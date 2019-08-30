@@ -59,3 +59,7 @@ typings/
 
 # next.js build output
 .next
+/v8-compile-cache-0/*
+/shop_server/conf.js
+.*
+/robots.txt
