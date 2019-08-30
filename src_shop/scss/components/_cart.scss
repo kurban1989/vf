@@ -1,0 +1,376 @@
+.Cart {
+    @include flexbox;
+    @include flex-direction(column);
+    @include transition(transform .2s);
+    @include translate(100%, 0);
+    position: fixed;
+    z-index: 1000;
+    top: 0;
+    right: 0;
+    width: 400px;
+    max-width: 100%;
+    height: 100%;
+    transition-timing-function: cubic-bezier(.16,.68,.43,.99);
+    will-change: transform;
+    background: #000;
+    border-left: 1px solid #2d2d2d;
+
+    &__header {
+        @include flexbox;
+        @include justify-content(space-between);
+        @include flex-direction(row);
+        @include align-items(center);
+        width: 100%;
+        padding: 1rem 1rem 0 2rem;
+        margin-bottom: 1em;
+        background-color: #000;
+        color: #dedede;
+    }
+
+    &__body {
+        position: relative;
+        -ms-flex: 1;
+        flex: 1;
+        background: #000;
+        -webkit-overflow-scrolling: touch;
+        border-top: 1px solid #2b2b2b;
+        padding-top: 15px;
+    }
+
+    &__overlay-loading {
+        position: fixed;
+        z-index: 9;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,.8);
+        display: none;
+        opacity: 0;
+        transition: opacity .2s ease-in;
+
+        .loading-animated-icon {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translateX(-50%) translateY(-50%);
+
+            svg {
+                @include size(40px);
+            }
+        }
+    }
+
+    &__title {
+        text-align: left;
+    }
+
+    &__close {
+        background-color: transparent;
+        border: 0;
+        width: 40px;
+        height: 40px;
+        padding: 13px;
+        outline: none;
+        color: #dedede;
+        svg {
+            width: 14px;
+            height: 14px;
+            display: block;
+        }
+    }
+
+    &__bag {
+        display: inline-block;
+        position: relative;
+        width: 20px;
+        height: 40px;
+        padding: 10px 0;
+        text-align: center;
+    }
+
+    &__empty {
+        background: #000;
+        margin: 0 0 2rem;
+        padding: 0 2rem;
+    }
+
+    &__shipping {
+        background: #000000;
+        margin: 0 0 2rem;
+        padding: 0 2rem;
+        &--p {
+            letter-spacing: .05em;
+            font-size: .85rem;
+            font-weight: 600;
+            color: #daa676;
+        }
+    }
+
+    &__payment-header {
+        font-size: .75rem;
+        text-transform: uppercase;
+        letter-spacing: .15em;
+        color: #848484;
+        text-align: center;
+    }
+
+    .bag-icon-empty {
+        display: inline-block;
+         svg {
+            width: 16px;
+            height: 19px;
+            fill: #dedede;
+         }
+    }
+
+    &__footer {
+        @include flex-shrink(1);
+        @include flexbox;
+        @include justify-content(flex-end);
+        @include flex-direction(column);
+        @include align-items(center);
+        background-color: #000;
+        width: 100%;
+        padding: 1rem 2rem;
+        border-top: 1px solid #2b2b2b;
+    }
+
+    &__total {
+        @include flexbox;
+        @include justify-content(space-between);
+        @include align-items(baseline);
+        width: 100%;
+        margin-bottom: 1rem;
+        color: #daa676;
+    }
+
+    &__subtotal {
+        font-weight: 600;
+        color: #daa676;
+        font-size: 1.1rem;
+
+        &.money::after {
+            content: ' ₽';
+        }
+    }
+}
+
+.cart-item {
+    transition: max-height .2s;
+    transition-timing-function: cubic-bezier(.16,.68,.43,.99);
+    max-height: 300px;
+    overflow: hidden;
+    background-color: #000;
+    padding: 0 2rem;
+
+    &__inner {
+        @include flexbox;
+        padding-top: .5rem;
+        padding-bottom: 1rem;
+        margin-bottom: .5rem;
+        border-bottom: 1px solid #2b2b2b;
+
+        a:hover {
+            color: $hover-link;
+        }
+    }
+
+    &__image {
+        width: 80px;
+        @include flex-grow(0);
+        @include flex-shrink(0);
+        margin-right: 20px;
+    }
+
+    &__content {
+        @include flexbox;
+        @include flex-direction(column);
+        @include justify-content(space-between);
+        position: relative;
+        width: 70%;
+        float: right;
+        padding-left: 1rem;
+    }
+    &__footer {
+        @include flexbox;
+        @include justify-content(space-between);
+        @include align-items(center);
+    }
+    &__title {
+        @include align-items(flex-start);
+        @include flex-flow;
+        margin-top: 0;
+        font-size: .8rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: .15em;
+        margin-bottom: .5rem;
+
+        p, a {
+            text-decoration: none;
+            position: relative;
+            display: inline-block;
+            color: #dedede;
+            transition: all .3s;
+            transition-timing-function: cubic-bezier(.16,.68,.43,.99);
+            font-size: .8rem;
+            white-space: nowrap;
+            max-width: 163px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+
+            &:hover {
+                color: #FEFEFE;
+            }
+        }
+    }
+    &__price {
+        font-size: 1rem;
+        text-transform: uppercase;
+        letter-spacing: .15em;
+        font-weight: 600;
+        text-align: left;
+        margin: 0;
+        color: #fff;
+
+        span {
+            color: #fff;
+        }
+
+        .money::after {
+            content: ' ₽';
+        }
+    }
+
+    &__remove {
+        @include flex-shrink(0);
+        display: inline-block;
+        margin-left: 15px;
+        width: 34px;
+        height: 34px;
+        transform: translateY(-8px);
+        float: right;
+
+        button {
+            display: block;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            border: none;
+            width: 34px;
+            height: 34px;
+            text-decoration: none;
+            position: relative;
+            display: inline-block;
+            color: #dedede;
+            transition: all .3s;
+            transition-timing-function: cubic-bezier(.16,.68,.43,.99);
+            will-change: transform;
+            background-color: #000000;
+            outline: none;
+            color: #848484;
+            padding: 0;
+
+            svg {
+                pointer-events: none;
+            }
+        }
+    }
+
+    &__description {
+        font-size: .75rem;
+        text-transform: uppercase;
+        letter-spacing: .15em;
+        color: #848484;
+        margin-bottom: .5rem;
+    }
+}
+
+.quantity-selector {
+    border: 1px solid #2b2b2b;
+    display: inline-block;
+    &__decrement,
+    &__increment  {
+        border: 0;
+        background: none;
+        width: 24px;
+        height: 24px;
+        display: inline-block;
+        float: left;
+        text-align: center;
+        padding: 0;
+        color: #848484;
+        @include flex-grow(0);
+
+        svg {
+            margin-top: 3px;
+        }
+    }
+    &__quantity {
+        color: #dedede;
+        border: 0;
+        background: none;
+        width: 24px;
+        height: 24px;
+        display: inline-block;
+        float: left;
+        text-align: center;
+        padding: 0;
+        @include flex-grow(0);
+    }
+
+    button {
+        &:focus {
+            outline-color: $hover-link;
+        }
+    }
+}
+
+.small {
+    font-size: .85rem;
+}
+
+.no-touchevents .btn--primary:before {
+    content: "";
+    position: absolute;
+    left: var(--x);
+    top: var(--y);
+    width: 0;
+    height: 0;
+    background: radial-gradient(circle closest-side,#e7c19d,transparent);
+}
+@include mq("phone-wide", "max") {
+   .cart-item__title p {
+        font-size: .8rem;
+        max-width: 150px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+   }
+   .cart-item__image {
+        margin-right: 15px;
+   }
+   .cart-item{
+        &__remove {
+            position: absolute;
+            top: -11px;
+            right: -11px;
+            margin: 0;
+        }
+        &__content {
+           position: relative;
+           padding-left: .8rem;
+           width: 75%;
+       }
+  }
+}
+@include mq("appleSE", "max") {
+    .Cart {
+        &__subtotal {
+            font-size: 1rem;
+        }
+        &__shipping--p {
+            font-size: .7rem;
+        }
+    }
+}

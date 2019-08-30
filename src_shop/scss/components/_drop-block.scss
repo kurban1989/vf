@@ -1,0 +1,106 @@
+.Drop-block {
+    &__drag-base {
+        position: relative;
+    }
+
+    &__block {
+        position: relative;
+    }
+
+    &__previews-list {
+        width: 700px;
+        min-height: 200px;
+        padding: 5px;
+        background-color: #f8f8f8;
+        border: 1px dashed #dcdcdc;
+        cursor: pointer;
+        margin: 0 auto;
+
+        &.is-active {
+            background-color: #DBDBDB;
+        }
+    }
+
+    &__title {
+        text-align: center;
+        margin-bottom: 20px;
+        font-size: 16px;
+    }
+
+    &__box {
+        padding: 10px;
+        border-radius: 2px;
+        margin: -10px;
+    }
+
+    &__info {
+        padding: 9px 12px;
+        text-align: left;
+
+        &--icon {
+            position: relative;
+            padding: 16px 12px 5px 55px;
+
+            svg {
+                position: absolute;
+                top: 14px;
+                left: 9px;
+                display: inline-block;
+                width: 30px;
+                height: 26px;
+            }
+        }
+    }
+
+    &__button {
+        @include transition(background-color .3s linear);
+        position: relative;
+        display: inline-block;
+        width: 30px;
+        height: 30px;
+        background-color: rgba(0, 0, 0, .7);
+        cursor: pointer;
+
+        .icon {
+            @include translate(-50%,-50%);
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            display: inline-block;
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+
+        &:hover {
+            background-color: rgba(70, 70, 70, .9);
+        }
+
+        &--close {
+            position: absolute;
+            top: 5px;
+            right: 10px;
+            z-index: 5;
+            .icon {
+                width: 12px;
+                height: 12px;
+                background-image: url('#{$path-png}/test-drop-block-icon-2.png');
+            }
+        }
+    }
+
+    &__gallery-elem {
+        position: relative;
+        display: inline-block;
+        width: 33.3%;
+        max-width: 220px;
+        min-width: 180px;
+        padding: 5px 10px;
+        vertical-align: top;
+        img {
+            z-index: 2;
+            position: relative;
+            display: block;
+            width: 100%;
+        }
+    }
+}

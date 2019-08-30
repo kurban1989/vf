@@ -1,0 +1,122 @@
+.Faq {
+    text-align: left;
+    width: 100%;
+    max-width: 1010px;
+    float: right;
+
+    &__accordion {
+        margin: 0;
+        list-style: none;
+        border-bottom: 1px solid #2b2b2b;
+
+        &--label {
+            width: 100%;
+        }
+
+        &--content {
+            padding-bottom: 2rem;
+            display: none;
+        }
+
+        &--text {
+            padding: 0;
+            font-size: 18px;
+            font-weight: 200;
+            word-spacing: 1px;
+
+            ol {
+                font-size: 17px;
+                margin-top: 15px;
+            }
+        }
+
+        &--btn {
+            position: relative;
+            @include flexbox;
+            @include justify-content(space-between);
+            @include align-items(flex-start);
+            color: $color-white-dark;
+            font-size: 19px;
+            background: none;
+            border: 0;
+            padding: 1.5rem 0;
+            width: 100%;
+            text-align: left;
+
+            .icon-minus {
+                display: none;
+            }
+
+            .icon-plus, .icon-minus {
+                position: absolute;
+                right: 5px;
+                top: 50%;
+                -ms-transform: translateY(-50%);
+                -moz-transform: translateY(-50%);
+                -webkit-transform: translateY(-50%);
+                transform: translateY(-50%);
+                fill: currentColor;
+                width: 12px;
+                pointer-events: none;
+            }
+        }
+    }
+
+    &__accordion-list {
+        border-bottom: none;
+        padding: 0;
+        margin: 0 0 1rem;
+        list-style: disc outside;
+    }
+
+    &__form {
+        margin: 0;
+        padding: 0 0 20px 0;
+        position: relative;
+
+        &--textarea {
+            background: black;
+            color: #fff !important;
+            border: 0;
+            border-bottom: 1px solid #dedede;
+            padding: 15px 0;
+            width: 100% !important;
+            font-family: $font-base;
+            margin-top: 15px;
+            outline: none;
+        }
+    }
+}
+
+
+@include mq("Ipad", "max") {
+    h2 {
+        font-size: 1.2em !important;
+    }
+
+    .h2 {
+        font-size: 24px;
+    }
+
+    .Faq {
+        padding: 10px 20px;
+        max-width: unset;
+        float: none;
+
+        &__accordion--text {
+            font-size: 14px;
+        }
+
+        &__accordion--btn {
+            font-size: 15px;
+        }
+
+        &__accordion--content {
+            padding-bottom: 1.1rem;
+        }
+
+        &__form--textarea {
+            margin-top: 10px;
+        }
+    }
+}

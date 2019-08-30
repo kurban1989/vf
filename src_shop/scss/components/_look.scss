@@ -1,0 +1,104 @@
+.Look {
+    @include size(100vw, auto);
+    position: relative;
+    margin-top: 50px;
+    padding: 15px 0;
+    max-height: 580px;
+    text-align: center;
+    background: #000;
+
+    &__h2 {
+        font-size: 28px;
+        color: $color-white;
+        letter-spacing: .1em;
+        font-weight: 200;
+    }
+
+    &__list {
+        @include size(100%, auto);
+        position: relative;
+    }
+
+    &__item {
+        @include size(100%, auto);
+        max-width: 1150px;
+        display: inline-block;
+        text-align: center;
+
+        img {
+            @include size(220px, 100%);
+            margin: 0 auto;
+            display: block;
+        }
+    }
+}
+
+.Look-arrowPrev, .Look-arrowNext {
+    background: transparent;
+    position: absolute;
+    top: calc(50% - 30px);
+    @include size(60px);
+    outline: none;
+    cursor: pointer;
+    z-index: 12;
+
+    span {
+        position: absolute;
+        top: 30%;
+        left: 50%;
+        @include size(40px);
+        @include rotate(45);
+        cursor: pointer;
+    }
+}
+.Look-arrowPrev {
+    left: 10px;
+
+    span {
+        @include border-color(transparent transparent #e8ae1a #a60b55);
+        border-style: solid;
+        border-width: 3px;
+
+        &:hover {
+            @include border-color(transparent transparent #F8CB59 #C23B7B);
+        }
+    }
+}
+.Look-arrowNext {
+    right: 10px;
+
+    span {
+        @include border-color(#a60b55 #e8ae1a transparent transparent);
+        border-style: solid;
+        border-width: 3px;
+
+        &:hover {
+            @include border-color(#C23B7B #F8CB59 transparent transparent);
+        }
+    }
+}
+
+@include mq("tablet", "max") {
+    .Look {
+        margin-top:0;
+
+        &__h2 {
+            font-size: 26px;
+        }
+        &__item img {
+            width: 200px;
+        }
+        &__list {
+            padding-left: 0;
+        }
+    }
+    .Look-arrowPrev span, .Look-arrowNext span{
+        left:0;
+        top:0;
+        @include size(30px);
+    }
+    .Look-arrowPrev span {
+        right: 0;
+        left: auto;
+    }
+}

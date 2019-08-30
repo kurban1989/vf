@@ -1,0 +1,40 @@
+.Panel {
+    margin-bottom: 14px;
+    background-color: #fff;
+    border: 1px solid transparent;
+    -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, .05);
+    box-shadow: 0 1px 1px rgba(0, 0, 0, .05);
+
+    &__body {
+        padding: 10px;
+    }
+
+    &--default {
+        border: 1px solid #dcdcdc;
+        border-top: 1px solid #dcdcdc;
+    }
+
+    &--head {
+        color: #4c4d5a;
+        border-color: #dcdcdc;
+        background: #f6f6f6;
+        text-shadow: 0 -1px 0 rgba(50,50,50,0);
+        padding-bottom: 10px;
+
+        h3 {
+            font-weight: 500;
+            display: inline-block;
+            margin-top: 10px;
+            margin-bottom: 0;
+            font-size: 16px;
+            color: inherit;
+        }
+
+        svg {
+            @include size(18px);
+            margin-top: 7px;
+            margin-left: 10px;
+            -webkit-tap-highlight-color: rgba(0,0,0,0);
+        }
+    }
+}

@@ -1,0 +1,42 @@
+<div class="Container">
+    <div class="Container--center Container__top"><h1 class="h2"><%= h1 %></h1></div>
+    <ul class="Flex-standart Block-items Flex-start Flex-start__justify">
+        <% table.forEach(function(item){ %>
+        <% var imgPreview; %>
+        <li class="Block-item">
+            <div class="Block__product-card">
+                <a href="/product/<%= String(h1).toLowerCase() %>/<%= item.id %>/">
+                    <div class="Block__product-card--image js-slickCard">
+                        <% if(item.images && item.images != '' && item.images.length > 5) {imgPreview = item.images.split(','); %>
+                            <% imgPreview.forEach(function(img){ %>
+                                <% if(img.length > 3) { %>
+                                <span><img data-src="<%= img %>" alt="<%= item.title %>"></span>
+                                <% } %>
+                            <% }); %>
+                        <%} else {%>
+                        <span><img data-src="/img/svg/no-photo.svg" alt=""></span>
+                        <% } %>
+                    </div>
+                </a>
+                <p class="Block__product-card--title">
+                    <a href="/product/<%= String(h1).toLowerCase() %>/<%= item.id %>/"><%= item.title %></a>
+                </p>
+                <div class="Block__product-card--price"><span><%= item.price %> ₽</span>
+                    <% if(item.old_price > item.price) { %>
+                    <span class="old-price"><%= item.old_price %> ₽</span>
+                    <% } %>
+                </div>
+                <button class="Button__card--primary Button--block Button--hidden-down Button--mini-card js-add2cart" data-product_id="<%= item.id %>"><span>В корзину</span></button>
+            </div>
+            <% if(imgPreview.length > 2) { %>
+                <div class="Block__arrows Block__arrows--left">
+                    <svg svg-inline="" role="presentation" focusable="false" xmlns="http://www.w3.org/2000/svg" width="14" height="26"><defs><linearGradient id="a" x1="50%" x2="24.241%" y1="24.167%" y2="77.79%"><stop offset="0%" stop-color="#E7C19D"></stop><stop offset="100%" stop-color="#D59B67"></stop></linearGradient></defs><path fill="url(#a)" fill-rule="evenodd" transform="matrix(-1 0 0 1 14 0)" d="M14 12.935v.13L.258 26H0l10.516-13L0 0h.258z"></path></svg>
+                </div>
+                <div class="Block__arrows Block__arrows--right">
+                    <svg svg-inline="" role="presentation" focusable="false" xmlns="http://www.w3.org/2000/svg" width="14" height="26"><defs><linearGradient id="a" x1="50%" x2="24.241%" y1="24.167%" y2="77.79%"><stop offset="0%" stop-color="#E7C19D"></stop><stop offset="100%" stop-color="#D59B67"></stop></linearGradient></defs><path fill="url(#a)" fill-rule="evenodd" d="M14 12.935v.13L.258 26H0l10.516-13L0 0h.258z"></path></svg>
+                </div>
+            <% } %>
+        </li>
+        <% }) %>
+    </ul>
+</div>

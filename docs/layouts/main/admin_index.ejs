@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <title>Админ панель</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="description" content="">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Vary" content="User-Agent">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,shrink-to-fit=no">
+    <link rel="stylesheet" href="/dist/main.css"/>
+</head>
+<body>
+    <%- serviceModal %>
+<div class="Wrapper">
+    <div class="Menu-adm Menu-adm--black">
+        <p class="first-child">Меню</p>
+
+        <div class="Menu-adm__item">
+            <p class="js-addPower" data-handler="prod"><a href="/power/admin/">Товары</a></p>
+        </div>
+        <div class="Menu-adm__item">
+            <p class="js-addPower" data-handler="cat"><a href="/power/admin/cat/">Категории</a></p>
+        </div>
+        <div class="Menu-adm__item">
+            <p class="js-addPower" data-handler="sale"><a href="/power/admin/orders/">Заказы</a></p>
+            <% if(countOrder != 0) { %>
+            <div class="Menu-adm__item--label-new Vertical-center" title="У вас новые заказы"><span class=""><%= countOrder %></span></div>
+            <% } %>
+        </div>
+        <br>
+        <div class="Menu-adm__item">
+            <p data-handler="home"><a href="/">&larr; На сайт</a></p>
+        </div>
+    </div>
+    <div class="Content-table js-ajaxContent">
+        <%- showAllProd %>
+</div>
+<script async src="/dist/bundle.js"></script>
+</body>
+</html>

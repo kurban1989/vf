@@ -1,0 +1,63 @@
+<div class="Container--center Container__top">
+  <h1 class="h2 cart-h" style="text-transform: none;font-weight: 200;"><%- h1 %></h1>
+</div>
+<div class="Container Container__table-cart">
+  <table class="Product-table Product-table-all" <%- tableVisible %>>
+    <thead class="small--hide">
+      <tr>
+        <th class="page-cart">Продукт</th>
+        <th class="page-cart">Цена</th>
+        <th class="page-cart small-col">Количество</th>
+        <th class="page-cart text-right">Итого</th>
+      </tr>
+    </thead>
+    <% arrOrder.forEach(function(item) { %>
+    <tr class="Product-table__cart">
+      <td>
+        <div class="Product-table__cart--info-cell">
+          <div>
+            <% if(item.img && item.img != '' && item.img.length > 5) {var imgPreview = item.img.split(','); %>
+            <img data-src="<%- imgPreview[0] %>" alt="<%- item.title %>">
+            <%} else {%>
+            <img data-src="/img/svg/no-photo.svg" alt="">
+            <% } %>
+          </div>
+          <div>
+            <p><a href="/product/<%- item.title %>/<%- item.id %>/"><%- item.title %></a></p>
+            <div class="info-size" data-size="true"><span><%- item.size %></span></div>
+            <br>
+            <div class="remove-link">
+                <span class="js-removeFromCart" data-product_id="<%- item.id %>">
+                      удалить
+                  <svg xmlns="http://www.w3.org/2000/svg" width="7.79" height="7.79" viewBox="0 0 7.79 7.79"><path d="M4.6,3.9l3-3,0,0a.49.49,0,0,0,0-.68l0,0a.49.49,0,0,0-.68,0L3.9,3.2.85.15l0,0a.49.49,0,0,0-.68,0l0,0a.49.49,0,0,0,0,.68l3,3.05-3,3h0a.5.5,0,0,0,0,.71.5.5,0,0,0,.7,0L3.9,4.6l3,3.05a.5.5,0,0,0,.7,0h0a.5.5,0,0,0,0-.71Z" transform="translate(0 0)"></path></svg>
+                </span>
+            </div>
+          </div>
+        </div>
+      </td>
+      <td data-label="Цена">
+        <span class="money js-money"><%- item.price %></span>
+      </td>
+      <td data-label="Количество" class="small-col">
+        <div>
+          <div class="quantity-selector">
+            <button type="button" class="quantity-selector__decrement js-crement" data-action="minus" data-product_id="<%- item.id %>">
+          <svg id="Layer_1" xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 1.02" class="icon-minus"><path d="M.31,6.51C.14,6.51,0,6.29,0,6s.14-.49.31-.49l11.37,0c.18,0,.32.23.32.5s-.14.5-.32.5h0Z" transform="translate(0 -5.49)"></path></svg>
+          </button>
+          <input type="number" class="quantity-selector__quantity js-quantity" value="<%= item.quantity %>" disabled="">
+          <button type="button" class="quantity-selector__increment js-crement" data-action="plus" data-product_id="<%- item.id %>">
+        <svg id="Layer_1" xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12" class="icon-plus"><path d="M.31,6.51C.14,6.51,0,6.29,0,6s.14-.49.31-.49l11.37,0c.18,0,.32.23.32.5s-.14.5-.32.5h0Z" transform="translate(0 0)"></path><path d="M5.49.32C5.49.14,5.71,0,6,0H6c.28,0,.5.14.5.31l0,11.38c0,.17-.22.31-.5.31s-.5-.14-.5-.32h0Z" transform="translate(0 0)"></path></svg>
+        </button>
+      </div>
+    </div>
+  </td>
+  <td data-label="Итого" class="text-right">
+    <span class="money"><%- item.sum %>&nbsp;</span>
+  </td>
+</tr>
+<% }); %>
+</table>
+<div class="Product-table__checkout" <%- tableVisible %>>
+  <button class="Button__card--primary Button--block" onclick="window.location.href='/order/';"><span>Оформить заказ</span></button>
+</div>
+</div>

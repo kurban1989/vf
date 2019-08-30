@@ -1,0 +1,96 @@
+<div class="Content-table__header">
+    <h1 class="js-headerCab">Категории -> Добавление новой</h1>
+    <button class="Content-table__add-btn js-btnAddProd" title="Назад" data-src="backAllProd">&nbsp;&larr;&nbsp;</button>
+</div>
+<div class="Content-table__wrapper-table js-scrollContent simplebar" style="height: 90%;">
+    <div class="Panel Panel--default">
+        <div class="Panel--head">
+            <svg class="pensal" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 22 20" enable-background="new 0 0 22 20" xml:space="preserve"><g><path fill="#000" d="M17.73,3.27c-1.48-1.48-2.591-1.258-2.591-1.258L9.958,7.193l-5.922,5.922L3,18l4.885-1.036l5.922-5.922 l5.182-5.181C18.988,5.861,19.21,4.75,17.73,3.27z M7.594,16.377l-1.665,0.359c-0.161-0.301-0.354-0.601-0.709-0.956 c-0.354-0.354-0.655-0.547-0.956-0.709l0.359-1.665l0.481-0.482c0,0,0.906,0.018,1.929,1.042c1.023,1.023,1.042,1.93,1.042,1.93 L7.594,16.377z"></path></g></svg>
+            <h3>Добавить</h3>
+        </div>
+        <div class="Panel__body">
+            <form action="" id="addNewProd">
+                <div class="Content-table__filter--form-group">
+                    <div class="inline inline--left">
+                        <label for="input-name" class="inline  required">Наименование категории</label>
+                    </div>
+                    <input type="text" name="name" value="" placeholder="Наименование категории" id="input-name" class="Content-table__filter--form-control inline" required autocomplete="off">
+                </div>
+                <div class="Content-table__filter--form-group">
+                    <div class="inline inline--left">
+                        <label for="input-parent_cat" class="inline">Родительская категория</label>
+                    </div>
+                    <input type="text" name="parent_cat" value="" placeholder="Родительская категория" id="input-parent_cat" class="Content-table__filter--form-control inline" autocomplete="off">
+                </div>
+                <div class="Content-table__filter--form-group">
+                    <div class="inline inline--left" style="vertical-align: top;">
+                        <label for="input-description" class="inline">Описание категории</label>
+                    </div>
+                    <textarea name="description" placeholder="Описание категории" id="input-description" class="Content-table__filter--form-control inline" style="min-height: 160px;"></textarea>
+                </div>
+                <div class="Content-table__filter--form-group">
+                    <p class="Drop-block__title">Добавьте одну фотографию которая будет отображатся на странице категории</p>
+                    <div class="Drop-block__drag-base Drop-block__previews-list js-dropPhotogallery" draggable="true" onclick="uploadFile();">
+                        <div class="Drop-block__box">
+                            <div class="Drop-block__info Drop-block__info--icon js-drop-block__info js-change-quantity">
+                                <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 50 44" enable-background="new 0 0 50 44" xml:space="preserve"><path fill="#E1E1E1" d="M43.75,7.75c2.07,0,3.75,1.68,3.75,3.75v26.25c0,2.07-1.68,3.75-3.75,3.75H6.25c-2.07,0-3.75-1.68-3.75-3.75 V11.5c0-2.07,1.68-3.75,3.75-3.75H43.75 M43.75,5.25H6.25C2.804,5.25,0,8.054,0,11.5v26.25C0,41.196,2.804,44,6.25,44h37.5 c3.446,0,6.25-2.804,6.25-6.25V11.5C50,8.054,47.196,5.25,43.75,5.25L43.75,5.25z"></path><path fill="#E1E1E1" d="M25,37.125c-6.892,0-12.5-5.608-12.5-12.5s5.608-12.5,12.5-12.5s12.5,5.608,12.5,12.5 S31.892,37.125,25,37.125z M25,14.625c-5.514,0-10,4.486-10,10s4.486,10,10,10s10-4.486,10-10S30.514,14.625,25,14.625z"></path><rect x="13.75" y="0.25" fill="#E1E1E1" width="22.5" height="2.5"></rect></svg>
+                                <p class="title">Кликните, чтобы <a class="noLink">выбрать файл</a></p>
+                            </div>
+                        </div>
+                    </div>
+                    <input type="hidden" name="images[]">
+                </div>
+                <div class="Content-table__filter--form-group" style="text-align: center;">
+                    <button class="Content-table__add-btn" id="submitFormCat" type="submit">Создать</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+var inputThisPage = document.querySelectorAll('#addNewProd input, #addNewProd textarea');
+    // Если пришёл запрос на редактирование продукта
+if(location.href.search(/admin/) != -1 && getCookie('updateCat')) {
+    localStorage.clear();// Очистка старого значения локального хранилища во избежании конфликтов
+    var btn = document.querySelector('#submitFormCat');
+    btn.setAttribute('type', 'button');
+    btn.textContent = 'Обновить';
+
+    dom.query('.js-headerCab').text('Категории -> Редактирование');
+
+    dom.query.post(location.href + 'update/', {qeuryUpdate: 'set', id: getCookie('updateCat')}, function(data, textStatus, xhr) {
+      data = JSON.parse(data);
+      var ii = 0;
+
+        for (var i = inputThisPage.length - 1; i >= 0; i--) {
+            var field = inputThisPage[i].name
+        /* вставляем фото */
+            if(/image/.test(inputThisPage[i].name) && String(data.result[0][field]).length > 3) {
+                var forImg = document.querySelectorAll('input[name="' + inputThisPage[i].name + '"]');
+                field = field.replace(/\[\]/g, '');
+                var arrImg = String(data.result[0][field]).split(',');
+
+                if(arrImg[ii]!='' && arrImg[ii]!= null && arrImg[ii]!= undefined ) {
+                    document.querySelector('.js-dropPhotogallery').insertAdjacentHTML("beforeEnd", templateCustom({
+                        src: arrImg[ii],
+                    }));
+
+                    forImg[ii].classList.add('readyLoad');
+                    forImg[ii].value = arrImg[ii];
+                }
+
+                ii++;
+        /* вставляем фото */
+            } else if(inputThisPage[i].type == 'checkbox') {
+                inputThisPage[i].checked = data.result[0][field] == 1 ? true : false;
+            } else {
+                inputThisPage[i].value = data.result[0][field];
+            }
+
+        }
+    });
+}
+function templateCustom(args) {
+    return '<div class="Drop-block__gallery-elem"><a class="Drop-block__button Drop-block__button--close js-removeImage" title="Удалить изображение"><span class="icon js-removeImageSpan"></span></a><div class="Drop-block__block"><img src="' + args.src + '" alt=""></div></div>';
+}
+</script>

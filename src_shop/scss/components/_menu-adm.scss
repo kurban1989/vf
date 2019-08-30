@@ -1,0 +1,59 @@
+.Menu-adm {
+    text-align: center;
+    color: #fff;
+    position: fixed;
+    left: 0;
+    top: 0;
+    padding: 12px 8px 8px 12px;
+    @include size(210px, 100vh);
+    overflow: hidden;
+
+    .first-child {
+        font-size: 24px;
+    }
+
+    &--black {
+        background-color: #0a0a0a;
+        background-image: -webkit-repeating-linear-gradient(315deg,#232323,#232323 10%,transparent 0,transparent 50%),-webkit-repeating-linear-gradient(225deg,#232323,#232323 10%,transparent 0,transparent 50%);
+        background-image: repeating-linear-gradient(135deg,#232323,#232323 10%,transparent 0,transparent 50%),repeating-linear-gradient(-135deg,#232323,#232323 10%,transparent 0,transparent 50%);
+        background-size: 12px 12px;
+    }
+
+    &__item {
+        position: relative;
+        margin-top: 30px;
+        margin-bottom: -20px;
+        width: 100%;
+        height: auto;
+        text-align: center;
+
+        p, a {
+            position: relative;
+            font-family: $font-base;
+            font-size: 17px;
+            vertical-align: middle;
+            text-align: center;
+            cursor: pointer;
+            color: #fff;
+            @include transition(.3s);
+
+            &:hover {
+                color: #3EED15;
+            }
+        }
+
+        &--label-new {
+            @include size(24px);
+            cursor: pointer;
+            position: absolute;
+            right: 30px;
+            bottom: -5px;
+            color: $color-white;
+            padding-top: 2px;
+            background: #E13A3A;
+            border-radius: 50%;
+            font-size: 15px;
+            font-weight: 400;
+        }
+    }
+}

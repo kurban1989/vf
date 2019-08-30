@@ -1,0 +1,280 @@
+<div class="Content-table__header">
+    <h1 class="js-headerCab">Товары -> Добавление нового</h1>
+    <button class="Content-table__add-btn js-btnAddProd" title="Назад" data-src="backAllProd">&nbsp;&larr;&nbsp;</button>
+</div>
+<div class="Content-table__wrapper-table js-scrollContent simplebar" style="height: 90%;">
+    <div class="Panel Panel--default">
+        <div class="Panel--head">
+            <svg class="pensal" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 22 20" enable-background="new 0 0 22 20" xml:space="preserve"><g><path fill="#000" d="M17.73,3.27c-1.48-1.48-2.591-1.258-2.591-1.258L9.958,7.193l-5.922,5.922L3,18l4.885-1.036l5.922-5.922 l5.182-5.181C18.988,5.861,19.21,4.75,17.73,3.27z M7.594,16.377l-1.665,0.359c-0.161-0.301-0.354-0.601-0.709-0.956 c-0.354-0.354-0.655-0.547-0.956-0.709l0.359-1.665l0.481-0.482c0,0,0.906,0.018,1.929,1.042c1.023,1.023,1.042,1.93,1.042,1.93 L7.594,16.377z"></path></g></svg>
+            <h3>Добавить</h3>
+        </div>
+        <div class="Panel__body">
+            <form action="" id="addNewProd">
+                <div class="Content-table__filter--form-group">
+                    <div class="inline inline--left">
+                        <label for="input-title" class="inline  required">Наименование товара</label>
+                    </div>
+                    <input type="text" name="title" value="" placeholder="Наименование товара" id="input-title" class="Content-table__filter--form-control inline" required autocomplete="off">
+                </div>
+                <div class="Content-table__filter--form-group">
+                    <div class="inline inline--left">
+                        <label for="input-vendor" class="inline">Брэнд</label>
+                    </div>
+                    <input type="text" name="vendor" value="" placeholder="Брэнд" id="input-vendor" class="Content-table__filter--form-control inline" autocomplete="off">
+                </div>
+                <div class="Content-table__filter--form-group">
+                    <div class="inline inline--left">
+                        <label for="input-category" class="inline required">Категория</label>
+                    </div>
+                    <input type="text" name="category" value="" placeholder="Категория" id="input-category" class="Content-table__filter--form-control inline js-keyPopup" data-target="categoryPopup" required autocomplete="off">
+                    <ul class="Content-table__dropdown-menu Content-table__dropdown-menu--for-add-page js-categoryPopup"></ul>
+                </div>
+                <div class="Content-table__filter--form-group">
+                    <div class="inline inline--left">
+                        <label for="input-price" class="inline required">Цена</label>
+                    </div>
+                    <input type="number" name="price" value="" placeholder="Цена" id="input-price" class="Content-table__filter--form-control inline" required autocomplete="off">
+                </div>
+                <div class="Content-table__filter--form-group">
+                    <div class="inline inline--left">
+                        <label for="input-old_price" class="inline">Старая цена</label>
+                    </div>
+                    <input type="number" name="old_price" value="0" placeholder="Старая цена" id="input-old_price" class="Content-table__filter--form-control inline" autocomplete="off">
+                </div>
+                <div class="Content-table__filter--form-group">
+                    <div class="inline inline--left">
+                        <label for="input-sizes" class="required">Размеры</label>
+                        <label for="input-sizes" class="required js-ifSecondSize" style="display: none;">Размеры трусов</label>
+                    </div>
+                    <input type="text" name="sizes" value="" placeholder="Размеры ( Указывать через запятую!!! )" id="input-sizes" class="Content-table__filter--form-control inline" autocomplete="off" required>
+                </div>
+                 
+                <div class="Content-table__filter--form-group">
+                    <div class="inline inline--left"></div>
+                    <div class="inline">
+                        <button class="Content-table__add-btn Content-table__add-btn--new-field" id="add-second-size" type="button">&nbsp;Добавить второй размер для BRA&nbsp;</button>
+                    </div>
+                </div>
+
+                <div class="Content-table__filter--form-group js-braSize is-hidden">
+                </div>
+
+                <div class="Content-table__filter--form-group">
+                    <div class="inline inline--left">
+                        <label for="input-weight" class="inline required">Вес товара</label>
+                    </div>
+                    <input type="text" name="weight" value="" placeholder="Вес товара ( Указывается в кг => 0.5 или 2 )" id="input-weight" class="Content-table__filter--form-control inline" required autocomplete="off">
+                </div>
+                <div class="Content-table__filter--form-group">
+                    <div class="inline inline--left">
+                        <label for="input-length" class="inline required">Длина товара</label>
+                    </div>
+                    <input type="number" name="length" value="" placeholder="Длина товара ( Указывается в сантиметрах )" id="input-length" class="js-numberFormat Content-table__filter--form-control inline" required data-type="number" />
+                </div>
+                <div class="Content-table__filter--form-group">
+                    <div class="inline inline--left">
+                        <label for="input-height" class="inline required">Высота товара</label>
+                    </div>
+                    <input type="number" name="height" value="" placeholder="Высота товара ( Указывается в сантиметрах )" id="input-height" class="js-numberFormat Content-table__filter--form-control inline" required data-type="number" />
+                </div>
+                <div class="Content-table__filter--form-group">
+                    <div class="inline inline--left">
+                        <label for="input-width" class="inline required">Ширина товара</label>
+                    </div>
+                    <input type="number" name="width" value="" placeholder="Ширина товара ( Указывается в сантиметрах )" id="input-width" class="js-numberFormat Content-table__filter--form-control inline" required data-type="number" />
+                </div>
+                <div class="Content-table__filter--form-group">
+                    <div class="inline inline--left">
+                        <label for="input-stock_count" class="inline required">Количество</label>
+                    </div>
+                    <input type="number" name="stock_count" value="1" placeholder="Количество" id="input-stock_count" class="Content-table__filter--form-control inline" required autocomplete="off">
+                </div>
+                <div class="Content-table__filter--form-group">
+                    <div class="inline inline--left">
+                        <label for="input-list_primary" class="inline required">Преимущества товара</label>
+                    </div>
+                    <input type="text" name="list_primary" placeholder="Преимущества товара ( Указывать через запятую! )" id="input-list_primary" class="Content-table__filter--form-control inline" required autocomplete="off">
+                </div>
+                <div class="Content-table__filter--form-group">
+                    <div class="inline inline--left" style="vertical-align: top;">
+                        <label for="input-discription" class="inline">Описание товара</label>
+                    </div>
+                    <textarea name="discription" placeholder="Описание товара" id="input-discription" class="Content-table__filter--form-control inline" style="min-height: 160px;"></textarea>
+                </div>
+                <div class="Content-table__filter--form-group">
+                    <p class="Drop-block__title">Добавьте от 1 до 3 фотографий, которые будут отображаться на странице товара</p>
+                    <div class="Drop-block__drag-base Drop-block__previews-list js-dropPhotogallery" draggable="true" onclick="uploadFile();">
+                        <div class="Drop-block__box">
+                            <div class="Drop-block__info Drop-block__info--icon js-drop-block__info js-change-quantity">
+                                <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 50 44" enable-background="new 0 0 50 44" xml:space="preserve"><path fill="#E1E1E1" d="M43.75,7.75c2.07,0,3.75,1.68,3.75,3.75v26.25c0,2.07-1.68,3.75-3.75,3.75H6.25c-2.07,0-3.75-1.68-3.75-3.75 V11.5c0-2.07,1.68-3.75,3.75-3.75H43.75 M43.75,5.25H6.25C2.804,5.25,0,8.054,0,11.5v26.25C0,41.196,2.804,44,6.25,44h37.5 c3.446,0,6.25-2.804,6.25-6.25V11.5C50,8.054,47.196,5.25,43.75,5.25L43.75,5.25z"></path><path fill="#E1E1E1" d="M25,37.125c-6.892,0-12.5-5.608-12.5-12.5s5.608-12.5,12.5-12.5s12.5,5.608,12.5,12.5 S31.892,37.125,25,37.125z M25,14.625c-5.514,0-10,4.486-10,10s4.486,10,10,10s10-4.486,10-10S30.514,14.625,25,14.625z"></path><rect x="13.75" y="0.25" fill="#E1E1E1" width="22.5" height="2.5"></rect></svg>
+                                <p class="title">Перетащите фото сюда или <a class="noLink">выберите файлы</a></p>
+                            </div>
+                        </div>
+                    </div>
+                    <input type="hidden" name="images[]">
+                    <input type="hidden" name="images[]">
+                    <input type="hidden" name="images[]">
+                </div>
+                <div class="Content-table__filter--form-group">
+                    <div class="inline--left" style="vertical-align: top;text-align: left;margin-left: 140px;">
+                        <p class="title"><b>Опции</b></p><br>
+                    </div>
+                    <div class="inline inline--left">
+                        <label for="input-new" class="inline">Новинка</label>
+                    </div>
+                        <input type="checkbox" class="Content-table__filter--form-control checkbox checkbox--options" name="new" id="input-new">
+                    <div class="inline inline--left">
+                        <label for="input-sale" class="inline">Распродажа</label>
+                    </div>
+                        <input type="checkbox" class="Content-table__filter--form-control checkbox checkbox--options" name="sale" id="input-sale" >
+                    <div class="inline inline--left">
+                        <label for="input-visible" class="inline">Видимый на сайте</label>
+                    </div>
+                        <input type="checkbox" class="Content-table__filter--form-control checkbox checkbox--options" name="visible" id="input-visible"  checked>
+                </div>
+                <div class="Content-table__filter--form-group" style="text-align: center;">
+                    <button class="Content-table__add-btn" id="submitFormProd" type="submit">Отправить</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+var dropZone = document.querySelectorAll('.js-dropPhotogallery');
+var inputThisPage = document.querySelectorAll('#addNewProd input, #addNewProd textarea');
+var addSecondSize = document.querySelector('#add-second-size');
+var targetBra = document.querySelectorAll('.js-braSize');
+var ifSecondSize = document.querySelector('.js-ifSecondSize');
+var removeFieldBra = null;
+
+addSecondSize.addEventListener('click', function(e) {
+    e.preventDefault();
+    this.offsetParent.classList.add('is-hidden');
+    ifSecondSize.classList.remove('is-hidden');
+    targetBra[0].insertAdjacentHTML('beforeend', templateBraSize());
+    targetBra[0].classList.remove('is-hidden');
+    removeFieldBra = document.querySelector('#js-removeBraSize');
+    dom.query(ifSecondSize).show();
+    dom.query(ifSecondSize).siblings('.required').hide();
+
+    removeFieldBra.addEventListener('click', function(e) {
+        e.preventDefault();
+        this.removeEventListener('click', function(e) {})
+        addSecondSize.parentElement.parentElement.classList.remove('is-hidden');
+        dom.query(ifSecondSize).hide();
+        dom.query(ifSecondSize).siblings('.required').show();
+
+        while (targetBra[0].firstChild) {
+            targetBra[0].removeChild(targetBra[0].firstChild);
+        }
+
+        targetBra[0].classList.add('is-hidden');
+    });
+});
+
+/* Ставим события на перетаскивание файлов */
+dropZone[0].ondragover = function() {
+    dropZone[0].classList.add('is-active');
+    return false;
+};
+dropZone[0].ondragleave = function() {
+    dropZone[0].classList.remove('is-active');
+    return false;
+};
+dropZone[0].ondrop = function(event) {
+    event.preventDefault();
+
+    dropZone[0].classList.remove('is-active');
+
+    var files = event.dataTransfer.files;
+
+    if (files) {
+        [].forEach.call(files, upload);
+    }
+};
+/* Сохраняем в локалСторадж введённые данные для товара */
+for (var i = inputThisPage.length - 1; i >= 0; i--) {
+    inputThisPage[i].addEventListener('blur', function(e) {
+        if(e.target.value == '') return false;
+
+        prodStorageSet(e.target.name, e.target.value);
+        setCookie('localStorageInput', encodeURIComponent(e.target), 3);
+    }, false)
+}
+/* Если пришёл запрос на редактирование продукта */
+if(location.href.search(/admin/) != -1 && getCookie('updateProduct')) {
+    addSecondSize.click(); /* Вернём поле БРА перед всеми манипуляциями И скроем кнопку */
+
+    var btn = document.querySelector('#submitFormProd');
+    inputThisPage = document.querySelectorAll('#addNewProd input, #addNewProd textarea');
+    
+    localStorage.clear(); /* Очистка старого значения локального хранилища во избежании конфликтов */
+    btn.setAttribute('type', 'button');
+    btn.textContent = 'Обновить';
+
+    dom.query('.js-headerCab').text('Товары -> Редактирование');
+
+    dom.query.post(location.href + '/update/', {qeuryUpdate: 'set', id: getCookie('updateProduct')}, function(data, textStatus, xhr) {
+      data = JSON.parse(data);
+      var ii = 0;
+
+        for (var i = inputThisPage.length - 1; i >= 0; i--) {
+            var field = inputThisPage[i].name
+            /* вставляем фото */
+            if(/image/.test(inputThisPage[i].name) && String(data.result[0][field]).length > 3) {
+                var forImg = document.querySelectorAll('input[name="' + inputThisPage[i].name + '"]');
+                field = field.replace(/\[\]/g, '');
+                var arrImg = String(data.result[0][field]).split(',');
+
+                if(arrImg[ii]!='' && arrImg[ii]!= null && arrImg[ii]!= undefined ) {
+                    document.querySelector('.js-dropPhotogallery').insertAdjacentHTML("beforeEnd", templateCustom({
+                        src: arrImg[ii],
+                    }));
+
+                    forImg[ii].classList.add('readyLoad');
+                    forImg[ii].value = arrImg[ii];
+                }
+
+                ii++;
+        /* вставляем фото */
+            } else if(inputThisPage[i].type == 'checkbox') {
+                inputThisPage[i].checked = data.result[0][field] == 1 ? true : false;
+            } else {
+                inputThisPage[i].value = data.result[0][field];
+            }
+
+        }
+    });
+}
+/* Восстановление введённых значений из инпута при случайной перезагрузке или прочего фейла */
+if(location.href.search(/admin/) != -1 && getCookie('localStorageInput')) {
+    var forImg = 0;
+    for (var i = inputThisPage.length - 1; i >= 0; i--) {
+        var strSearch = inputThisPage[i].name
+
+        if(/image/.test(inputThisPage[i].name)) {
+            forImg++;
+            strSearch = inputThisPage[i].name + '' + forImg;
+        }
+
+        var getVal = prodStorageGet(strSearch);
+
+        if(getVal != null && getVal != undefined) {
+            inputThisPage[i].value = getVal;
+
+            if(/image/.test(inputThisPage[i].name) && getVal.length > 3) {
+              /* вставляем фото */
+                document.querySelector('.js-dropPhotogallery').insertAdjacentHTML("beforeEnd", templateCustom({
+                    src: getVal,
+                }));
+            }
+        }
+    }
+}
+function templateCustom(args) {
+    return '<div class="Drop-block__gallery-elem"><a class="Drop-block__button Drop-block__button--close js-removeImage" title="Удалить изображение"><span class="icon js-removeImageSpan"></span></a><div class="Drop-block__block"><img src="' + args.src + '" alt=""></div></div>';
+}
+function templateBraSize() {
+    return '<div class="inline inline--left"><label for="input-sizesBra" class="inline required">Размеры BRA</label></div><input type="text" name="sizesBra" value="" placeholder="Размеры ( Указывать через запятую!!! )" id="input-sizesBra" class="Content-table__filter--form-control inline" autocomplete="off" required><div id="js-removeBraSize" class="Content-table__filter--form-field" title="Убрать поле добавления размера Бра"></div>'
+}
+</script>

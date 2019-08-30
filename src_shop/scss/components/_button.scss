@@ -1,0 +1,145 @@
+button {
+     -webkit-appearance: button;
+     cursor: pointer;
+     background: transparent;
+     border: none;
+     outline: none;
+}
+.Button {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    transition: all .2s ease;
+    border-radius: 0;
+    cursor: pointer;
+    display: inline-block;
+    font-family: "Avenir Next",sans-serif;
+    font-size: .75rem;
+    font-weight: 600;
+    min-height: 40px;
+    letter-spacing: .15em;
+    line-height: 1;
+    margin: 0;
+    text-align: center;
+    text-decoration: none;
+    text-transform: uppercase;
+    vertical-align: middle;
+    white-space: nowrap;
+    color: #dedede;
+    background-color: rgba(0,0,0,0);
+    border: 1px solid rgba(0,0,0,0);
+
+    &--danger {
+        color: #fff;
+        background-color: #e3503e;
+        border-color: #dd3520;
+
+        &:hover {
+            background-color: #C44333;
+            border-color: #B82715;
+        }
+    }
+
+    &--hidden-down {
+        max-height: 0;
+        opacity: 0;
+    }
+
+    &--ready-size {
+        margin-top: 30px;
+        padding: .7em 1.5rem !important;
+    }
+
+    &--mini-card {
+        @include transition(all .2s ease);
+        @include user-select;
+        position: absolute !important;
+        left:0;
+        bottom: -15px !important;
+        padding: 10px !important;
+    }
+
+    &__card {
+        @include transition(background-color .1s linear);
+        background-color: rgb(237, 113, 158);
+        border-radius: 25px;
+        border-style: solid;
+        border-width: 0px;
+        border-color: rgb(229, 50, 116);
+        padding-top: 8px;
+        padding-bottom: 8px;
+        padding-left: 20px;
+        padding-right: 20px;
+        font-size: 14px;
+        color: #fff;
+
+        &:hover {
+            background-color: rgb(187, 113, 158);
+        }
+
+        .icon {
+            @include size(18px);
+            margin-right: 7px;
+
+            svg {
+                @include size(20px);
+                margin-bottom: -5px;
+            }
+        }
+
+        &--primary {
+            position: relative;
+            padding: 1.2em 2.5rem;
+            color: #000;
+            background: linear-gradient(10deg,#daa676 30%,#e7c19d);
+            border-color: rgba(0,0,0,0);
+            overflow: hidden;
+
+            span {
+                position: relative;
+                pointer-events: none;
+                font-size: 18px;
+            }
+
+            &:hover {
+                background: #daa676;
+                border-color: rgba(0,0,0,0);
+            }
+        }
+
+        &--next-step {
+            padding: .9em 2rem;
+            margin-top: 30px;
+        }
+    }
+    &--block {
+        width: 100%;
+    }
+
+    &__transparent-btn {
+        color: #fff;
+        background-color: rgba(0,0,0,0);
+        border: 1px solid #fff;
+        margin-top: 0;
+        font-weight: 300;
+
+        &:hover {
+            border: 1px solid $hover-link-old-price;
+            color: $hover-link-old-price;
+        }
+    }
+}
+
+.inCart {
+    background: linear-gradient(10deg,#916338 30%,#C78F5A);
+}
+
+@include mq("tablet-small", "max") {
+    .Button--block {
+        width: 100%;
+    }
+}

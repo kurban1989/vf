@@ -1,0 +1,25 @@
+<% table.forEach(function(item){ %>
+<% var imgPreview; %>
+<div class="Content-table__row js-removeRow">
+    <div class="Content-table__cell">
+        <input type="checkbox" class="Content-table__filter--form-control checkbox" name="selected[]" data-product_id="<%=item.id%>">
+    </div>
+    <% if(item.images && item.images != '' && item.images.length > 5) {imgPreview = item.images.split(','); %>
+    <div class="Content-table__cell"><img class="preview" src="<%- imgPreview[0] %>" alt=""></div>
+    <%} else {%>
+    <div class="Content-table__cell"><img class="preview" src="/img/svg/no-photo.svg" alt=""></div>
+    <% } %>
+    <div class="Content-table__cell"><p class="text"><%- item.title %></p></div>
+    <div class="Content-table__cell"><p class="text"><%- item.vendor %></p></div>
+    <div class="Content-table__cell"><p class="text"><%- item.category %></p></div>
+    <div class="Content-table__cell"><p class="text"><span class="price"><%= item.price %> </span><br> <span class="old-price"><%= item.old_price %> </span></p></div>
+    <div class="Content-table__cell"><p class="text"><% if(item.visible == 1) {%> Да <%} else {%> Нет <% } %></p></div>
+    <div class="Content-table__cell"><p class="text"><%- item.discription %></p></div>
+    <div class="Content-table__cell"><p class="text"><%= item.stock_count %></p></div>
+    <div class="Content-table__cell">
+        <button class="Content-table__add-btn js-btnAddProd" title="Редактирование товара" style="font-size: 14px;" data-src="setNewWindowAdd" data-product_id="<%=item.id%>">
+            <svg class="pensal" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 22 20" enable-background="new 0 0 22 20" xml:space="preserve"><g><path fill="#fff" d="M17.73,3.27c-1.48-1.48-2.591-1.258-2.591-1.258L9.958,7.193l-5.922,5.922L3,18l4.885-1.036l5.922-5.922 l5.182-5.181C18.988,5.861,19.21,4.75,17.73,3.27z M7.594,16.377l-1.665,0.359c-0.161-0.301-0.354-0.601-0.709-0.956 c-0.354-0.354-0.655-0.547-0.956-0.709l0.359-1.665l0.481-0.482c0,0,0.906,0.018,1.929,1.042c1.023,1.023,1.042,1.93,1.042,1.93 L7.594,16.377z"></path></g></svg>
+        </button>
+    </div>
+</div>
+<% }) %>

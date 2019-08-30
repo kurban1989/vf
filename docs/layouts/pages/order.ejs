@@ -1,0 +1,237 @@
+<div class="Container">
+    <div class="Nav__handler--logo Order-main__logo">
+        <a href="/" title="Главная страница" class="a-logo"></a>
+        <div class="Nav__handler--inner">
+            <span>
+                <span style="color: rgb(244, 155, 193);">V</span>
+                <span style="color: rgb(245, 153, 157);">a</span>
+                <span style="color: rgb(239, 110, 168);">n</span>
+                <span style="color: rgb(241, 109, 126);">i</span>
+                <span style="color: rgb(158, 0, 92);">t</span>
+                <span style="color: rgb(238, 16, 90);">y</span>
+                <span style="color: rgb(241, 109, 126);">F</span>
+                <span style="color: rgb(239, 110, 168);">a</span>
+                <span style="color: rgb(245, 153, 157);">i</span>
+                <span style="color: rgb(244, 155, 193);">r</span>
+            </span>
+        </div>
+    </div>
+    <div class="Order-main__wrapper">
+        <div class="Order-main">
+            <div class="Order-main__header">
+                <ul class="Order-breadcrumb">
+                    <li class="Order-breadcrumb__item Order-breadcrumb__item--current">
+                        <span class="Order-breadcrumb__text" aria-current="step">Адрес</span>
+                        <div class="line"></div>
+                    </li>
+                    <li class="Order-breadcrumb__item Order-breadcrumb__item--blank">
+                        <span class="Order-breadcrumb__text" aria-current="step">Доставка</span>
+                        <div class="line"></div>
+                    </li>
+                    <li class="Order-breadcrumb__item Order-breadcrumb__item--blank">
+                        <span class="Order-breadcrumb__text" aria-current="step">Оплата</span>
+                    </li>
+                </ul>
+                <h1 class="h2 Order-main--header">&nbsp;Оформление заказа</h1>
+            </div>
+
+            <div class="Order-main__step2 is-hidden" style="display: block;">
+                <div class="Product__content-box">
+                    <div class="Product__content-box--row">
+                        <div class="Product__content-box--review-block">
+                            <div class="Product__content-box--inner">
+                                <span class="Product__content-box--label">Контактный Email:</span>
+                                <span class="Product__content-box--content js-contentEmail"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="Product__content-box--row">
+                        <div class="Product__content-box--review-block review-line">
+                            <div class="Product__content-box--inner">
+                                <span class="Product__content-box--label">Контактный телефон:</span>
+                                <span class="Product__content-box--content js-contentPhone"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="Product__content-box--row">
+                        <div class="Product__content-box--review-block review-line">
+                            <div class="Product__content-box--inner">
+                                <span class="Product__content-box--label">Адрес доставки:</span>
+                                <span class="Product__content-box--content js-contentDelivery"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <br>
+                <h3>Данные по доставке</h3>
+                <div class="Product__content-box">
+                    <div class="Product__content-box--row">
+                        <div class="Product__content-box--review-block">
+                            <div class="Product__content-box--inner">
+                                <span class="Product__content-box--content" style="text-align: left;">Экспресс доставка:&nbsp;
+                                    <span class="js-dayDelivery"></span>
+                                </span>
+                                <span class="Product__content-box--accessory">
+                                    <span class="Product__content-box--emphasis js-costDelivery"></span>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="Order-step__sections--half">
+                    <span class="Order-main--link"><a href="javascript:void(0);" class="js-returnInfo"><p>&larr; Вернуться к полям информации</p></a></span>
+                </div>
+                <div class="Order-step__sections--half">
+                    <button class="Button__card--primary Button--block Button__card--next-step js-goToPay" type="button"><span>Перейти к оплате</span></button>
+                </div>
+            </div>
+
+            <div class="Order-main__content">
+                <div class="Order-main--step" data-step="contact_information">
+                    <form action="" id="checkoutStep1" style="margin: 0;">
+                        <div class="Order-step__sections">
+                            <div class="Order-main__header--sections">
+                                <span>Контактная информация</span> <span>&nbsp;Уже есть аккаунт? <a href="/account/login" class="Order-main__header--sigin">Войти</a></span>
+                            </div>
+                        </div>
+
+                        <div class="Order-step__sections">
+                            <input placeholder="Email" autocapitalize="off" spellcheck="false" autocomplete="shipping email" aria-required="true" class="Order-input" size="30" type="email" name="checkoutEmail" id="checkout_email">
+                        </div>
+                        <div class="Order-step__sections">
+                            <div class="Order-step__sections--half">
+                                <input placeholder="Имя" autocapitalize="off" spellcheck="false" autocomplete="shipping efirst_namemail" aria-required="true" class="Order-input" size="30" type="text" name="checkoutFirst_name" id="checkout_first_name">
+                            </div>
+                            <div class="Order-step__sections--half">
+                                <input placeholder="Фамилия" autocapitalize="off" spellcheck="false" autocomplete="shipping last_name" aria-required="true" class="Order-input Order-step__sections--right" size="30" type="text" name="checkoutLast_name" id="checkout_last_name">
+                            </div>
+                        </div>
+                        <div class="Order-step__sections">
+                            <div class="Order-main__header--sections">
+                                <span style="font-weight: 200;">Адрес доставки</span>
+                            </div>
+                        </div>
+                        <div class="Order-step__sections">
+                            <input placeholder="Организация (опционально)" autocomplete="shipping organization" class="Order-input" size="30" type="text" name="checkoutCompany" id="checkout_shipping_address_company">
+                        </div>
+                        <div class="Order-step__sections" style="position: relative;">
+                            <input placeholder="Регион / Область доставки" aria-required="true" autocomplete="shipping region" class="Order-input js-keyPopup" size="30" type="text" name="checkoutRegion" id="checkout_shipping_region">
+                            <input type="text" class="is-hidden" name="checkoutRegionCode">
+                            <ul class="Content-table__dropdown-menu js-categoryPopup"></ul>
+                        </div>
+                        <div class="Order-step__sections" style="position: relative;">
+                            <input placeholder="Город" aria-required="true" autocomplete="shipping city" class="Order-input js-keyPopup" size="30" type="text" name="checkoutCity" id="checkout_shipping_city">
+                            <ul class="Content-table__dropdown-menu js-categoryPopup"></ul>
+                        </div>
+                        <div class="Order-step__sections">
+                            <input placeholder="Номер телефона" aria-required="true" autocomplete="shipping phone" class="Order-input js-numberFormat" size="30" type="text" name="checkoutPhone" id="checkout_shipping_phone">
+                        </div>
+                        <div class="Order-step__sections">
+                            <div class="Order-step__sections--half">
+                                <input placeholder="Почтовый индекс" aria-required="true" autocomplete="shipping postal_code" class="Order-input js-numberFormat" data-type="number" type="text" name="checkoutPostalCode" id="checkout_shipping_postal_code">
+                            </div>
+                        </div>
+                        <div class="Order-step__sections--half">
+                            <span class="Order-main--link"><a href="/cart/"><p>&larr; Вернуться в корзину</p></a></span>
+                        </div>
+                        <div class="Order-step__sections--half">
+                            <button class="Button__card--primary Button--block Button__card--next-step js-nextCheckout" type="submit">
+                                <div class="Order-main__loade-wrap js-preloaderOrder">
+                                    <div class="loader"></div>
+                                </div>
+                                <span>Продолжить</span>
+                            </button>
+                        </div>
+                        <input type="text" class="is-hidden" name="sum_checkout" value="<%= totalSum %>">
+                    </form>
+                </div>
+            </div>
+        </div>
+
+    <div class="Order-sidebar__mobile js-toggleSidebar">
+        <span class="wrap">
+            <span class="Order-sidebar__mobile--inner">
+                <span class="Order-sidebar__mobile--icon-wrapper">
+                    <svg width="20" height="19" xmlns="http://www.w3.org/2000/svg" class="order-summary-toggle-icon">
+                      <path d="M17.178 13.088H5.453c-.454 0-.91-.364-.91-.818L3.727 1.818H0V0h4.544c.455 0 .91.364.91.818l.09 1.272h13.45c.274 0 .547.09.73.364.18.182.27.454.18.727l-1.817 9.18c-.09.455-.455.728-.91.728zM6.27 11.27h10.09l1.454-7.362H5.634l.637 7.362zm.092 7.715c1.004 0 1.818-.813 1.818-1.817s-.814-1.818-1.818-1.818-1.818.814-1.818 1.818.814 1.817 1.818 1.817zm9.18 0c1.004 0 1.817-.813 1.817-1.817s-.814-1.818-1.818-1.818-1.818.814-1.818 1.818.814 1.817 1.818 1.817z"></path>
+                    </svg>
+                </span>
+            </span>
+            <span class="Order-sidebar__mobile--text-show">
+                <span class="js-textShow1">Показать детали заказа&nbsp;&nbsp;</span>
+                <span class="js-textShow2 is-hidden">Скрыть детали заказа&nbsp;&nbsp;</span>
+                <svg width="11" height="7" xmlns="http://www.w3.org/2000/svg" class="order-summary-toggle-icon js-toggleIcon"><path d="M.504 1.813l4.358 3.845.496.438.496-.438 4.642-4.096L9.504.438 4.862 4.534h.992L1.496.69.504 1.812z"></path></svg>
+            </span>
+
+            <span class="Order-sidebar__mobile--total-recap">
+                <span class="js-totalSumAfter"><%- totalSum %>&nbsp;</span>
+            </span>
+        </span>
+    </div>
+
+        <div class="Order-sidebar">
+            <div class="Order-sidebar__sections js-sidebar">
+                <div class="Order-sidebar__section Order-sidebar__section--product-list">
+                    <div class="Order-sidebar__content">
+                        <table class="Product-table">
+                            <% arrOrder.forEach(function(item){ %>
+                            <tr class="Product" data-product-id="<%- item.id %>">
+                                <td class="Product__image">
+                                    <div class="Product__thumbnail">
+                                        <div class="Product__thumbnail--wrapper">
+                                            <img src="<%- item.img %>" alt="" class="Product__thumbnail--image">
+                                        </div>
+                                        <span class="Product__quantity" aria-hidden="true"><%- item.quantity %></span>
+                                    </div>
+                                </td>
+                                <td class="Product__description">
+                                    <div class="Product__description--title">
+                                        <%- item.title %>
+                                    </div>
+                                    <div class="Product__description--variant Product__small-text">
+                                        <%- item.size %>
+                                    </div>
+                                </td>
+                                <td class="Product__price">
+                                    <div class="Product__price--table"><span><%- item.sum %>&nbsp;</span></div>
+                                </td>
+                            </tr>
+                            <% }); %>
+                        </table>
+
+                        <div class="Order-sidebar__summary-section">
+                            <table class="Product-table__total-line">
+                                <tr>
+                                    <th scope="row">Подитог</th>
+                                    <td class="Product-table__total-line--price">
+                                        <span class="js-preSum"><%- totalSum %>&nbsp;</span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Доставка</th>
+                                    <td>
+                                        <span class="Product__small-text js-costDelivery">Стоимость доставки будет расчитана на следующем шаге</span>
+                                    </td>
+                                </tr>
+                                <tfoot>
+                                    <tr>
+                                        <th class="Product-table__total-line--footer">
+                                            <span class="payment-due-label__total">Всего</span>
+                                        </th>
+                                        <td class="Product-table__total-line--price Product-table__total-line--bold Product-table__total-line--footer">
+                                            <span class="js-totalSumAfter"><%- totalSum %>&nbsp;</span>
+                                        </td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

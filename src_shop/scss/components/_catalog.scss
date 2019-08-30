@@ -1,0 +1,6 @@
+.Catalog {
+    position: relative;
+    @include size(100vw, auto);
+    padding: 20px 0;
+    background: #fff;
+}

@@ -1,0 +1,20 @@
+<nav class="mobile-nav js-mobileNav" aria-label="Mobile menu">
+    <div class="mobile-nav__wrapper">
+        <ul class="mobile-nav__list mobile-nav__list--primary">
+            <% if(checkNewCat) { %>
+            <li><a href="/collection/new" class="mobile-nav-item">New<img src="/img/jpg/test777.jpg" alt=""></a></li>
+            <% } %>
+
+            <% items.forEach(function(item){ %>
+            <li><a href="/collection/<%= item.name %>" class="mobile-nav-item"><%= item.name %><img src="<%= item.images %>" alt=""></a></li>
+            <% }) %>
+        </ul>
+        <ul class="mobile-nav__list mobile-nav__list--secondary">
+            <li><a href="/account/login" class="mobile-nav-item">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="15" height="16.5" viewBox="0 0 15 16.5"><title>Вход/Регистрация</title><path d="M10.5,9A3.5,3.5,0,1,0,7,5.5,3.5,3.5,0,0,0,10.5,9Zm0-6A2.5,2.5,0,1,1,8,5.5,2.5,2.5,0,0,1,10.5,3Z" transform="translate(-3 -2)" stroke="#fff"></path><path d="M10.5,11A7.5,7.5,0,0,0,3,18.5H4a6.5,6.5,0,0,1,13,0h1A7.5,7.5,0,0,0,10.5,11Z" transform="translate(-3 -2)" stroke="#fff"></path></svg>
+                    <p><a href="/account/login" style="color:#fff;">&nbsp;&nbsp;Авторизоваться</a></p>
+                </a>
+            </li>
+        </ul>
+    </div>
+</nav>

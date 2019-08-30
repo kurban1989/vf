@@ -1,0 +1,41 @@
+<div class="Modal__sizes">
+    <button type="button" class="action-close" data-dismiss="modal">×</button>
+    <div class="Modal__middle">
+        <h4>Выберите размер</h4>
+
+        <% if(sizesBra && sizesBra.length > 0) { %>
+            <div class="Options-size">
+                <select name="sizeBra" id="optionOfBra">
+                    <option value="" style="font-size: 15px;color: #989595;">размер bra ( бюзгальтер )</option>
+                    <% sizesBra.forEach(function(item){ %>
+                    <option value="<%- item %>"><%- item %></option>
+                    <% }) %>
+                </select>
+                <div class="is-selected is-hidden">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="9.19" height="8.24" viewBox="0 0 9.19 8.24"><title>icon-tick</title><path d="M4.84,9.94,1.61,6.65a.5.5,0,0,1,0-.71.49.49,0,0,1,.7,0L4.75,8.42l5-6.52a.5.5,0,1,1,.79.61Z" transform="translate(-1.47 -1.71)"></path></svg>
+                Выбрано
+                </div>
+            </div>
+        <% } %>
+        
+        <div class="Options-size">
+            <select name="size" id="optionOfSize">
+                <option value="" style="font-size: 15px;color: #989595;">
+                    <% if(sizesBra && sizesBra.length > 0) { %>
+                        размер трусов
+                    <% } else { %> 
+                        размеры 
+                    <% } %> 
+                </option>
+                <% sizes.forEach(function(item){ %>
+                <option value="<%- item %>"><%- item %></option>
+                <% }) %>
+            </select>
+            <div class="is-selected is-hidden">
+                <svg xmlns="http://www.w3.org/2000/svg" width="9.19" height="8.24" viewBox="0 0 9.19 8.24"><title>icon-tick</title><path d="M4.84,9.94,1.61,6.65a.5.5,0,0,1,0-.71.49.49,0,0,1,.7,0L4.75,8.42l5-6.52a.5.5,0,1,1,.79.61Z" transform="translate(-1.47 -1.71)"></path></svg>
+            Выбрано
+            </div>
+        </div>
+        <button class="Button__card--primary Button--block Button--ready-size js-add2cart" data-product_id="<%- pid %>" disabled><span>В корзину</span></button>
+    </div>
+</div>

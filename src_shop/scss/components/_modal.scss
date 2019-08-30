@@ -1,0 +1,144 @@
+.Modal {
+    @include transition(all 0.2s linear);
+    @include transform-origin(top);
+    @include scale(0);
+
+    display: inline-block;
+    position: relative;
+    top: 0;
+    background: #D0CFCF;
+    background-size: cover;
+    vertical-align: middle;
+    border-radius: 5px;
+    overflow: hidden;
+
+    h3 {
+        margin: 0;
+        padding-top: 16px;
+        color: #fff;
+    }
+
+    &__just-msg {
+        margin-top: 5px;
+        font-weight: 300;
+        max-width: 280px;
+        word-wrap: break-word;
+        white-space: normal;
+        text-align: left;
+        color: $hover-link !important;
+    }
+
+    &__sizes {
+        position: relative;
+        background: #000;
+        display: inline-block;
+        position: relative;
+        vertical-align: middle;
+        border: 1px solid #ccc;
+        padding: 40px;
+        color: #fff;
+
+        .action-close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            -webkit-appearance: none;
+            padding: 0;
+            cursor: pointer;
+            background: 0 0;
+            border: 0;
+            float: right;
+            font-size: 21px;
+            font-weight: 700;
+            line-height: 1;
+            color: #000;
+            text-shadow: 0 1px 0 #fff;
+            color: #ccc;
+
+            &:hover {
+                color: #F1DDC7;
+            }
+        }
+    }
+
+    &--enter {
+        width: 510px;
+        height: 210px;
+    }
+
+    &__container {
+        padding: 16px;
+        min-width: 200px;
+        text-align: left;
+        white-space: normal;
+
+        &--light-bg {
+            background: rgba(0, 0, 0, 0.4);
+        }
+    }
+
+    &__header {
+        width: 100%;
+        height: 70px;
+        border-bottom: 1px solid #A4A4A4;
+        background: -webkit-linear-gradient(bottom, rgba(101, 101, 144, 0.5), rgba(89, 93, 117, 0.5));
+        background: -o-linear-gradient(bottom, rgba(101, 101, 144, 0.5), rgba(89, 93, 117, 0.5));
+        background: linear-gradient(to top, rgba(101, 101, 144, 0.5), rgba(89, 93, 117, 0.5));
+        color: #fff;
+        vertical-align: middle;
+        text-align: center;
+    }
+
+    &__middle {
+        margin: 1px auto;
+        text-align: center;
+        width: auto;
+        height: auto;
+        padding: 5px;
+
+        h4 {
+            margin: 10px auto;
+            text-align: center;
+            font-size: 18px;
+            color: $hover-link;
+        }
+
+        p {
+            color: $color-black;
+        }
+    }
+
+    &--close {
+        height: 44px;
+        width: 44px;
+        background-image: url('#{$path-svg}/cross_s.svg');
+        background-repeat: no-repeat;
+        background-size: contain;
+        position: absolute;
+        border: 1px solid #8C8C8C;
+        border-radius: 50%;
+        cursor:pointer;
+        right: 14px;
+        top: 12px;
+        &:hover {
+           border: 1px solid #fff;
+           background-image: url('#{$path-svg}/cross_s-hover.svg');
+        }
+     }
+}
+
+@include mq("tablet", "max") {
+    .Modal {
+        &--enter {
+            width: 400px;
+            height: 280px;
+        }
+        &__container {
+            margin: 10px;
+            padding: 10px;
+        }
+        &__sizes {
+            padding: 20px;
+        }
+    }
+}

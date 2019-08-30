@@ -1,0 +1,30 @@
+<div class="Cart">
+    <div class="Cart__header">
+        <div class="Cart__title">
+            <span class="Cart__bag js-cartIcon">
+                <span class="bag-icon-empty">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="15" height="17" viewBox="0 0 15 17"><title>icon-bag</title><path d="M3.59,4.57V4a3.91,3.91,0,1,1,7.82,0v.61h2.65L15,17H0L.94,4.57Zm1,0h5.82V4A2.91,2.91,0,1,0,4.59,4Zm-2.73,1L1.08,16H13.92L13.14,5.58Z"></path></svg>
+                </span>
+            </span>
+        </div>
+        <button type="button" class="Cart__close js-cartToggle"><svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" width="13.64" height="13.64" viewBox="0 0 13.64 13.64"><path d="M3.4,3.6a.49.49,0,0,1,.7-.7L16.75,15.51a.5.5,0,0,1-.71.71h0Z" transform="translate(-3.25 -2.75)"></path><path d="M16,2.9a.5.5,0,0,1,.71,0h0a.5.5,0,0,1,0,.7L4.1,16.25a.5.5,0,0,1-.7,0,.5.5,0,0,1,0-.71h0Z" transform="translate(-3.25 -2.75)"></path></svg></button>
+    </div>
+    <div class="Cart__shipping">
+        <p class="Cart__shipping--p">
+            Осуществляем доставку в любой регион.
+        </p>
+    </div>
+    <div class="Cart__body js-scrollContent">
+        <div class="Cart__empty js-cartEmpty"><p class="Cart__payment-header">Ваша корзина пуста ...</p></div><div class="js-insertInCartProd"></div>
+    </div>
+    <div class="Cart__footer">
+        <div class="Cart__total">
+            <div class="Cart__subtotal">Промежуточный итог</div>
+            <div class="Cart__subtotal money js-moneyTotal">0</div>
+        </div>
+        <br>
+        <button class="Button__card--primary Button--block" onclick="window.location.href='/order/';">
+            <span>Оформить заказ</span>
+        </button>
+    </div>
+</div>

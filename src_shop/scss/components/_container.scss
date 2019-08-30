@@ -1,0 +1,195 @@
+.Container {
+    max-width: 1150px;
+    padding:2px 0;
+    margin: 0 auto;
+
+    &--center {
+        text-align: center;
+        vertical-align: top;
+        margin-top: 20px;
+        background-color: #000;
+        padding: 10px;
+    }
+
+    &--left {
+        margin-left: 5px;
+        vertical-align: top;
+        margin-top: 15px;
+        text-align: left;
+    }
+
+    &__big-logo {
+        @include size(100%, auto);
+        margin-top: 30px;
+        padding: 20px 0;
+
+        p {
+            letter-spacing: 2em;
+            text-align: center;
+        }
+
+        .big-font {
+            font-size: 104px;
+            font-weight: 100;
+        }
+    }
+
+    &__top {
+        padding-top: 65px;
+
+        &--large {
+            padding-top: 100px;
+        }
+    }
+
+    &__row {
+        @include flexbox;
+        @include flex-flow;
+        margin-right: -20px;
+        margin-left: -20px;
+    }
+
+    &__col-1of2 {
+        -ms-flex: 0 0 auto;
+        -webkit-flex: 0 0 auto;
+        flex: 0 0 auto;
+        flex-basis: 50%;
+        max-width: 50%;
+        padding-right: 20px;
+        padding-left: 20px;
+    }
+
+    &__col-lg {
+        flex-basis: 41.6%;
+        max-width: 41.6%;
+    }
+
+    &__collection {
+        @include flexbox;
+        @include justify-content(center);
+        @include size(100%, auto);
+        position: relative;
+        padding-bottom: 15px;
+    }
+
+    &__offset-left {
+        margin-left: 16.66666667%;
+        flex: 0 0 auto;
+        padding-right: 20px;
+        padding-left: 20px;
+    }
+
+    &__galary-1 {
+        @include size(31.3%, 860px);
+        position: relative;
+
+        img {
+            @include size(100%);
+        }
+    }
+
+    &__galary-center {
+        @include flex(1 0 70%);
+    }
+
+    &__new-collection {
+        position: absolute;
+        top: 50%;
+        left: 0;
+        @include size(100%, 80px);
+        background-color: rgba(20, 25, 15, 0.7);
+        text-align: center;
+
+        &--custom {
+            position: relative !important;
+            @include size(100%, auto);
+            background-color: rgba(10, 10, 10, 0.85);
+            display: inline-block;
+            vertical-align: middle;
+            white-space: nowrap;
+            padding: 25px;
+            visibility: hidden;
+
+            .inner {
+                text-align: center;
+                letter-spacing: 11px;
+                font-size: 32px;
+                font-weight: 100;
+                text-transform: uppercase;
+                margin-bottom: 20px;
+            }
+        }
+
+        p {
+            color: #fff;
+            font-size: 28px;
+            font-weight: 200;
+            display: inline-block;
+            vertical-align: middle;
+            text-align: center;
+            white-space: nowrap;
+        }
+    }
+}
+
+/*=== breakpoints ===*/
+@include mq("desktop", "max") {
+    .Container {
+        max-width: 1020px;
+         &__top {
+            padding-top: 55px;
+        }
+    }
+}
+
+@include mq("tablet-small", "max") {
+    .Container{
+        &__top {
+            padding-top: 20px;
+        }
+        &__row {
+            @include flex-flow(column wrap);
+        }
+        &__col-1of2 {
+            flex-basis: 100%;
+            max-width: 100%;
+        }
+        &__col-lg {
+            flex-basis: 100%;
+            max-width: 100%;
+        }
+        &__table-cart {
+            width: 100%;
+            margin-right: auto;
+            margin-left: auto;
+            padding-right: 20px;
+            padding-left: 20px;
+        }
+        &--left {
+            text-align: center;
+        }
+    }
+}
+
+@include mq("tablet-small", "max") {
+    .Container__top {
+        padding-top: 35px;
+        &--large {
+            padding-top: 60px;
+        }
+    }
+
+    .Container__offset-left {
+        display: none;
+    }
+}
+@include mq("phone-wide", "max") {
+    .Container__top {
+        padding-top: 20px;
+    }
+}
+@include mq("appleSE", "max") {
+    .Container__top {
+        padding-top: 10px;
+    }
+}

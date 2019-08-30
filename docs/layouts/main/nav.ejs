@@ -1,0 +1,58 @@
+<header class="Nav-bg">
+<div class="Container">
+     <nav class="Nav">
+        <div class="Nav__mob-menu js-mobMenu">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+        <div class="Nav__handler">
+        </div>
+        <div class="Nav__handler Nav__handler--logo">
+            <a href="/" title="Главная страница" class="a-logo"></a>
+            <div class="Nav__handler--inner">
+                <span>
+                    <span style="color: rgb(244, 155, 193);">V</span>
+                    <span style="color: rgb(245, 153, 157);">a</span>
+                    <span style="color: rgb(239, 110, 168);">n</span>
+                    <span style="color: rgb(241, 109, 126);">i</span>
+                    <span style="color: rgb(158, 0, 92);">t</span>
+                    <span style="color: rgb(238, 16, 90);">y</span>
+                    <span style="color: rgb(241, 109, 126);">F</span>
+                    <span style="color: rgb(239, 110, 168);">a</span>
+                    <span style="color: rgb(245, 153, 157);">i</span>
+                    <span style="color: rgb(244, 155, 193);">r</span>
+                </span>
+            </div>
+        </div>
+        <div class="Nav__handler Flex-standart Flex-standart--end-align">
+            <div class="Nav__handler--actions">
+                <a href="/account/login" class="Nav__handler--login">
+                <svg xmlns="http://www.w3.org/2000/svg" width="15" height="16.5" viewBox="0 0 15 16.5"><title>Вход/Регистрация</title><path d="M10.5,9A3.5,3.5,0,1,0,7,5.5,3.5,3.5,0,0,0,10.5,9Zm0-6A2.5,2.5,0,1,1,8,5.5,2.5,2.5,0,0,1,10.5,3Z" transform="translate(-3 -2)" stroke="#fff"></path><path d="M10.5,11A7.5,7.5,0,0,0,3,18.5H4a6.5,6.5,0,0,1,13,0h1A7.5,7.5,0,0,0,10.5,11Z" transform="translate(-3 -2)" stroke="#fff"></path></svg>
+                </a>
+            </div>
+            <div class="Nav__handler--actions">
+                <span onclick="alert('Пока доступна только Русскоязычная версия сайта.')">RU&nbsp;&#9660;</span>
+            </div>
+            <div class="Nav__handler--actions js-cartToggle js-cartIcon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="15" height="17" viewBox="0 0 15 17"><title>Корзина</title><path d="M3.59,4.57V4a3.91,3.91,0,1,1,7.82,0v.61h2.65L15,17H0L.94,4.57Zm1,0h5.82V4A2.91,2.91,0,1,0,4.59,4Zm-2.73,1L1.08,16H13.92L13.14,5.58Z" fill="#fff" stroke="#fff"></path></svg>
+            </div>
+        </div>
+
+        <div class="Nav__mob-card">
+            <div class="Nav__handler--actions js-cartToggle js-cartIcon"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="17" viewBox="0 0 15 17"><title>Корзина</title><path d="M3.59,4.57V4a3.91,3.91,0,1,1,7.82,0v.61h2.65L15,17H0L.94,4.57Zm1,0h5.82V4A2.91,2.91,0,1,0,4.59,4Zm-2.73,1L1.08,16H13.92L13.14,5.58Z" fill="#fff" stroke="#fff"></path></svg></div>
+        </div>
+    </nav>
+    <div class="Flex-standart Menu">
+        <ul class="Menu__items">
+            <% if(checkNewCat) { %>
+                <li class="Menu__item js-mouseSee" role="menuitem"><a href="/collection/new" title="Новинки"><p>New</p></a></li>
+            <% } %>
+            <% list.forEach(function(item){ %>
+            <li class="Menu__item js-mouseSee" role="menuitem"><a href="/collection/<%= item.name %>" title="Перейти в каталог <%= item.name %>"><p><%= item.name %></p></a></li>
+            <% }) %>
+        </ul>
+    </div>
+</div>
+</header>
+<%- items%>

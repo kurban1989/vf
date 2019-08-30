@@ -1,0 +1,37 @@
+@charset "UTF-8";
+
+$prefix-for-webkit:    true !default;
+$prefix-for-mozilla:   true !default;
+$prefix-for-microsoft: true !default;
+$prefix-for-opera:     true !default;
+$prefix-for-spec:      true !default;
+
+/* Пути
+   ========================================================================== */
+
+$path-base:   '/dist';
+$path-fonts:  '#{$path-base}/fonts';
+$path-images: '/img';
+$path-jpg:    '#{$path-images}/jpg';
+$path-svg:    '#{$path-images}/svg';
+$path-png:    '#{$path-images}/png';
+$font-Roboto: 'Roboto', sans-serif;
+$font-base:   $font-Roboto;
+
+$slick-font-path: "./fonts/" !default;
+
+/* цвет */
+$color-green: #76bc21;
+$color-blue: #c7d3ff;
+$color-white: #fff;
+$color-yellow: #FFEA00;
+$color-black: #222;
+$color-light-blue: #eeedff;
+$color-dark-blue: #08008C;
+$hover-link: #daa676;
+$hover-link-old-price: #BEA995;
+$color-white-dark: #ddd;
+$color-gray: #848484;
+$color-gray-light: #A3A3A3;
+
+$breakpoints: ( "appleSE": 321px, "phone": 400px, "phone-wide": 480px, "phablet": 560px, "tablet-small": 640px, "Ipad": 768px, "tablet": 980px, "tablet-middle": 960px, "tablet-wide": 1024px, "desktop": 1248px, "desktop-wide": 1440px);
