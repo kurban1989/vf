@@ -264,6 +264,7 @@ db.setData('vfuser', dataUser).then(async (result) => {
   result.token = token;
   res.cookie('ust', token, { domain: '.'+config.domain, path: '/', expires: expires});
   res.send(JSON.stringify(result))
+  
 })
 .catch(function(err) { res.send(err) });
 

@@ -166,7 +166,6 @@
 
     &__inner {
         @include flexbox;
-        padding-top: .5rem;
         padding-bottom: 1rem;
         margin-bottom: .5rem;
         border-bottom: 1px solid #2b2b2b;
