@@ -129,7 +129,7 @@ $(document).on('click', '.js-removeFromCart', function(e) {
         .prop('disabled', false)
         .html('<span>Выбрать размеры</span>')
         .removeClass('inCart');
-        $('.Nav__cart-count').text(getCookie('total_in_cart'));// Общее кол-во единиц товара в корзине
+        $('.Nav__cart-count').text(getCookie('total_in_cart')); /* Общее кол-во единиц товара в корзине */
         if (getCookie('total_sum_in_cart') == '0') {
             $('.js-cartEmpty').show();
         }

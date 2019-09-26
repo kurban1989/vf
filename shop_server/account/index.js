@@ -7,6 +7,7 @@ const router = express.Router();
 const utils = require('../utils');
 const util = new utils();
 const db = require("mysql_models");
+const {mailer, testMailer} = require("mailer");
 const auth = require("auth");
 const fs = require('fs'); // Модуль для чтения файлов
 const mobileMenu = config.pagesPath + '/menu/mobile_menu.ejs'; // Путь до мобильного меню
@@ -67,7 +68,7 @@ switch(req.params.page) {
     break;
 }
 
-if(req.params.page === 'inside') {
+if (req.params.page === 'inside') {
   
   if (!req.cookies || !req.cookies.ust) {
     res.status(401).send("<p>Sorry, Unauthorized! <br><br> You need authorize!</p><br><p><b>Error 401 </b></p><br><br><a href='/account/login/'>LOGIN<a>");
@@ -76,8 +77,8 @@ if(req.params.page === 'inside') {
     const token = await db.getQuery('SELECT * FROM `sessions` WHERE `token_session`="' + req.cookies.ust + '";');
     const user = await db.getQuery('SELECT * FROM `vfuser` WHERE `id`=' + token[0].user_id + ';');
 
-    if(user.length > 0 && token.length > 0) {
-      if(user[0].prava === 'artem') {
+    if (user.length > 0 && token.length > 0) {
+      if (user[0].prava === 'artem') {
         optionsMain.admin = true
       }
     }
@@ -88,7 +89,7 @@ preRender(config.pagesPath, res)
       let checkNewCat = false;
       const checkNew = await db.getQuery('SELECT * FROM `products` WHERE `new`=1');
 
-      if(checkNew.length > 0) {
+      if (checkNew.length > 0) {
         checkNewCat = true;
       }
       // Рендер пунктов выпадашек
@@ -97,7 +98,7 @@ preRender(config.pagesPath, res)
       items : result,
       list: await db.getQuery('SELECT * FROM `category`'),
       }, function(err, html){
-          if(err) { throw new Error("this E: " + err); }
+          if (err) { throw new Error("this E: " + err); }
           optionsMain.nav  = html;
       });
   })
@@ -107,7 +108,7 @@ preRender(config.pagesPath, res)
         let checkNewCat = false;
         const checkNew = await db.getQuery('SELECT * FROM `products` WHERE `new`=1');
 
-        if(checkNew.length > 0) {
+        if (checkNew.length > 0) {
           checkNewCat = true;
         }
 
@@ -115,7 +116,7 @@ preRender(config.pagesPath, res)
         checkNewCat: checkNewCat,
         items : result,
         }, function(err, html){
-            if(err) { throw new Error("this E: " + err); }
+            if (err) { throw new Error("this E: " + err); }
             optionsMain.mobileMenu = html;
         });
       });
@@ -127,7 +128,7 @@ preRender(config.pagesPath, res)
       res.render(config.pagesPath + '/' + req.params.page + '.ejs',
       optionsMain,
       function(err, html){
-          if(err) {
+          if (err) {
             res.status(404).send("<p>Sorry can't find that you want!</p> <p><b>Error 404 </b></p><br><br><a href='/'>HOME<a>");
           }
           optionsMain.bodyMain = html;
@@ -142,7 +143,7 @@ preRender(config.pagesPath, res)
           res.send(util.replacerSpace(html)); // Обфускация HTML - delete space
       });
   })
-  .catch(function(err) { throw new Error(err); });
+  .catch((err) => { throw new Error(err); });
 });
 
 //// Аутентификация через вк ////
@@ -157,20 +158,20 @@ router.get('/vk/auth', function (request, response, next) {
   }
   // Тело запроса на сервер ВК
   const req = https.request(options, (res) => {
-    if(res.statusCode != 200) {
+    if (res.statusCode != 200) {
       response.status(res.statusCode).send('<b style="color:#C50606;font-size:20px;">Удалённый сервер не ответил правильно. Статус ответа: <i>' + res.statusCode + '</i></b>');
       throw new Error('Статус ответа: ' + res.statusCode);
     }
 
-    res.on('data', async (d) => {
-      const json = JSON.parse(d);
+    res.on('data', async (responceData) => {
+      const json = JSON.parse(responceData);
       const expires = new Date(Date.now() + 1000 * 60 * 60 * 2)
       let id = String(json.user_id);
       const hash = crypto.createHash('md5').update(id).digest('hex'); // Хэш MD5
 
       db.getQuerySafe('vfuser', 'hash_id', hash, 'equality').then( async (r) => {
 
-        if(!r[0] || r[0] === undefined) {
+        if (!r[0] || r[0] === undefined) {
           auth.setUser(d).then( async (result) => {
               result = JSON.parse(result);
               const dataUser = {
@@ -197,7 +198,7 @@ router.get('/vk/auth', function (request, response, next) {
             expire_at: expires
         });
 
-        response.cookie('ust', token, { domain: '.'+config.domain, path: '/', expires: expires});
+        response.cookie('ust', token, { domain: '.' + config.domain, path: '/', expires: expires});
         response.redirect(config.fullDomain + '/account/inside/')
 
       });
@@ -221,7 +222,7 @@ router.post('/login/', async function (req, res, next) {
   }
 
   db.getQueryManySafe('vfuser', dataUser).then( async (result) => {
-    if(result.length > 0) {
+    if (result.length > 0) {
       const token = uuidv1(req.body.email + new Date().getTime());
       const expires = new Date(Date.now() +  1000 * 60 * 60 * 2);
       const r = await db.setData('sessions', {
@@ -230,7 +231,7 @@ router.post('/login/', async function (req, res, next) {
           expire_at: expires
       });
 
-      res.cookie('ust', token, { domain: '.'+config.domain, path: '/', expires: expires});
+      res.cookie('ust', token, { domain: '.' + config.domain, path: '/', expires: expires});
 
       res.send(JSON.stringify({path: config.fullDomain + '/account/inside/'}));
       return
@@ -240,35 +241,61 @@ router.post('/login/', async function (req, res, next) {
   })
 });
 // Регистрация юзера в системе
-router.post('/reguser/', function (req, res, next) {
+router.post('/reguser', function (req, res, next) {
+  const salt = bcrypt.genSaltSync(10);
+  const originPassword = req.body.regpass
+  const dataUser = {
+    email: req.body.regemail,
+    first_name: req.body.regName,
+    last_name: req.body.regLastName,
+    password: crypto.createHash('md5').update(req.body.regpass).digest('hex'),
+    hash_id: bcrypt.hashSync(req.body.regemail + '$' + req.body.regemail, salt)
+  }
+  
+  const token = uuidv1(req.body.regemail + new Date().getTime());
+  
+  db.setData('vfuser', dataUser).then(async (result) => {
+    const expires = new Date(Date.now() +  1000 * 60 * 60 * 2)
 
-const salt = bcrypt.genSaltSync(10);
-const dataUser = {
-  email: req.body.regemail,
-  first_name: req.body.regName,
-  last_name: req.body.regLastName,
-  password: crypto.createHash('md5').update(req.body.regpass).digest('hex'),
-  hash_id: bcrypt.hashSync(req.body.regemail + '$' + req.body.regemail, salt)
-}
-
-const token = uuidv1(req.body.regemail + new Date().getTime());
-
-db.setData('vfuser', dataUser).then(async (result) => {
-  const expires = new Date(Date.now() +  1000 * 60 * 60 * 2)
-  const r = await db.setData('sessions', {
+    await db.setData('sessions', {
       user_id: result.insertId,
       token_session: token,
       expire_at: expires
-  });
+    })
+    .catch((err) => { throw new Error("sessions E: " + err) });
 
-  result.token = token;
-  res.cookie('ust', token, { domain: '.'+config.domain, path: '/', expires: expires});
-  res.send(JSON.stringify(result))
-  
-})
-.catch(function(err) { res.send(err) });
+    result.token = token;
+
+    // testMailer()
+    const message = getTemplateMail(Object.assign({}, {originPassword}, dataUser) )
+
+    mailer(message).then((resultMail) => {
+      console.log(resultMail)
+    })
+    res.cookie('ust', token, { domain: '.' + config.domain, path: '/', expires: expires});
+    res.send(JSON.stringify(result))
+
+  })
+  .catch((err) => { res.send(err) });
 
 });
+// Функция возвращающая объект письма для отправки
+function getTemplateMail (objectUser) {
+  let {email, originPassword} = objectUser
+
+  return {
+    from: '<vflingerierus@gmail.com>',
+    to: email.replace(/\'/g, ''),
+    subject: 'Поздравляем! Вы успешно прошли регистрацию на сайте ' + config.domain,
+    text: `Поздравляем с успешной регистрацией на нашем сайт красивого нижнего белья по индивидуальным меркам!
+    
+        Данные вашего аккаунта: 
+        login: ${email}
+        password: ${originPassword}
+        
+        Данное письмо создано автоматически и не требует ответа.`
+  }
+}
 // Пререндер Меню
 function preRender(path, res) {
   let args = null;

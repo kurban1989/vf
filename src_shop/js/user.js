@@ -10,8 +10,8 @@ $(document).on('click', '.js-createUser', function(e) {
 
     $(this).prop('disabled', true);
 
-    [].forEach.call(requiredData, function(item) {
-        if(item.value == '' || item.value.length == 1) {
+    [].forEach.call(requiredData, (item) => {
+        if (item.value == '' || item.value.length == 1) {
             item.classList.add('Error-input');
             err = true;
         } else {
@@ -19,18 +19,18 @@ $(document).on('click', '.js-createUser', function(e) {
         }
     });
 
-    if(err) {
+    if (err) {
         $(this).prop('disabled', false);
         return false;
     } else {
         dataObj = Object.assign({}, getFormData($('#formRegistr')));
     }
 
-    if(!testEmail($('#reg_email').val())) {
+    if (!testEmail($('#reg_email').val())) {
         $(this).prop('disabled', false);
         $('#reg_email').addClass('Error-input');
         return false;
-    } else if(dataObj.regpass != dataObj.regconfirmpass) {
+    } else if (dataObj.regpass != dataObj.regconfirmpass) {
         $(this).prop('disabled', false);
         $('.Fixed-overlay').show();
         $('body').addClass('no-scroll');
@@ -39,7 +39,7 @@ $(document).on('click', '.js-createUser', function(e) {
         return false;
     }
 
-    $.post('/account/reguser/', dataObj, (data, textStatus, xhr) => {
+    $.post('/account/reguser', dataObj, (data, textStatus, xhr) => {
         $(this).prop('disabled', false);
         $('.Fixed-overlay').show();
         $('body').addClass('no-scroll');
@@ -48,7 +48,7 @@ $(document).on('click', '.js-createUser', function(e) {
 
         setTimeout(function(args) {
             window.location.href='/account/inside/';
-        }, 3000)
+        }, 4000)
     });
 });
 
@@ -62,7 +62,7 @@ $(document).on('click', '.js-LogIn', function(e) {
     $(this).prop('disabled', true);
 
     [].forEach.call(requiredData, function(item) {
-        if(item.value == '' || item.value.length == 1) {
+        if (item.value == '' || item.value.length == 1) {
             item.classList.add('Error-input');
             err = true;
         } else {
@@ -70,14 +70,14 @@ $(document).on('click', '.js-LogIn', function(e) {
         }
     });
 
-    if(err) {
+    if (err) {
         $(this).prop('disabled', false);
         return false;
     } else {
         dataObj = Object.assign({}, getFormData($('#formLogin')));
     }
 
-    if(!testEmail($('#reg_email').val())) {
+    if (!testEmail($('#reg_email').val())) {
         $(this).prop('disabled', false);
         $('#reg_email').addClass('Error-input');
         return false;
@@ -87,12 +87,12 @@ $(document).on('click', '.js-LogIn', function(e) {
         $(this).prop('disabled', false);
         data = JSON.parse(data)
 
-        if(data.error) {
+        if (data.error) {
             $('.Fixed-overlay').show();
             $('body').addClass('no-scroll');
             $('.Modal').addClass('active');
             $('.js-differentMsg').html('<b style="color:#FFB54C;">Ошибка: '+data.text+'</b>');
-        } else if(data.path) {
+        } else if (data.path) {
             window.location.href = data.path;
         }
     })
@@ -109,7 +109,7 @@ $(document).on('click', '.js-faqQuery', function(e) {
     $(this).prop('disabled', true);
 
     [].forEach.call(requiredData, function(item) {
-        if(item.value === '' || item.value.length == 1) {
+        if (item.value === '' || item.value.length == 1) {
             item.classList.add('Error-input');
             err = true;
         } else {
@@ -117,14 +117,14 @@ $(document).on('click', '.js-faqQuery', function(e) {
         }
     });
 
-    if(err) {
+    if (err) {
         $(this).prop('disabled', false);
         return false;
     } else {
         dataObj = Object.assign({}, getFormData($('#faqQuery')));
     }
 
-    if(!testEmail($('#faq_email').val())) {
+    if (!testEmail($('#faq_email').val())) {
         $(this).prop('disabled', false);
         $('#faq_email').addClass('Error-input');
         return false;

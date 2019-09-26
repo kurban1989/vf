@@ -58,15 +58,15 @@ app.use('/dist', express.static(config.public));
 app.use('/fonts', express.static(config.public + '/fonts'));
 
 // Запрос svg файлов
-app.get('/img/svg/:name_svg', function (req, res, next) {
+app.get('/img/svg/:name_svg', (req, res, next) => {
   res.setHeader('Content-Type', 'image/svg+xml');
   res.sendFile(config.img + '/svg/' + req.params.name_svg);
 });
 
 // Запрос image/jpeg файлов
-app.get('/img/jpg/:name_jpg', function (req, res, next) {
-  if(path.extname(req.url) == ".gif") {
-    fs.readFile(path.basename(req.url), function(err, data) {
+app.get('/img/jpg/:name_jpg', (req, res, next) => {
+  if (path.extname(req.url) == ".gif") {
+    fs.readFile(path.basename(req.url), (err, data) => {
 
       res.writeHead(200, {'content-type':'image/gif'});
       res.end(data);
@@ -79,11 +79,10 @@ app.get('/img/jpg/:name_jpg', function (req, res, next) {
 });
 
 // Запрос image/png файлов
-app.get('/img/png/:name_png', function (req, res, next) {
+app.get('/img/png/:name_png', (req, res, next) => {
   res.setHeader('Content-Type', 'image/png');
   res.sendFile(config.img + '/jpg/' + req.params.name_jpg);
-});
-
+})
 
 // CRM магазина
 app.use('/power/admin/', adminPanel);
@@ -102,7 +101,7 @@ app.use('/cart/', cartPage);
 // Текстовые Страницы
 app.use('/pages/', textPages);
 // ЛК юзера
-app.use('/account/', account);
+app.use('/account', account);
 
 
 // Вызов индекс диретории
@@ -116,34 +115,34 @@ app.get('/', function (req, res, next) {
         let checkNewCat = false;
         const checkNew = await db.getQuery('SELECT * FROM `products` WHERE `new`=1');
 
-        if(checkNew.length > 0) {
+        if (checkNew.length > 0) {
           checkNewCat = true;
         }
         // Рендер пунктов выпадашек
         res.render(config.viewMain + '/nav.ejs', {
-        checkNewCat: checkNewCat,
-        items : result,
-        list: await db.getQuery('SELECT * FROM `category`'),
+          checkNewCat: checkNewCat,
+          items : result,
+          list: await db.getQuery('SELECT * FROM `category`'),
         }, function(err, html){
-            if(err) { throw new Error("this E: " + err); }
+            if (err) { throw new Error("this E: " + err); }
             optionsMain.nav  = html;
         });
     })
     .then(function() {
         // РЕНДЕР МОБИЛЬНОГО МЕНЮ
-        let mobMenu = db.getQuery('SELECT * FROM `category`').then(async function(result){
+        let mobMenu = db.getQuery('SELECT * FROM `category`').then(async (result) => {
             let checkNewCat = false;
             const checkNew = await db.getQuery('SELECT * FROM `products` WHERE `new`=1');
 
-            if(checkNew.length > 0) {
+            if (checkNew.length > 0) {
               checkNewCat = true;
             }
 
             res.render(mobileMenu, {
-            checkNewCat: checkNewCat,
-            items : result,
-            }, function(err, html){
-                if(err) { throw new Error("this E: " + err); }
+              checkNewCat: checkNewCat,
+              items : result,
+            }, (err, html) => {
+                if (err) { throw new Error("this E: " + err); }
                 optionsMain.mobileMenu = html;
             });
         });
@@ -155,7 +154,7 @@ app.get('/', function (req, res, next) {
         res.render(config.pagesPath + '/main.ejs', {
         h1 : optionsMain.h1,
         }, function(err, html){
-            if(err) { throw new Error("this E: " + err); }
+            if (err) { throw new Error("this E: " + err); }
             optionsMain.bodyMain = html;
         });
     })
@@ -172,7 +171,7 @@ app.get('/', function (req, res, next) {
 });
 
 // Запрос карточки продукта /product/
-app.get('/product/:types/:ids', function (req, res, next) {
+app.get('/product/:types/:ids', (req, res, next) => {
   const optionsCol = optionsMain;
   const userToken = req.cookies.add2cart_for_users || 'none';
   let inCart = null;
@@ -187,16 +186,16 @@ app.get('/product/:types/:ids', function (req, res, next) {
         let checkNewCat = false;
         const checkNew = await db.getQuery('SELECT * FROM `products` WHERE `new`=1');
 
-        if(checkNew.length > 0) {
+        if (checkNew.length > 0) {
           checkNewCat = true;
         }
         // Рендер пунктов выпадашек
         let f1 = res.render(config.viewMain + '/nav.ejs', {
-        checkNewCat: checkNewCat,
-        items : result,
-        list: await db.getQuery('SELECT * FROM `category`'),
+          checkNewCat: checkNewCat,
+          items : result,
+          list: await db.getQuery('SELECT * FROM `category`'),
         }, function(err, html){
-            if(err) { console.log("this E: " + err); }
+            if (err) { console.log("this E: " + err); }
             optionsCol.nav  = html;
         });
 
@@ -205,17 +204,17 @@ app.get('/product/:types/:ids', function (req, res, next) {
     .then(function(f1) {
 
       // Рендер всей инфы на странице товара в майн боди
-      let f2 = db.getQuerySafe('products', 'id', req.params.ids, 'equality').then(async function(rr){
+      let f2 = db.getQuerySafe('products', 'id', req.params.ids, 'equality').then(async (rr) => {
 
         let resultInCart = null;
         optionsCol.title = rr[0].category + ' -> ' + rr[0].title;
 
         /* Проверка наличия товара в корзине */
-        await (async function() {
+        await (async () => {
           resultInCart = await db.getQueryManySafe('cart', {id_prod: req.params.ids, user_token: userToken, success: 0});
         })();
 
-        if(resultInCart.length > 0 || resultInCart.length != 0) {
+        if (resultInCart.length > 0 || resultInCart.length != 0) {
             disabled = 'disabled="true"';
             textInCart = 'В корзине';
             classInCart = ' inCart';
@@ -246,7 +245,7 @@ app.get('/product/:types/:ids', function (req, res, next) {
           textInCart: textInCart,
           classInCart: classInCart
         }, function(err, html){
-            if(err) { throw new Error("this E: " + err); }
+            if (err) { throw new Error("this E: " + err); }
             optionsCol.bodyMain = html;
         });
       });
@@ -260,14 +259,14 @@ app.get('/product/:types/:ids', function (req, res, next) {
             let checkNewCat = false;
             const checkNew = await db.getQuery('SELECT * FROM `products` WHERE `new`=1');
 
-            if(checkNew.length > 0) {
+            if (checkNew.length > 0) {
               checkNewCat = true;
             }
             res.render(mobileMenu, {
             checkNewCat: checkNewCat,
             items : result,
             }, function(err, html){
-                if(err) { throw new Error("this E: " + err); }
+                if (err) { throw new Error("this E: " + err); }
                 optionsMain.mobileMenu = html;
             });
         });
@@ -285,13 +284,13 @@ app.get('/product/:types/:ids', function (req, res, next) {
     .catch(function(err) { throw new Error(err); });
 });
 // Запрос КОЛЛЕКЦИИ
-app.get('/collection/:query', function (req, res, next) {
+app.get('/collection/:query', (req, res, next) => {
 
   const optionsCol = optionsMain;
     optionsCol.h1 = req.params.query;
     optionsCol.picture = '';
 
-    if(req.params.query == 'new') {
+    if (req.params.query == 'new') {
       optionsCol.h1 = 'Новая коллекция';
     }
 
@@ -300,7 +299,7 @@ app.get('/collection/:query', function (req, res, next) {
         let checkNewCat = false;
         const checkNew = await db.getQuery('SELECT * FROM `products` WHERE `new`=1');
 
-        if(checkNew.length > 0) {
+        if (checkNew.length > 0) {
           checkNewCat = true;
         }
         // Рендер пунктов выпадашек
@@ -309,7 +308,7 @@ app.get('/collection/:query', function (req, res, next) {
         items : result,
         list: await db.getQuery('SELECT * FROM `category`'),
         }, function(err, html){
-            if(err) { console.log("this E: " + err); }
+            if (err) { console.log("this E: " + err); }
             optionsCol.nav  = html;
         });
     })
@@ -319,15 +318,15 @@ app.get('/collection/:query', function (req, res, next) {
             let checkNewCat = false;
             const checkNew = await db.getQuery('SELECT * FROM `products` WHERE `new`=1');
 
-            if(checkNew.length > 0) {
+            if (checkNew.length > 0) {
               checkNewCat = true;
             }
 
             res.render(mobileMenu, {
-            checkNewCat: checkNewCat,
-            items : result,
+              checkNewCat: checkNewCat,
+              items : result,
             }, function(err, html){
-                if(err) { throw new Error("this E: " + err); }
+                if (err) { throw new Error("this E: " + err); }
                 optionsMain.mobileMenu = html;
             });
         });
@@ -342,7 +341,7 @@ app.get('/collection/:query', function (req, res, next) {
         visible: 1
       };
 
-      if(req.params.query == 'new') {
+      if (req.params.query == 'new') {
         delete objModel.category;
       } else {
         delete objModel.new;
@@ -356,7 +355,7 @@ app.get('/collection/:query', function (req, res, next) {
             table: result
           },
           function(err, html){
-            if(err) { console.log("this E: " + err); }
+            if (err) { console.log("this E: " + err); }
             optionsCol.bodyMain = html;
           });
 
@@ -390,9 +389,9 @@ function preRender(path, args = [], res) {
 
     args = await db.getQuery('SELECT * FROM `category`');
 
-    args.forEach(async function(item) {
+    args.forEach(async item => {
 
-      await (function(){
+      await (() => {
          res.render(path + '/menu/desktop_menu.ejs',
          {
            link: item.name,

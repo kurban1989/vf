@@ -3,14 +3,12 @@ const config = require('../conf');
 const client = mysql.createPool(config.mysql);
 
 function setCHARACTER() {
-  // ( () => {
-    client.getConnection(async (err, conn) => {
-      await conn.query("SET NAMES utf8");
-      await conn.query("SET CHARACTER SET 'utf8'");
-      await conn.query("SET SESSION collation_connection = 'utf8_general_ci'");
-      conn.release();
+    client.getConnection(async (err, connector) => {
+      await connector.query("SET NAMES utf8");
+      await connector.query("SET CHARACTER SET 'utf8'");
+      await connector.query("SET SESSION collation_connection = 'utf8_general_ci'");
+      connector.release();
     })
-  // })()
 }
 
 setCHARACTER(); // Первый запрос на изменение кодировки
@@ -20,15 +18,15 @@ exports.getQuery = async (sql, callback) => {
   setCHARACTER();
   // Промис запроса
   return new Promise(function(resolve, reject){
-    client.getConnection(function(err, conn){
-      conn.query(sql, function(error, result) {
-        conn.release();
+    client.getConnection(function(err, connector){
+      connector.query(sql, function(error, result) {
+        connector.release();
 
-        if(error) {
+        if (error) {
            return reject(new Error(error));
         }
 
-        if(typeof callback === 'function') {
+        if (typeof callback === 'function') {
             const resFunc = callback();
             return resolve(result, resFunc);
         } else {
@@ -46,31 +44,31 @@ exports.getQuerySafe = async (table, field, query, pattern = 'like', callback) =
   let sql = "SELECT id, ?? FROM ?? WHERE ?? like ?";
   let inserts = [field, table, field, '%' + query + '%'];
 
-  if(pattern === 'equality') {
+  if (pattern === 'equality') {
       sql = "SELECT * FROM ?? WHERE ?? = ?";
       inserts = [table, field, query];
 
-  } else if(pattern === 'likeAllFields') {
+  } else if (pattern === 'likeAllFields') {
       sql = "SELECT * FROM ?? WHERE ?? like ?";
       inserts = [table, field, '%' + query + '%'];
 
-  } else if(pattern === 'deleteProd') {
+  } else if (pattern === 'deleteProd') {
       sql = "DELETE FROM ?? WHERE ?? = ?";
       inserts = [table, field, query];
   }
   // Промис запроса
   return new Promise(function(resolve, reject){
-    client.getConnection(function(err, conn){
+    client.getConnection(function(err, connector){
 
-      sql = conn.format(sql, inserts);
+      sql = connector.format(sql, inserts);
 
-      conn.query(sql, function(error, result) {
-        conn.release();
+      connector.query(sql, function(error, result) {
+        connector.release();
 
-        if(error) {
+        if (error) {
            return reject(new Error(error));
         }
-        if(typeof callback === 'function') {
+        if (typeof callback === 'function') {
             const resFunc = callback();
             return resolve(result, resFunc);
         } else {
@@ -92,7 +90,7 @@ exports.getQueryManySafe = async (table, obj, callback) => {
 
     /* Если мы хотим чтобы последнее условие было как 'like %search%', то первый аргумент должен быть обязательно массивом */
     /* Где второй элемент должен быть парметром для этого LIKE */
-    if(Array.isArray(table)) {
+    if (Array.isArray(table)) {
       like = table[1];
       table = table[0];
     }
@@ -102,11 +100,11 @@ exports.getQueryManySafe = async (table, obj, callback) => {
       for (let prop in ObjProm) {
         if ({}.hasOwnProperty.call(ObjProm, prop)) {
           // если пусто то не продолжаем дальше итерацию
-          if(ObjProm[prop] == undefined || ObjProm[prop] == 'NULL') {
+          if (ObjProm[prop] == undefined || ObjProm[prop] == 'NULL') {
             i++;
           } else {
 
-            if(like == 'latestLike' && i == fields.length - 1) {
+            if (like == 'latestLike' && i == fields.length - 1) {
               dataWrite += '`' + fields[i] + '` like "%'+ obj[prop] +'%"';
             } else {
               dataWrite += '`' + fields[i] + '` = "' + obj[prop];
@@ -121,7 +119,7 @@ exports.getQueryManySafe = async (table, obj, callback) => {
       dataWrite = dataWrite.replace(/(\')/gm, '');
       dataWrite = dataWrite.replace(/\"on\"/gm, '1');
 
-      if(like !== 'latestLike') {
+      if (like !== 'latestLike') {
         /* Обрезка хвостика ('" AND ') */
         dataWrite = dataWrite.substring(0, dataWrite.length - 5);
       }
@@ -130,15 +128,15 @@ exports.getQueryManySafe = async (table, obj, callback) => {
 
       sql = "SELECT * FROM " + table + " WHERE " + dataWrite;
 
-      client.getConnection(function(err, conn){
+      client.getConnection(function(err, connector){
         // запрос
-        conn.query(sql, function(error, result) {
-          conn.release();
-          if(error) {
+        connector.query(sql, function(error, result) {
+          connector.release();
+          if (error) {
              return reject(new Error(error));
           }
 
-          if(typeof callback === 'function') {
+          if (typeof callback === 'function') {
               callback();
               return resolve(result);
           } else {
@@ -179,16 +177,16 @@ exports.updateData = async (table, obj, id, callback) => {
       sql = 'UPDATE `' + table + '` SET '+ dataWrite +', date = NOW() WHERE id=' + parseInt(id, 10) + ';';
       sql = sql.replace(/(\"NULL\")/, 'NULL'); // Если мы специально хотим записать NULL в ячейку.
 
-      client.getConnection(function(err, conn){
+      client.getConnection(function(err, connector){
         // запрос
-        conn.query(sql, function(error, result) {
-          conn.release();
+        connector.query(sql, function(error, result) {
+          connector.release();
 
-          if(error) {
+          if (error) {
              return reject(new Error(error));
           }
 
-          if(typeof callback === 'function') {
+          if (typeof callback === 'function') {
               callback();
               return resolve(result);
           } else {
@@ -203,14 +201,14 @@ exports.updateData = async (table, obj, id, callback) => {
 /* Функция для записи данных в БД */
 exports.setData = async (table, obj, callback) => {
   setCHARACTER();
-
+  
   return new Promise( (resolve, reject) => {
-
+    
     let fields = Object.keys(obj);
     let dataWrite = '';
     let sql = '';
 
-    clearBad(obj).then(function(ObjProm) {
+    clearBad(obj).then((ObjProm) => {
       for (var prop in ObjProm) {
         if ({}.hasOwnProperty.call(ObjProm, prop)) {
           dataWrite += '"' + obj[prop];
@@ -218,24 +216,30 @@ exports.setData = async (table, obj, callback) => {
         }
       }
     })
-    .then(function(){
+    .then(() => {
       dataWrite = dataWrite.replace(/(on)/gm, '1');
       dataWrite = dataWrite.replace(/(\')/gm, '');
       dataWrite = clearDigitsFields(dataWrite);
     })
-    .then(function(){
-
+    .then(() => {
+      
       sql = 'INSERT INTO `' + table + '` ('+ fields +', date) VALUES ('+ dataWrite +', NOW());';
-      client.getConnection(function(err, conn) {
-        // запрос
-        conn.query(sql, (error, result) => {
-          conn.release();
 
-          if(error) {
-             return reject(new Error(error));
+      client.getConnection(function(err, connector) {
+        if (err) {
+          return reject(new Error(error));
+        }
+        // запрос
+        connector.query(sql, (error, result) => {
+          
+          if (error) {
+            connector.release(); // Закрываем соединение
+            return reject(new Error(error));
           }
 
-          if(typeof callback === 'function') {
+          connector.release(); // Закрываем соединение
+
+          if (typeof callback === 'function') {
               callback();
               return resolve(result);
           } else {
@@ -243,7 +247,8 @@ exports.setData = async (table, obj, callback) => {
           }
         });
       });
-    });
+    })
+    .catch((err) => { throw new Error("this E: " + err) });
   });
 }
 
@@ -257,9 +262,9 @@ async function clearBad(obj) {
 }
 // Очистка от кавычек в цифровых полях
 function clearDigitsFields(str) {
-  if(str.search(/(\,\s{1})/) != -1) {
+  if (str.search(/(\,\s{1})/) != -1) {
     str = str.split(', ');
-  } else if(str.search(/(\.\s{1})/) != -1) {
+  } else if (str.search(/(\.\s{1})/) != -1) {
     str = str.split('. ');
   } else {
     return new Error('Invalid string separator.');

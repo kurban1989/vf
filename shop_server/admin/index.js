@@ -30,8 +30,8 @@ router.all('*', async function(req, res, next) {
     const token = await db.getQuery('SELECT * FROM `sessions` WHERE `token_session`="' + req.cookies.ust + '";');
     const user = await db.getQuery('SELECT * FROM `vfuser` WHERE `id`=' + token[0].user_id + ';');
 
-    if(user.length > 0 && token.length > 0) {
-        if(user[0].prava !== 'artem') {
+    if (user.length > 0 && token.length > 0) {
+        if (user[0].prava !== 'artem') {
           res.status(403).send("<p>Sorry, Forbidden! </p><br><p><b>Error 403 </b></p><br><br><a href='/account/login/'>LOGIN<a>");
           return
         }
@@ -46,7 +46,7 @@ router.all('*', async function(req, res, next) {
 router.get('/orders/', function(req, res) {
 
   /* Проверка наличия заказов */
-  queryNewOrder(db).then(function(res) {
+  queryNewOrder(db).then((res) => {
     optionsPage.countOrder = res.length;
   });
 
@@ -57,7 +57,7 @@ router.get('/orders/', function(req, res) {
       res.render(config.viewMain + '/admin_index',
           optionsPage,
           function(err, html){
-            if(err) throw new Error(err);
+            if (err) throw new Error(err);
             res.send(util.replacerSpace(html)); // Обфускация HTML - del space
           });
     });
@@ -75,7 +75,7 @@ router.post('/orders/', function(req, res) {
   };
 
   /* Запрос для перевода заказа в из "Нового" в статус "Обработанный" */
-  if(req.body.param1 === 'orderReady') {
+  if (req.body.param1 === 'orderReady') {
 
     db.updateData('checkout', {new: 0}, req.body.idProd)
       .then(function(result) {
@@ -86,7 +86,7 @@ router.post('/orders/', function(req, res) {
   }
 
     /* Условие, где рендерится таблица заказа со всеми его данными */
-  if(req.body.param1 === 'setNewWindowAdd') {
+  if (req.body.param1 === 'setNewWindowAdd') {
     page = config.pagesPath + '/show_order.ejs';
 
     db.getQuerySafe('cart', 'user_token', req.body.idProd, 'equality').then(async function(result) {
@@ -117,15 +117,15 @@ router.post('/orders/', function(req, res) {
       res.render(page,
       dataOrderAll,
       function(err, html){
-        if(err) throw new Error(err);
+        if (err) throw new Error(err);
         res.send(JSON.stringify({result: util.replacerSpace(html)})); // Обфускация HTML и отправка подробностей заказа
       });
     });
 
 
-  } else if(req.body.param1 === "backAllProd"){ // Если нажали НАЗАД, то просто редиректним на ордер
+  } else if (req.body.param1 === "backAllProd"){ // Если нажали НАЗАД, то просто редиректним на ордер
       res.send(JSON.stringify({result: '<script type="text/javascript"> window.location.href = "'+ config.fullDomain +'/power/admin/orders/";</script>'}));
-  } else if(req.body.param1 === 'deleteProd') {
+  } else if (req.body.param1 === 'deleteProd') {
       /* Запрос на удаление заказа из БД */
       db.getQuerySafe('checkout', 'id', req.body.idProd, 'deleteProd')
         .then(function(responce){
@@ -144,8 +144,8 @@ router.get('/cat/', function(req, res, next) {
   });
 
   /* Если пришёл ГЕТ запрос на добавление Категории ПОЗЖЕ СДЕЛАТЬ ПРОВЕРКУ АДМИНА ПО КУКЕ */
-  if('parent_cat' in req.query) {
-    if('update' in req.query && req.query.update == 1) {
+  if ('parent_cat' in req.query) {
+    if ('update' in req.query && req.query.update == 1) {
 
       delete req.query.update;// удаление лишнего поля
 
@@ -174,7 +174,7 @@ router.get('/cat/', function(req, res, next) {
       res.render(config.viewMain + '/admin_index',
           optionsPage,
           function(err, html){
-            if(err) throw new Error(err);
+            if (err) throw new Error(err);
             res.send(util.replacerSpace(html)); // Обфускация HTML - del space
           });
     });
@@ -188,14 +188,14 @@ router.get('/', function(req, res, next) {
   });
 
   /* Если пришёл ГЕТ запрос на добавление/редактирование товара */
-  if('title' in req.query) {
+  if ('title' in req.query) {
 
-    if('update' in req.query && req.query.update == 1) {
+    if ('update' in req.query && req.query.update == 1) {
 
       delete req.query.update;// удаление лишнего поля
 
       /* Чекаем есть ли размер для БРА в запросе */
-     if(!req.query.sizesBra) {
+     if (!req.query.sizesBra) {
       req.query.sizesBra = null;
      }
 
@@ -225,7 +225,7 @@ router.get('/', function(req, res, next) {
       res.render(config.viewMain + '/admin_index',
       optionsPage,
       function(err, html){
-        if(err) throw new Error(err);
+        if (err) throw new Error(err);
         res.send(util.replacerSpace(html)); // Обфускация HTML - del space
       });
     });
@@ -248,7 +248,7 @@ router.get('/filter/', function(req, res) {
           'table': resultFilter
         },
         function(err, html){
-          if(err) throw new Error(err);
+          if (err) throw new Error(err);
           r = util.replacerSpace(html);
         });
         return r;
@@ -259,7 +259,7 @@ router.get('/filter/', function(req, res) {
 });
 // POST запорсы AJAX страничек редактирования товара!
 router.post('/update/', function(req, res) {
-  if(req.body.qeuryUpdate === 'set') {
+  if (req.body.qeuryUpdate === 'set') {
     getOneValue(parseInt(req.body.id, 10), 'products').then(function(rr) {
       res.send(JSON.stringify({result: rr}));
     })
@@ -267,7 +267,7 @@ router.post('/update/', function(req, res) {
 });
 // POST запорсы AJAX страничек редактирования категории!
 router.post('/cat/update/', function(req, res) {
-  if(req.body.qeuryUpdate === 'set') {
+  if (req.body.qeuryUpdate === 'set') {
     getOneValue(parseInt(req.body.id, 10), 'category').then(function(rr) {
       res.send(JSON.stringify({result: rr}));
     })
@@ -280,22 +280,22 @@ router.post('/', function(req, res, next) {
   let state = {};
   let title = '';
 
-    if(req.body.param1 === 'searchTitleProd') { // Поиск по имени товара
+    if (req.body.param1 === 'searchTitleProd') { // Поиск по имени товара
       db.getQuerySafe('products', 'title', req.body.param2)
         .then(function(responce){
           res.send(JSON.stringify({result: responce}));
         });
 
-    } else if(req.body.param1 === 'deleteProd') { // Запрос на удаление товара
+    } else if (req.body.param1 === 'deleteProd') { // Запрос на удаление товара
       /* Удаление фотографий */
       db.getQuerySafe('products', 'id', req.body.idProd, 'equality')
         .then(function(resFile){
-            if(resFile[0].images.length > 2) {
+            if (resFile[0].images.length > 2) {
               const arrFile = resFile[0].images.split(',');
 
                 arrFile.forEach(function(file) {
                   fs.unlink(config.dirnameNew + file, function(err) {
-                    if(err && err.code == 'ENOENT') {
+                    if (err && err.code == 'ENOENT') {
                         console.info("File doesn't exist, won't remove it.");
                     } else if (err) {
                         // other errors, e.g. maybe we don't have enough permission
@@ -314,23 +314,23 @@ router.post('/', function(req, res, next) {
             });
         });
 
-    } else if(req.body.param1 === 'searchCat') { // Поиск по категории из списка категорий
+    } else if (req.body.param1 === 'searchCat') { // Поиск по категории из списка категорий
       db.getQuerySafe('category', 'name', req.body.param2)
         .then(function(responce){
           res.send(JSON.stringify({result: responce}));
         });
 
-    } else if(req.body.param1 === 'setNewWindowAdd') {
+    } else if (req.body.param1 === 'setNewWindowAdd') {
       title = 'Добавление нового товара';
       // Запрос на редактирование, просто ставим куку для следующего запроса
-      if(req.body.idProd != null && req.body.idProd!= undefined) {
+      if (req.body.idProd != null && req.body.idProd!= undefined) {
         res.cookie('updateProduct', req.body.idProd, { domain: '.'+config.domain, path: '/', expires: new Date(Date.now() + 60*60*100)});
       }
 
       page = fs.readFileSync(config.pagesPath + '/add_product.ejs', 'utf8');
       res.send(JSON.stringify({result: page, state: state, title: title}));
 
-    } else if(req.body.param1 === "backAllProd"){
+    } else if (req.body.param1 === "backAllProd"){
       preRanderTableProd(req, res, config.pagesPath + '/adm_show_product.ejs')
         .then(function(responce){
           page = responce;
@@ -352,22 +352,22 @@ router.post('/cat/',function(req,res) {
   let state = {};
   let title = '';
 
-  if(req.body.param1 === 'setNewWindowAdd') {
+  if (req.body.param1 === 'setNewWindowAdd') {
       // Запрос на редактирование, просто ставим куку для следующего запроса
-      if(req.body.idProd != null && req.body.idProd!= undefined) {
+      if (req.body.idProd != null && req.body.idProd!= undefined) {
         res.cookie('updateCat', req.body.idProd, { domain: '.'+config.domain, path: '/', expires: new Date(Date.now() + 60*60*50)});
       }
 
       page = fs.readFileSync(config.pagesPath + '/add_cat.ejs', 'utf8');
       res.send(JSON.stringify({result: page, state: {}, title: 'Добавление новой категории'}));
 
-  } else if(req.body.param1 === 'deleteProd') { // Запрос на удаление категории
+  } else if (req.body.param1 === 'deleteProd') { // Запрос на удаление категории
       db.getQuerySafe('category', 'id', req.body.idProd, 'deleteProd')
         .then(function(responce){
           res.send(JSON.stringify({result: '<script type="text/javascript"> window.location.href = "'+ config.fullDomain +'/power/admin/cat/";</script>'}));
         });
 
-  } else if(req.body.param1 === "backAllProd"){
+  } else if (req.body.param1 === "backAllProd"){
       preRanderTableCat(req, res, config.pagesPath + '/adm_show_cat.ejs')
       .then(function(responce){
           page = responce;
@@ -389,7 +389,7 @@ async function preRanderTableCat(req, res, file) {
             'table': result
           },
           function(err, html){
-            if(err) throw new Error(err);
+            if (err) throw new Error(err);
             r = util.replacerSpace(html);
           });
 
@@ -420,7 +420,7 @@ async function preRanderTableOrders(req, res, file) {
             'table': result
           },
           function(err, html){
-            if(err) throw new Error(err);
+            if (err) throw new Error(err);
             r = util.replacerSpace(html);
           });
 
@@ -441,7 +441,7 @@ async function preRanderTableProd(req, res, file) {
             'table': result
           },
           function(err, html){
-            if(err) throw new Error(err);
+            if (err) throw new Error(err);
             r = util.replacerSpace(html);
           });
 

@@ -98,4 +98,4 @@ const thisUtils = (function() {
     return thisUtils;
 }());
 
-module.exports = thisUtils;
+module.exports = thisUtils
