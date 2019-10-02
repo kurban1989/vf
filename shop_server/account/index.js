@@ -149,7 +149,7 @@ preRender(config.pagesPath, res)
 //// Аутентификация через вк ////
 router.get('/vk/auth', function (request, response, next) {
   const salt = bcrypt.genSaltSync(10);
-  const token = uuidv1(salt + new Date().getTime());
+  const token = uuidv1(salt + new Date().getTime() + String(Math.random() * 120));
   const options = {
     hostname: 'oauth.vk.com',
     port: 443,
@@ -223,7 +223,7 @@ router.post('/login/', async function (req, res, next) {
 
   db.getQueryManySafe('vfuser', dataUser).then( async (result) => {
     if (result.length > 0) {
-      const token = uuidv1(req.body.email + new Date().getTime());
+      const token = uuidv1(req.body.email + new Date().getTime() + String(Math.random() * 120));
       const expires = new Date(Date.now() +  1000 * 60 * 60 * 2);
       const r = await db.setData('sessions', {
           user_id: result[0].id,
@@ -252,7 +252,7 @@ router.post('/reguser', function (req, res, next) {
     hash_id: bcrypt.hashSync(req.body.regemail + '$' + req.body.regemail, salt)
   }
   
-  const token = uuidv1(req.body.regemail + new Date().getTime());
+  const token = uuidv1(req.body.regemail + new Date().getTime() + String(Math.random() * 120));
   
   db.setData('vfuser', dataUser).then(async (result) => {
     const expires = new Date(Date.now() +  1000 * 60 * 60 * 2)
