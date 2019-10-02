@@ -177,14 +177,16 @@ exports.updateData = async (table, obj, id, callback) => {
       sql = 'UPDATE `' + table + '` SET '+ dataWrite +', date = NOW() WHERE id=' + parseInt(id, 10) + ';';
       sql = sql.replace(/(\"NULL\")/, 'NULL'); // Если мы специально хотим записать NULL в ячейку.
 
-      client.getConnection(function(err, connector){
+      client.getConnection((err, connector) => {
         // запрос
-        connector.query(sql, function(error, result) {
-          connector.release();
+        connector.query(sql, (error, result) => {
 
           if (error) {
-             return reject(new Error(error));
+            connector.release(); // Закрываем соединение
+            return reject(new Error(error));
           }
+
+          connector.release(); // Закрываем соединение
 
           if (typeof callback === 'function') {
               callback();

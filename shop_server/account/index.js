@@ -156,7 +156,7 @@ router.get('/vk/auth', function (request, response, next) {
     path:'/access_token?client_id='+config.client_id+'&client_secret='+config.client_secret+'&redirect_uri='+config.calbackUri+'&v=5.95&code='+ request.query.code,
     method: 'GET'
   }
-  // Тело запроса на сервер ВК
+  // begin Тело запроса на сервер ВК
   const req = https.request(options, (res) => {
     if (res.statusCode != 200) {
       response.status(res.statusCode).send('<b style="color:#C50606;font-size:20px;">Удалённый сервер не ответил правильно. Статус ответа: <i>' + res.statusCode + '</i></b>');
@@ -172,7 +172,7 @@ router.get('/vk/auth', function (request, response, next) {
       db.getQuerySafe('vfuser', 'hash_id', hash, 'equality').then( async (r) => {
 
         if (!r[0] || r[0] === undefined) {
-          auth.setUser(d).then( async (result) => {
+          auth.setUser(responceData).then( async (result) => {
               result = JSON.parse(result);
               const dataUser = {
                 email: Math.ceil(Math.random() * 100) + 'm@template.com',
@@ -205,7 +205,7 @@ router.get('/vk/auth', function (request, response, next) {
 
     })
   });
-  // Тело запроса на сервер ВК
+  // end Тело запроса на сервер ВК
 
   // Сам запрос
   req.on('error', (error) => {
@@ -279,6 +279,35 @@ router.post('/reguser', function (req, res, next) {
   .catch((err) => { res.send(err) });
 
 });
+// Восстановление пароля
+router.post('/forgot/', async (req, res, next) => {
+  let newPassword = '';
+
+  if (req.body.forgot) {
+    const result = await db.getQuerySafe('vfuser', 'email', req.body.email, 'equality')
+
+    if (result.length) {
+      newPassword = String(crypto.createHash('md5').update(String(Math.random() * 500)).digest('hex')).substring(0, 7)
+      const message = getTemplateMailForgot(Object.assign({}, { email: req.body.email, originPassword: newPassword }) )
+      newPassword = crypto.createHash('md5').update(newPassword).digest('hex')
+
+      const resultSetNewPass = await db.updateData('vfuser', { password: newPassword }, result[0].id )
+
+      if (resultSetNewPass.affectedRows > 0) {
+        mailer(message).then((resultMail) => {
+          res.send(JSON.stringify({ responce: `Письмо с новым паролем на Email адрес '${req.body.email}' успешно отправлено.` }))
+        })
+      } else {
+        res.send(JSON.stringify({ responce: `Что-то пошло не так, произошла серверная ошибка` }))
+      }
+
+    } else {
+      res.send(JSON.stringify({ responce: `С Email адресом '${req.body.email}' пользователь не существует` }))
+    }
+  } else {
+    res.send(JSON.stringify({ responce: 'Bad request' }))
+  }
+})
 // Функция возвращающая объект письма для отправки
 function getTemplateMail (objectUser) {
   let {email, originPassword} = objectUser
@@ -292,6 +321,23 @@ function getTemplateMail (objectUser) {
         Данные вашего аккаунта: 
         login: ${email}
         password: ${originPassword}
+        
+        Данное письмо создано автоматически и не требует ответа.`
+  }
+}
+// Функция возвращающая объект письма для отправки 'Восстановление пароля'
+function getTemplateMailForgot (objectUser) {
+  let {email, originPassword} = objectUser
+
+  return {
+    from: '<vflingerierus@gmail.com>',
+    to: email.replace(/\'/g, ''),
+    subject: 'Восстановление пароля на сайте ' + config.domain,
+    text: `Ваш старый пароль успешно сброшен!
+    
+        Новые данные вашего аккаунта: 
+        login: ${email}
+        new password: ${originPassword}
         
         Данное письмо создано автоматически и не требует ответа.`
   }

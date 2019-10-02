@@ -15,11 +15,16 @@
   
                   <form action="" class="Product__template-login" id="formForgot">
                       <div class="Product__template-login--form Order-step__sections">
-                          <input placeholder="Ваш email" autocapitalize="off" spellcheck="false" aria-required="true" class="Order-input" size="30" type="text" name="email" id="reg_email">
+                          <input placeholder="Ваш email" autocapitalize="off" spellcheck="false" class="Order-input" size="30" type="text" name="email" id="email">
                       </div>
                       <div class="Order-step__sections">
                           <button class="Button__card--primary Button--block Button__card--next-step js-forgot" type="submit">
                               <span>Восстановить</span>
+                          </button>
+                      </div>
+                      <div class="Order-step__sections">
+                          <button class="Button__transparent-btn Button--block Button__card--next-step" type="button" onclick="window.location.href='/account/login';">
+                              <span>Войти</span>
                           </button>
                       </div>
                   </form>

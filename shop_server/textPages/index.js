@@ -51,6 +51,11 @@ router.get('/:page', function (req, res, next) {
       optionsMain.discription = 'Опт / франчайзинг, франчайзинг нижнего женского белья';
       optionsMain.h1 = 'Опт / франчайзинг';
       break;
+    case 'contact_us' :
+      optionsMain.title = 'Контакты / Связаться с нами';
+      optionsMain.discription = 'Контакты / Связаться с нами / Позвонить';
+      optionsMain.h1 = 'Наши контакты';
+      break;
   }
 
   preRender(config.pagesPath, res)

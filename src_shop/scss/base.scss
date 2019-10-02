@@ -78,7 +78,6 @@ img[data-src] {
 .Main {
     position: relative;
     padding: 4px;
-    color: #1e1e1e;
     min-width: 320px;
     max-width: 1150px;
     margin: 0 auto;
@@ -340,6 +339,11 @@ input[type="text"], select {
 svg:not(:root) {
     overflow: hidden;
     fill: currentColor;
+}
+
+p.contacts {
+    color: #fff !important;
+    line-height: 35px;
 }
 
 .cart-is-expanded {

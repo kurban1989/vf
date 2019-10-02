@@ -63,3 +63,4 @@ typings/
 /shop_server/conf.js
 .*
 /robots.txt
+/docs/dist/*

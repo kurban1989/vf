@@ -51,7 +51,47 @@ $(document).on('click', '.js-createUser', function(e) {
         }, 4000)
     });
 });
+/* разлогиниться */
+$(document).on('click', '.js-logout', (e) => {
+    setCookie('ust', '', -1)
+    window.location.href = "/account/login/"
+});
+/* запрос восстановления пароля юзера */
+$(document).on('click', '.js-forgot', function(e) {
+    e.preventDefault();
+   
+    let err = false;
+    let dataObj = {};
 
+    $(this).prop('disabled', true);
+
+    if ($('#email').val() === '') {
+        $(this).prop('disabled', false);
+        $('#email').addClass('Error-input');
+        return false;
+    } else {
+        dataObj = Object.assign({}, { forgot: 'true' }, getFormData($('#formForgot')));
+    }
+
+    if (!testEmail($('#email').val())) {
+        $(this).prop('disabled', false);
+        $('#email').addClass('Error-input');
+        return false;
+    }
+
+    $.post('/account/forgot/', dataObj, (data, textStatus, xhr) => {
+        $(this).prop('disabled', false);
+        data = JSON.parse(data)
+
+        $('.Fixed-overlay').show();
+        $('body').addClass('no-scroll');
+        $('.Modal').addClass('active');
+        $('.js-differentMsg').html('<b style="color:#FFB54C;line-height: 25px; width: 100%; text-align: center;">' + data.responce + '</b>');
+
+        $('#email').val('');
+        $('#email').removeClass('Error-input');
+    })
+});
 /* запрос залогинить юзера */
 $(document).on('click', '.js-LogIn', function(e) {
     e.preventDefault();
@@ -91,7 +131,7 @@ $(document).on('click', '.js-LogIn', function(e) {
             $('.Fixed-overlay').show();
             $('body').addClass('no-scroll');
             $('.Modal').addClass('active');
-            $('.js-differentMsg').html('<b style="color:#FFB54C;">Ошибка: '+data.text+'</b>');
+            $('.js-differentMsg').html('<b style="color:#FFB54C;">Ошибка: ' + data.text + '</b>');
         } else if (data.path) {
             window.location.href = data.path;
         }

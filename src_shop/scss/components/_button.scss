@@ -17,7 +17,6 @@ button {
     border-radius: 0;
     cursor: pointer;
     display: inline-block;
-    font-family: "Avenir Next",sans-serif;
     font-size: .75rem;
     font-weight: 600;
     min-height: 40px;
@@ -32,6 +31,18 @@ button {
     color: #dedede;
     background-color: rgba(0,0,0,0);
     border: 1px solid rgba(0,0,0,0);
+
+    &__absolute {
+        position: absolute;
+        border: 1px solid #fff;
+        border-radius: 5px;
+
+        &--right {
+            top: 5px;
+            right: 1px;
+            padding: 0 10px;
+        }
+    }
 
     &--danger {
         color: #fff;

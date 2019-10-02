@@ -111,11 +111,11 @@ app.get('/', function (req, res, next) {
   optionsMain.h1 = 'Красивое нижнее бельё по индивидуальным меркам';
 
   preRender(config.pagesPath, null, res)
-    .then(async function(result) {
+    .then(async (result) => {
         let checkNewCat = false;
         const checkNew = await db.getQuery('SELECT * FROM `products` WHERE `new`=1');
 
-        if (checkNew.length > 0) {
+        if (checkNew.length) {
           checkNewCat = true;
         }
         // Рендер пунктов выпадашек
@@ -167,7 +167,7 @@ app.get('/', function (req, res, next) {
             res.send(util.replacerSpace(html)); // Обфускация HTML - delete space
         });
     })
-    .catch(function(err) { throw new Error(err); });
+    .catch((err) => { throw new Error(err) });
 });
 
 // Запрос карточки продукта /product/
@@ -176,7 +176,7 @@ app.get('/product/:types/:ids', (req, res, next) => {
   const userToken = req.cookies.add2cart_for_users || 'none';
   let inCart = null;
   let disabled = '';
-  let textInCart = 'Выбрать размеры';
+  let textInBtnCart = 'Выбрать размеры';
   let classInCart = '';
 
   optionsCol.picture = '';
@@ -204,7 +204,7 @@ app.get('/product/:types/:ids', (req, res, next) => {
     .then(function(f1) {
 
       // Рендер всей инфы на странице товара в майн боди
-      let f2 = db.getQuerySafe('products', 'id', req.params.ids, 'equality').then(async (rr) => {
+      let renderByMainBody = db.getQuerySafe('products', 'id', req.params.ids, 'equality').then(async (rr) => {
 
         let resultInCart = null;
         optionsCol.title = rr[0].category + ' -> ' + rr[0].title;
@@ -216,7 +216,7 @@ app.get('/product/:types/:ids', (req, res, next) => {
 
         if (resultInCart.length > 0 || resultInCart.length != 0) {
             disabled = 'disabled="true"';
-            textInCart = 'В корзине';
+            textInBtnCart = 'В корзине';
             classInCart = ' inCart';
         }
 
@@ -241,19 +241,19 @@ app.get('/product/:types/:ids', (req, res, next) => {
           images: rr[0].images,
           list_primary: rr[0].list_primary,
           descr: rr[0].discription,
-          disabled: disabled,
-          textInCart: textInCart,
-          classInCart: classInCart
+          disabled,
+          textInBtnCart,
+          classInCart
         }, function(err, html){
             if (err) { throw new Error("this E: " + err); }
             optionsCol.bodyMain = html;
         });
       });
 
-      return Promise.all([f2]);
+      return Promise.all([renderByMainBody]);
 
     })
-    .then(function(f2) {
+    .then(function(renderByMainBody) {
         // РЕНДЕР МОБИЛЬНОГО МЕНЮ
         let mobMenu = db.getQuery('SELECT * FROM `category`').then(async function(result){
             let checkNewCat = false;
@@ -273,7 +273,7 @@ app.get('/product/:types/:ids', (req, res, next) => {
 
         return Promise.all([mobMenu]);
     })
-    .then(function(mobMenu) {
+    .then((mobMenu) => {
         // Основной рендер
         res.render(config.viewMain + "/index",
         optionsCol,
