@@ -290,7 +290,7 @@ app.get('/collection/:query', (req, res, next) => {
     optionsCol.h1 = req.params.query;
     optionsCol.picture = '';
 
-    if (req.params.query == 'new') {
+    if (req.params.query === 'new') {
       optionsCol.h1 = 'Новая коллекция';
     }
 
@@ -307,33 +307,35 @@ app.get('/collection/:query', (req, res, next) => {
         checkNewCat: checkNewCat,
         items : result,
         list: await db.getQuery('SELECT * FROM `category`'),
-        }, function(err, html){
+        },
+        (err, html) => {
             if (err) { console.log("this E: " + err); }
             optionsCol.nav  = html;
         });
     })
-    .then(function() {
+    .then(() => {
         // РЕНДЕР МОБИЛЬНОГО МЕНЮ
-        let mobMenu = db.getQuery('SELECT * FROM `category`').then(async function(result){
-            let checkNewCat = false;
-            const checkNew = await db.getQuery('SELECT * FROM `products` WHERE `new`=1');
+        let mobMenu = db.getQuery('SELECT * FROM `category`')
+        .then(async (result) => {
+          let checkNewCat = false;
+          const checkNew = await db.getQuery('SELECT * FROM `products` WHERE `new`=1');
 
-            if (checkNew.length > 0) {
-              checkNewCat = true;
-            }
+          if (checkNew.length > 0) {
+            checkNewCat = true;
+          }
 
-            res.render(mobileMenu, {
-              checkNewCat: checkNewCat,
-              items : result,
-            }, function(err, html){
-                if (err) { throw new Error("this E: " + err); }
-                optionsMain.mobileMenu = html;
-            });
+          res.render(mobileMenu, {
+            checkNewCat: checkNewCat,
+            items : result,
+          }, function(err, html){
+              if (err) { throw new Error("this E: " + err); }
+              optionsMain.mobileMenu = html;
+          });
         });
 
         return Promise.all([mobMenu]);
     })
-    .then(function(mobMenu) {
+    .then((mobMenu) => {
       // РЕНДЕР СТРАНИЦЫ ТОВАРОВ В ЗАВИСИМОСТИ ОТ КАТЕГОРИИ
       const objModel = { /* объект для выборки из бд */
         new: 1,
@@ -347,33 +349,33 @@ app.get('/collection/:query', (req, res, next) => {
         delete objModel.new;
       }
       // Сам запрос на получение данных для мини карточек товара + Рендер заголовка в майн боди
-      db.getQueryManySafe('products', objModel).then(function(result) {
+      db.getQueryManySafe('products', objModel).then((result) => {
 
           res.render(config.pagesPath + '/collection.ejs',
           {
             h1 : optionsCol.h1,
             table: result
           },
-          function(err, html){
+          (err, html) => {
             if (err) { console.log("this E: " + err); }
             optionsCol.bodyMain = html;
           });
 
       })
-      .then(function() {
+      .then(() => {
           // Основной рендер
           res.render(config.viewMain + "/index",
           optionsCol,
-          function(err, html){
+          (err, html) => {
               res.send(util.replacerSpace(html)); // Обфускация HTML - delete space
           });
       });
-// конец всех рендеров страницы коллекции
+    // конец всех рендеров страницы коллекции
     })
-    .catch(function(err) { throw new Error(err); });
+    .catch((err) => { throw new Error(err) });
 });
 // catch 404 and forward to error handler
-app.use(function (req, res, next) {
+app.use((req, res, next) => {
   res.status(404).send("<p>Sorry can't find that you want!</p> <p><b>Error 404 </b></p><br><br><a href='/'>HOME<a>");
   //res.status(404).render(error.ejs, {})
 });

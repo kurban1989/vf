@@ -182,7 +182,7 @@ const goods = {
           "height":0
         };
 
-return new Promise(function(resolve, reject) {
+  return new Promise((resolve, reject) => {
     db.getQueryManySafe('cart', {user_token: userToken, success: 0})
         .then(async function(r){
 
@@ -195,9 +195,9 @@ return new Promise(function(resolve, reject) {
                 goods.height = String(toNumber(goods.height) + toNumber(resolve[0].height));
           });
 
-            return Promise.all(arrOrderPromise);
+          return Promise.all(arrOrderPromise);
         })
-        .then(function(prs){
+        .then((prs) => {
           const date = new Date();
           const month = Number(date.getMonth()) < 9 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1;
           const day = Number(date.getDate());

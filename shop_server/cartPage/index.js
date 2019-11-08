@@ -147,20 +147,20 @@ function preRender(path, args = [], res) {
 
   let template = [];
 
-  return new Promise(async function(resolve, reject) {
+  return new Promise(async (resolve, reject) => {
 
     args = await db.getQuery('SELECT * FROM `category`');
 
-    args.forEach(async function(item) {
+    args.forEach(async (item) => {
 
-      await (function(){
+      await (() => {
          res.render(path + '/menu/desktop_menu.ejs',
          {
            link: item.name,
            description: item.description,
            img: item.images
          },
-         function(err, html){
+         (err, html) => {
              template.push(util.replacerSpace(html)); // Обфускация HTML - delete space
          });
       })();

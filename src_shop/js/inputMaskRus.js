@@ -9,7 +9,7 @@ export const inputMaskRus = (args) => {
    * Входные данные
    */
   const $input = args.input; // Контейнер для телефона
-  const regex = /\+?[\(\)\-\s]{1,2}$/;
+  const regex = /\+?[()\-\s]{1,2}$/;
   const selector = $input.selector;
 
   /* отмечаем инициализированные инпуты */

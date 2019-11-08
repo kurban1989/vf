@@ -33,7 +33,7 @@ const optionsMain = {
   admin: false
 };
 
-router.get('/login', async function(req, res, next) {
+router.get('/login', async (req, res, next) => {
   if (req.cookies && req.cookies.ust) {
     res.redirect(config.fullDomain + '/account/inside');
     return
@@ -78,9 +78,7 @@ if (req.params.page === 'inside') {
     const user = await db.getQuery('SELECT * FROM `vfuser` WHERE `id`=' + token[0].user_id + ';');
 
     if (user.length > 0 && token.length > 0) {
-      if (user[0].prava === 'artem') {
-        optionsMain.admin = true
-      }
+      optionsMain.admin = user[0].prava === 'artem'
     }
   }
 }
@@ -104,7 +102,7 @@ preRender(config.pagesPath, res)
   })
   .then(function() {
       // РЕНДЕР МОБИЛЬНОГО МЕНЮ
-      let mobMenu = db.getQuery('SELECT * FROM `category`').then(async function(result){
+      let mobMenu = db.getQuery('SELECT * FROM `category`').then(async (result) => {
         let checkNewCat = false;
         const checkNew = await db.getQuery('SELECT * FROM `products` WHERE `new`=1');
 
@@ -115,7 +113,7 @@ preRender(config.pagesPath, res)
         res.render(mobileMenu, {
         checkNewCat: checkNewCat,
         items : result,
-        }, function(err, html){
+        }, (err, html) => {
             if (err) { throw new Error("this E: " + err); }
             optionsMain.mobileMenu = html;
         });
@@ -123,23 +121,25 @@ preRender(config.pagesPath, res)
 
       return Promise.all([mobMenu]);
   })
-  .then(function(r) {
+  .then(() => {
       // Рендер тела страницы
       res.render(config.pagesPath + '/' + req.params.page + '.ejs',
       optionsMain,
-      function(err, html){
+      (err, html) => {
           if (err) {
             res.status(404).send("<p>Sorry can't find that you want!</p> <p><b>Error 404 </b></p><br><br><a href='/'>HOME<a>");
           }
           optionsMain.bodyMain = html;
       });
   })
-  .then(function() {
+  .then(() => {
       // Основной рендер
       res.render(config.viewMain + "/index",
       optionsMain,
-      function(err, html){
-        if (err) {throw new Error(err);}
+      (err, html) => {
+        if (err) {
+          throw new Error(err)
+        }
           res.send(util.replacerSpace(html)); // Обфускация HTML - delete space
       });
   })
@@ -153,7 +153,7 @@ router.get('/vk/auth', function (request, response, next) {
   const options = {
     hostname: 'oauth.vk.com',
     port: 443,
-    path:'/access_token?client_id='+config.client_id+'&client_secret='+config.client_secret+'&redirect_uri='+config.calbackUri+'&v=5.95&code='+ request.query.code,
+    path:`/access_token?client_id=${config.client_id}&client_secret=${config.client_secret}&redirect_uri=${config.calbackUri}&v=5.95&code=${request.query.code}`,
     method: 'GET'
   }
   // begin Тело запроса на сервер ВК
@@ -169,13 +169,13 @@ router.get('/vk/auth', function (request, response, next) {
       let id = String(json.user_id);
       const hash = crypto.createHash('md5').update(id).digest('hex'); // Хэш MD5
 
-      db.getQuerySafe('vfuser', 'hash_id', hash, 'equality').then( async (r) => {
+      db.getQuerySafe('vfuser', 'hash_id', hash, 'equality').then( async (resultQuery) => {
 
-        if (!r[0] || r[0] === undefined) {
+        if (!resultQuery[0]) {
           auth.setUser(responceData).then( async (result) => {
               result = JSON.parse(result);
               const dataUser = {
-                email: Math.ceil(Math.random() * 100) + 'm@template.com',
+                email: `${~~(Math.random() * 100)}mail@template.com`,
                 first_name: result.response[0].first_name,
                 last_name: result.response[0].last_name,
                 city: result.response[0].city.title,
@@ -189,7 +189,7 @@ router.get('/vk/auth', function (request, response, next) {
               })
           })
         } else {
-          id = r[0].id;
+          id = resultQuery[0].id;
         }
 
         await db.setData('sessions', {
@@ -199,7 +199,7 @@ router.get('/vk/auth', function (request, response, next) {
         });
 
         response.cookie('ust', token, { domain: '.' + config.domain, path: '/', expires: expires});
-        response.redirect(config.fullDomain + '/account/inside/')
+        response.redirect(`${config.fullDomain}/account/inside/`)
 
       });
 
@@ -209,7 +209,7 @@ router.get('/vk/auth', function (request, response, next) {
 
   // Сам запрос
   req.on('error', (error) => {
-    console.error(error);
+    console.error(error)
   })
   req.end();
 

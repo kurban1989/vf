@@ -17,9 +17,9 @@ setCHARACTER(); // Первый запрос на изменение кодир�
 exports.getQuery = async (sql, callback) => {
   setCHARACTER();
   // Промис запроса
-  return new Promise(function(resolve, reject){
-    client.getConnection(function(err, connector){
-      connector.query(sql, function(error, result) {
+  return new Promise((resolve, reject) => {
+    client.getConnection((err, connector) => {
+      connector.query(sql, (error, result) => {
         connector.release();
 
         if (error) {
@@ -57,12 +57,12 @@ exports.getQuerySafe = async (table, field, query, pattern = 'like', callback) =
       inserts = [table, field, query];
   }
   // Промис запроса
-  return new Promise(function(resolve, reject){
-    client.getConnection(function(err, connector){
+  return new Promise((resolve, reject) => {
+    client.getConnection((err, connector) => {
 
       sql = connector.format(sql, inserts);
 
-      connector.query(sql, function(error, result) {
+      connector.query(sql, (error, result) => {
         connector.release();
 
         if (error) {
@@ -82,7 +82,7 @@ exports.getQuerySafe = async (table, field, query, pattern = 'like', callback) =
 exports.getQueryManySafe = async (table, obj, callback) => {
   setCHARACTER();
 
-  return new Promise(function(resolve, reject) {
+  return new Promise((resolve, reject) => {
     let fields = Object.keys(obj);
     let dataWrite = '';
     let sql = '';
@@ -128,9 +128,9 @@ exports.getQueryManySafe = async (table, obj, callback) => {
 
       sql = "SELECT * FROM " + table + " WHERE " + dataWrite;
 
-      client.getConnection(function(err, connector){
+      client.getConnection((err, connector) => {
         // запрос
-        connector.query(sql, function(error, result) {
+        connector.query(sql, (error, result) => {
           connector.release();
           if (error) {
              return reject(new Error(error));
@@ -151,13 +151,13 @@ exports.getQueryManySafe = async (table, obj, callback) => {
 exports.updateData = async (table, obj, id, callback) => {
   setCHARACTER();
 
-  return new Promise(function(resolve, reject){
+  return new Promise((resolve, reject) => {
 
     let fields = Object.keys(obj);
     let dataWrite = '';
     let sql = '';
 
-    clearBad(obj).then(function(ObjProm){
+    clearBad(obj).then((ObjProm) => {
       let i = 0;
       for (let prop in ObjProm) {
         if ({}.hasOwnProperty.call(ObjProm, prop)) {
@@ -167,12 +167,12 @@ exports.updateData = async (table, obj, id, callback) => {
         }
       }
     })
-    .then(function(){
+    .then(() => {
       dataWrite = dataWrite.replace(/(\')/gm, '');
       dataWrite = dataWrite.replace(/\"on\"/gm, '1');
       dataWrite = clearDigitsFields(dataWrite);
     })
-    .then(function(){
+    .then(() => {
 
       sql = 'UPDATE `' + table + '` SET '+ dataWrite +', date = NOW() WHERE id=' + parseInt(id, 10) + ';';
       sql = sql.replace(/(\"NULL\")/, 'NULL'); // Если мы специально хотим записать NULL в ячейку.
@@ -227,7 +227,7 @@ exports.setData = async (table, obj, callback) => {
       
       sql = 'INSERT INTO `' + table + '` ('+ fields +', date) VALUES ('+ dataWrite +', NOW());';
 
-      client.getConnection(function(err, connector) {
+      client.getConnection((err, connector) => {
         if (err) {
           return reject(new Error(error));
         }
@@ -250,7 +250,7 @@ exports.setData = async (table, obj, callback) => {
         });
       });
     })
-    .catch((err) => { throw new Error("this E: " + err) });
+    .catch((err) => { throw new Error("Look it Error: " + err) });
   });
 }
 
@@ -264,16 +264,16 @@ async function clearBad(obj) {
 }
 // Очистка от кавычек в цифровых полях
 function clearDigitsFields(str) {
-  if (str.search(/(\,\s{1})/) != -1) {
+  if (str.search(/(\,\s{1})/) > -1) {
     str = str.split(', ');
-  } else if (str.search(/(\.\s{1})/) != -1) {
+  } else if (str.search(/(\.\s{1})/) > -1) {
     str = str.split('. ');
   } else {
     return new Error('Invalid string separator.');
   }
 
-  str = str.filter(function(item) {
-    return item.search(/\"{1}\d+\"{1}/) != -1 ? toNumber(item) : item;
+  str = str.filter((item) => {
+    return item.search(/\"{1}\d+\"{1}/) > -1 ? toNumber(item) : item;
   });
 
   return str.join(',');
