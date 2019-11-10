@@ -26,9 +26,10 @@ const optionsMain = {
   main : '',
   modalSizes : modalFaq,
   discription : '',
+  sizeGuide: {} // Переменная для файла размеров рендера таблицы
 };
 
-router.get('/:page', function (req, res, next) {
+router.get('/:page', (req, res, next) => {
 
   const userToken = req.cookies.add2cart_for_users || '';
   const arrOrder = [];
@@ -42,9 +43,9 @@ router.get('/:page', function (req, res, next) {
       optionsMain.h1 = 'Скромно о нашей кампании';
       break;
     case 'faqs' :
-      optionsMain.title = 'Часто задоваемые вопросы';
-      optionsMain.discription = 'Часто задоваемые вопросы, написать вопрос, оставить отзыв о vanity fair';
-      optionsMain.h1 = 'Часто задоваемые вопросы';
+      optionsMain.title = 'Часто задаваемые вопросы';
+      optionsMain.discription = 'Часто задаваемые вопросы, написать вопрос, оставить отзыв о vanity fair';
+      optionsMain.h1 = 'Часто задаваемые вопросы';
       break;
     case 'opt' :
       optionsMain.title = 'Опт/франчайзинг';
@@ -56,14 +57,21 @@ router.get('/:page', function (req, res, next) {
       optionsMain.discription = 'Контакты / Связаться с нами / Позвонить';
       optionsMain.h1 = 'Наши контакты';
       break;
+    case 'size_guide' :
+      optionsMain.title = 'Руководство по размерам';
+      optionsMain.discription = 'Руководство по размерам, Размер трусиков, размер бюстгалбтера, помощь в подборе размера, размер bra';
+      optionsMain.h1 = 'Руководство по размерам';
+      optionsMain.sizeGuide = JSON.parse(fs.readFileSync(config.resourse + '/sizeGuide.json', 'utf8'));
+      optionsMain.completeness = JSON.parse(fs.readFileSync(config.resourse + '/sizeGuideCompleteness.json', 'utf8'));
+      break;
   }
 
   preRender(config.pagesPath, res)
-    .then(async function(result) {
+    .then(async (result) => {
         let checkNewCat = false;
         const checkNew = await db.getQuery('SELECT * FROM `products` WHERE `new`=1');
 
-        if(checkNew.length > 0) {
+        if (checkNew.length > 0) {
           checkNewCat = true;
         }
         // Рендер пунктов выпадашек
@@ -71,57 +79,61 @@ router.get('/:page', function (req, res, next) {
         checkNewCat: checkNewCat,
         items : result,
         list: await db.getQuery('SELECT * FROM `category`'),
-        }, function(err, html){
-            if(err) { throw new Error("this E: " + err); }
+        }, 
+        (err, html) => {
+            if (err) { throw new Error("Render Err.: " + err) }
             optionsMain.nav  = html;
         });
     })
-    .then(function() {
+    .then(() => {
         // РЕНДЕР МОБИЛЬНОГО МЕНЮ
-        let mobMenu = db.getQuery('SELECT * FROM `category`').then(async function(result){
+        let mobMenu = db.getQuery('SELECT * FROM `category`').then(async (result) => {
             let checkNewCat = false;
             const checkNew = await db.getQuery('SELECT * FROM `products` WHERE `new`=1');
 
-            if(checkNew.length > 0) {
+            if (checkNew.length) {
               checkNewCat = true;
             }
 
             res.render(mobileMenu, {
             checkNewCat: checkNewCat,
             items : result,
-            }, function(err, html){
-                if(err) { throw new Error("this E: " + err); }
+            }, 
+            (err, html) => {
+                if (err) { throw new Error("Render Err.: " + err) }
                 optionsMain.mobileMenu = html;
             });
         });
 
         return Promise.all([mobMenu]);
     })
-    .then(function(r) {
+    .then((r) => {
 
         // Рендер тела страницы
         res.render(config.pagesPath + '/' + req.params.page + '.ejs',
         optionsMain,
-        function(err, html){
-            if(err) {
-              res.status(404).send("<p>Sorry can't find that you want!</p> <p><b>Error 404 </b></p><br><br><a href='/'>HOME PAGE<a>");
+        (err, html) => {
+            if (err) {
+              res.status(404).send("<p>Sorry can't find that you want!</p> <p><b>Error 404 </b></p><br><br><a href='/'>HOME PAGE<a>")
+              throw new Error(("Maybe Render Err.: " + err))
+              return false
             }
             optionsMain.bodyMain = html;
         });
     })
-    .then(function() {
+    .then(() => {
         // Основной рендер
         res.render(config.viewMain + "/index",
         optionsMain,
-        function(err, html){
-          if (err) {throw new Error(err);}
+        (err, html) => {
+          if (err) { throw new Error(err) }
             res.send(util.replacerSpace(html)); // Обфускация HTML
         });
     })
-    .catch(function(err) { throw new Error(err); });
+    .catch((err) => { throw new Error(err) });
 });
 // Запись отзыва или вопорса
-router.post('/reviews', function(req, res) {
+router.post('/reviews', (req, res) => {
   const detail = {
     email: req.body.faqEmail,
     name: req.body.faqName,
@@ -138,7 +150,7 @@ function toNumber(val) {
   return isNaN(n) ? val : n
 };
 
-// Пререндер Меню
+// function Пререндер Меню
 function preRender(path, res) {
   let args = null;
   let template = [];
@@ -147,16 +159,16 @@ function preRender(path, res) {
 
     args = await db.getQuery('SELECT * FROM `category`');
 
-    args.forEach(async function(item) {
+    args.forEach(async (item) => {
 
-      await (function(){
+      await (() => {
          res.render(path + '/menu/desktop_menu.ejs',
          {
            link: item.name,
            description: item.description,
            img: item.images
          },
-         function(err, html){
+         (err, html) => {
              template.push(util.replacerSpace(html)); // Обфускация HTML - delete space
          });
       })();

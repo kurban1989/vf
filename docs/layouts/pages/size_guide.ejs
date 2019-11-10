@@ -1,0 +1,109 @@
+<div class="Container--center Container__top">
+  <h1 class="h2" style="text-transform: none;font-weight: 400;"><%= h1 %></h1>
+</div>
+<div class="Container">
+  <p class="text-info">&nbsp;Здесь мы поможем Вам соорентироваться при выборе размеров. В наших таблицах руководства размеров можете узнать свой точный размер согласно вашим пропорциям тела.</p>
+
+  <div class="Container--size-chart">
+    <h2 class="h3">Определение размера бюстгальтера</h2>
+    <div class="Container--size-chart--scroll">
+      <table class="Product-table Product-table-all">
+        <thead>
+            <tr class="size-guide-tr">
+              <th rowspan="2" class="page-size-guide medium-col">Размер бюстгальтера</th>
+              <th rowspan="2" class="page-size-guide medium-col">Обхват под грудью (см)</th>
+              <th colspan="8" class="page-size-guide medium-col size-guide-td">Обхват груди (см)</th>
+            </tr>
+            <tr class="size-guide-tr">
+              <th class="small-col page-size-guide--center size-guide-td">AA</th>
+              <th class="small-col page-size-guide--center size-guide-td">A</th>
+              <th class="small-col page-size-guide--center size-guide-td">B</th>
+              <th class="small-col page-size-guide--center size-guide-td">C</th>
+              <th class="small-col page-size-guide--center size-guide-td">D</th>
+              <th class="small-col page-size-guide--center size-guide-td">E</th>
+              <th class="small-col page-size-guide--center size-guide-td">F</th>
+              <th class="small-col page-size-guide--center size-guide-td">G</th>
+            </tr>
+          </thead>
+          <% for(i = 0; i < sizeGuide.AA.length; i++) { %>
+            <tr class="Product-table__cart size-guide-tr">
+              <td class="page-size-guide--center medium-col size-guide-td text-bold"><%= sizeGuide.AA[i].size %></td>
+              <td class="page-size-guide--center medium-col size-guide-td"><%= sizeGuide.AA[i].underBreast %></td>
+              <td class="page-size-guide--center medium-col size-guide-td"><%= sizeGuide.AA[i].breast %></td>
+              <td class="page-size-guide--center medium-col size-guide-td"><%= sizeGuide.A[i].breast %></td>
+              <td class="page-size-guide--center medium-col size-guide-td"><%= sizeGuide.B[i].breast %></td>
+              <td class="page-size-guide--center medium-col size-guide-td"><%= sizeGuide.C[i].breast %></td>
+              <td class="page-size-guide--center medium-col size-guide-td"><%= sizeGuide.D[i].breast %></td>
+              <td class="page-size-guide--center medium-col size-guide-td"><%= sizeGuide.E[i].breast %></td>
+              <td class="page-size-guide--center medium-col size-guide-td"><%= sizeGuide.F[i].breast %></td>
+              <td class="page-size-guide--center medium-col size-guide-td"><%= sizeGuide.G[i].breast %></td>
+            </tr>
+          <% } %>
+      </table>
+    </div>
+  </div>
+  <div class="Container--size-chart">
+    <h2 class="h3">Определение полноты чашечки бюстгальтера</h2>
+    <div class="Container--size-chart--scroll">
+      <table class="Product-table">
+        <thead>
+          <tr class="size-guide-tr">
+            <th class="page-size-guide medium-col">Полнота</th>
+            <th class="page-size-guide medium-col">Размер объёмов (см)</th>
+          </tr>
+        </thead>
+        <% Object.keys(completeness).forEach(function(key) { %>
+          <tr class="Product-table__cart size-guide-tr">
+            <td class="page-size-guide--center medium-col size-guide-td"><%= key %></td>
+            <td class="page-size-guide--center medium-col size-guide-td"><%= completeness[key].completeness %></td>
+          </tr>
+        <% }) %>
+      </table>
+    </div>
+  </div>
+  <div class="Container--size-chart">
+    <h2 class="h3">Определение размера трусиков</h2>
+    <div class="Container--size-chart--scroll">
+      <table class="Product-table Product-table-all">
+        <thead>
+          <tr class="size-guide-tr">
+            <th class="page-size-guide medium-col">Размер трусиков</th>
+            <th class="page-size-guide medium-col">XS</th>
+            <th class="page-size-guide medium-col">S</th>
+            <th class="page-size-guide medium-col">M</th>
+            <th class="page-size-guide medium-col">L</th>
+            <th class="page-size-guide medium-col">XL</th>
+            <th class="page-size-guide medium-col">XXL</th>
+            <th class="page-size-guide medium-col">XXXL</th>
+            <th class="page-size-guide medium-col">4XL</th>
+            <th class="page-size-guide medium-col size-guide-td">5XL</th>
+          </tr>
+        </thead>
+        <tr class="Product-table__cart size-guide-tr">
+          <td class="page-size-guide--center size-guide-td">Обхват талии</td>
+          <th class="page-size-guide medium-col">63 - 67</th>
+          <th class="page-size-guide medium-col">68 - 72</th>
+          <th class="page-size-guide medium-col">73 - 77</th>
+          <th class="page-size-guide medium-col">78 - 82</th>
+          <th class="page-size-guide medium-col">83 - 87</th>
+          <th class="page-size-guide medium-col">88 - 92</th>
+          <th class="page-size-guide medium-col">93 - 97</th>
+          <th class="page-size-guide medium-col">98 - 102</th>
+          <th class="page-size-guide medium-col size-guide-td">103 - 107</th>
+        </tr>
+        <tr class="Product-table__cart size-guide-tr">
+          <td class="page-size-guide--center size-guide-td">Обхват бёдер</td>
+          <th class="page-size-guide medium-col">88 - 92</th>
+          <th class="page-size-guide medium-col">93 - 97</th>
+          <th class="page-size-guide medium-col">98 - 102</th>
+          <th class="page-size-guide medium-col">103 - 107</th>
+          <th class="page-size-guide medium-col">108 - 112</th>
+          <th class="page-size-guide medium-col">113 - 117</th>
+          <th class="page-size-guide medium-col">118 - 122</th>
+          <th class="page-size-guide medium-col">123 - 127</th>
+          <th class="page-size-guide medium-col size-guide-td">128 - 132</th>
+        </tr>
+      </table>
+    </div>
+  </div>
+</div>

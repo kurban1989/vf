@@ -1,15 +1,15 @@
-const thisUtils = (function() {
+const Utils = (function() {
     'use strict';
 
-    function thisUtils(args) {
+    function Utils(args) {
         // enforces new
-        if (!(this instanceof thisUtils)) {
-            return new thisUtils(args);
+        if (!(this instanceof Utils)) {
+            return new Utils(args);
         }
         // constructor body
     }
 
-    thisUtils.prototype.replacerSpace = function(str) {
+    Utils.prototype.replacerSpace = function(str) {
         const regex = /\s+/gm;
         const regexRN = /(>\s<)/gm;
         str = str.replace(regex, ' ');
@@ -17,7 +17,7 @@ const thisUtils = (function() {
         return str;
     };
 
-    thisUtils.prototype.templateCart = function(args) {
+    Utils.prototype.templateCart = function(args) {
         return `<div class="cart-item" data-cart="${args.id}" data-insert_id="${args.insertID}">
             <div class="cart-item__inner">
                 <div class="cart-item__image">
@@ -55,7 +55,7 @@ const thisUtils = (function() {
         </div>`;
     };
 
-    thisUtils.prototype.renderCart = async function(req, db) {
+    Utils.prototype.renderCart = async function(req, db) {
         // Ссылка самого на себя, ебучий контекст THIS
         const obj = this;
 
@@ -95,7 +95,7 @@ const thisUtils = (function() {
         });
     };
 
-    return thisUtils;
+    return Utils;
 }());
 
-module.exports = thisUtils
+module.exports = Utils

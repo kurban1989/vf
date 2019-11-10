@@ -22,7 +22,7 @@ const optionsPage = {
 }
 
 // Проверка прав юзера перед всеми роутами админки
-router.all('*', async function(req, res, next) {
+router.all('*', async (req, res, next) => {
   if (!req.cookies || !req.cookies.ust) {
     res.status(401).send("<p>Sorry, Unauthorized! <br> You need authorize!</p><br><p><b>Error 401 </b></p><br><br><a href='/account/login/'>LOGIN<a>");
     return
@@ -43,7 +43,7 @@ router.all('*', async function(req, res, next) {
   }
 });
 // Заказы оплаченные и не оплаченные
-router.get('/orders/', function(req, res) {
+router.get('/orders/', (req, res) => {
 
   /* Проверка наличия заказов */
   queryNewOrder(db).then((res) => {
@@ -51,12 +51,12 @@ router.get('/orders/', function(req, res) {
   });
 
   preRanderTableOrders(req, res, config.pagesPath + '/adm_show_orders.ejs')
-    .then(async function(responce){
+    .then(async (responce) => {
       optionsPage.showAllProd = responce;
 
       res.render(config.viewMain + '/admin_index',
           optionsPage,
-          function(err, html){
+          function(err, html) {
             if (err) throw new Error(err);
             res.send(util.replacerSpace(html)); // Обфускация HTML - del space
           });
@@ -64,7 +64,7 @@ router.get('/orders/', function(req, res) {
 });
 
 // Различные AJAX запорсы ORDER
-router.post('/orders/', function(req, res) {
+router.post('/orders/', (req, res) => {
   const dataOrderAll = {
     templateArr: [],
     dataCustomer: [],
@@ -78,10 +78,10 @@ router.post('/orders/', function(req, res) {
   if (req.body.param1 === 'orderReady') {
 
     db.updateData('checkout', {new: 0}, req.body.idProd)
-      .then(function(result) {
+      .then((result) => {
         res.send(JSON.stringify({status: 'ok'}));
       })
-      .catch(function(err) { throw new Error(err); });
+      .catch(err => { throw new Error(err) });
       return;
   }
 
@@ -89,9 +89,9 @@ router.post('/orders/', function(req, res) {
   if (req.body.param1 === 'setNewWindowAdd') {
     page = config.pagesPath + '/show_order.ejs';
 
-    db.getQuerySafe('cart', 'user_token', req.body.idProd, 'equality').then(async function(result) {
+    db.getQuerySafe('cart', 'user_token', req.body.idProd, 'equality').then(async (result) => {
 
-        let templateArrLocal = await result.map(async function(item) {
+        let templateArrLocal = await result.map(async (item) => {
               let resolve = await db.getQuerySafe('products', 'id', item.id_prod, 'equality');
 
               resolve[0].changedSize = item.size;
@@ -112,11 +112,11 @@ router.post('/orders/', function(req, res) {
       });
 
     })
-    .then(function() {
+    .then(() => {
 
       res.render(page,
       dataOrderAll,
-      function(err, html){
+      (err, html) => {
         if (err) throw new Error(err);
         res.send(JSON.stringify({result: util.replacerSpace(html)})); // Обфускация HTML и отправка подробностей заказа
       });
@@ -124,11 +124,11 @@ router.post('/orders/', function(req, res) {
 
 
   } else if (req.body.param1 === "backAllProd"){ // Если нажали НАЗАД, то просто редиректним на ордер
-      res.send(JSON.stringify({result: '<script type="text/javascript"> window.location.href = "'+ config.fullDomain +'/power/admin/orders/";</script>'}));
+      res.send(JSON.stringify({ result: '<script type="text/javascript"> window.location.href = "'+ config.fullDomain +'/power/admin/orders/";</script>' }));
   } else if (req.body.param1 === 'deleteProd') {
       /* Запрос на удаление заказа из БД */
       db.getQuerySafe('checkout', 'id', req.body.idProd, 'deleteProd')
-        .then(function(responce){
+        .then((responce) => {
           res.send(JSON.stringify({result: '<script type="text/javascript"> window.location.href = "'+ config.fullDomain +'/power/admin/orders/";</script>'}));
       });
   }
@@ -136,10 +136,10 @@ router.post('/orders/', function(req, res) {
 });
 
 // КАТЕГОРИИ / ГРУППЫ - ТОВАРОВ
-router.get('/cat/', function(req, res, next) {
+router.get('/cat/', (req, res, next) => {
 
   /* Проверка наличия заказов */
-  queryNewOrder(db).then(function(res) {
+  queryNewOrder(db).then((res) => {
     optionsPage.countOrder = res.length;
   });
 
@@ -150,7 +150,7 @@ router.get('/cat/', function(req, res, next) {
       delete req.query.update;// удаление лишнего поля
 
       db.updateData('category', req.query, req.cookies.updateCat)
-      .then(function(result) {
+      .then((result) => {
         res.cookie('updatedCat', req.query.name + '__' + result.insertId, { domain: '.'+config.domain, path: '/', expires: new Date(Date.now() + 1100)});
         res.redirect(config.fullDomain + '/power/admin/');
       })
@@ -159,7 +159,7 @@ router.get('/cat/', function(req, res, next) {
     }
 
     db.setData('category', req.query)
-      .then(function(result) {
+      .then((result) => {
         res.cookie('successAddCat', req.query.name + '__' + result.insertId, { domain: '.'+config.domain, path: '/', expires: new Date(Date.now() + 1000)});
         res.redirect(config.fullDomain + '/power/admin/cat/');
       })
@@ -168,7 +168,7 @@ router.get('/cat/', function(req, res, next) {
   }
 
   preRanderTableCat(req, res, config.pagesPath + '/adm_show_cat.ejs')
-    .then(function(responce){
+    .then((responce) => {
 
       optionsPage.showAllProd = responce;
       res.render(config.viewMain + '/admin_index',
@@ -180,10 +180,10 @@ router.get('/cat/', function(req, res, next) {
     });
 });
 // Корень админки
-router.get('/', function(req, res, next) {
+router.get('/', (req, res, next) => {
 
   /* Проверка наличия заказов */
-  queryNewOrder(db).then(function(res) {
+  queryNewOrder(db).then((res) => {
     optionsPage.countOrder = res.length;
   });
 
@@ -200,7 +200,7 @@ router.get('/', function(req, res, next) {
      }
 
       db.updateData('products', req.query, req.cookies.updateProduct)
-      .then(function(result) {
+      .then((result) => {
         res.cookie('updatedProduct', req.query.title + '__' + result.insertId, { domain: '.'+config.domain, path: '/', expires: new Date(Date.now() + 1100)});
         res.redirect(config.fullDomain + '/power/admin/');
       })
@@ -209,7 +209,7 @@ router.get('/', function(req, res, next) {
     }
 
     db.setData('products', req.query)
-      .then(function(result) {
+      .then((result) => {
         res.cookie('successAddProduct', req.query.title + '__' + result.insertId, { domain: '.'+config.domain, path: '/', expires: new Date(Date.now() + 1100)});
         res.redirect(config.fullDomain + '/power/admin/');
       })
@@ -232,7 +232,7 @@ router.get('/', function(req, res, next) {
 
 });
 // GET запорс AJAX фильтрации товаров!
-router.get('/filter/', function(req, res) {
+router.get('/filter/', (req, res) => {
     const filter = {}
 
     for (let field in req.query) {
@@ -241,7 +241,7 @@ router.get('/filter/', function(req, res) {
         }
     }
 
-    db.getQueryManySafe('products', filter).then(function(resultFilter) {
+    db.getQueryManySafe('products', filter).then((resultFilter) => {
         let r = '';
         res.render(config.pagesPath + '/one_row_table.ejs',
         {
@@ -258,7 +258,7 @@ router.get('/filter/', function(req, res) {
     });
 });
 // POST запорсы AJAX страничек редактирования товара!
-router.post('/update/', function(req, res) {
+router.post('/update/', (req, res) => {
   if (req.body.qeuryUpdate === 'set') {
     getOneValue(parseInt(req.body.id, 10), 'products').then(function(rr) {
       res.send(JSON.stringify({result: rr}));
@@ -266,7 +266,7 @@ router.post('/update/', function(req, res) {
   }
 });
 // POST запорсы AJAX страничек редактирования категории!
-router.post('/cat/update/', function(req, res) {
+router.post('/cat/update/', (req, res) => {
   if (req.body.qeuryUpdate === 'set') {
     getOneValue(parseInt(req.body.id, 10), 'category').then(function(rr) {
       res.send(JSON.stringify({result: rr}));
@@ -274,7 +274,7 @@ router.post('/cat/update/', function(req, res) {
   }
 })
 // POST запорсы AJAX страничек добавления/удаления.
-router.post('/', function(req, res, next) {
+router.post('/', (req, res, next) => {
 
   let page = '';
   let state = {};
@@ -282,7 +282,7 @@ router.post('/', function(req, res, next) {
 
     if (req.body.param1 === 'searchTitleProd') { // Поиск по имени товара
       db.getQuerySafe('products', 'title', req.body.param2)
-        .then(function(responce){
+        .then((responce) => {
           res.send(JSON.stringify({result: responce}));
         });
 
@@ -346,7 +346,7 @@ router.post('/', function(req, res, next) {
 });
 
 // POST запорсы AJAX страничек добавления/редактирования/удаление категорий
-router.post('/cat/',function(req,res) {
+router.post('/cat/',(req,res) => {
 
   let page = '';
   let state = {};
@@ -363,16 +363,16 @@ router.post('/cat/',function(req,res) {
 
   } else if (req.body.param1 === 'deleteProd') { // Запрос на удаление категории
       db.getQuerySafe('category', 'id', req.body.idProd, 'deleteProd')
-        .then(function(responce){
+        .then((responce) => {
           res.send(JSON.stringify({result: '<script type="text/javascript"> window.location.href = "'+ config.fullDomain +'/power/admin/cat/";</script>'}));
         });
 
   } else if (req.body.param1 === "backAllProd"){
       preRanderTableCat(req, res, config.pagesPath + '/adm_show_cat.ejs')
-      .then(function(responce){
+      .then((responce) => {
           page = responce;
       })
-      .then(function(responce){
+      .then((responce) => {
           res.send(JSON.stringify({result: page, state: state, title: title}));
       });
       return;

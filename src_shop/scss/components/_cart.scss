@@ -248,7 +248,7 @@
         margin-left: 15px;
         width: 34px;
         height: 34px;
-        transform: translateY(-8px);
+        transform: translateY(-1px);
         float: right;
 
         button {
@@ -274,6 +274,12 @@
             svg {
                 pointer-events: none;
             }
+        }
+
+        &:after {
+            content: '';
+            display: table;
+            clear: both;
         }
     }
 

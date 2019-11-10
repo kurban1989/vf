@@ -12,7 +12,7 @@ exports.setUser = function(jsonString) {
     method: 'GET'
   }
 
-  return new Promise(function(resolve, reject){
+  return new Promise((resolve, reject) => {
 
     const req = https.request(options, (res) => {
 

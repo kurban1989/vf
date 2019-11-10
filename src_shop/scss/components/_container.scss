@@ -18,6 +18,11 @@
         text-align: left;
     }
 
+    &--size-chart{
+        padding: 10px 20px;
+        margin-bottom: 22px;
+    }
+
     &__big-logo {
         @include size(100%, auto);
         margin-top: 30px;
@@ -172,10 +177,20 @@
 }
 
 @include mq("tablet-small", "max") {
-    .Container__top {
-        padding-top: 35px;
-        &--large {
-            padding-top: 60px;
+    .Container {
+        &__top {
+            padding-top: 35px;
+            &--large {
+                padding-top: 60px;
+            }
+        }
+        &--size-chart {
+            padding: 5px 15px;
+            margin-bottom: 10px;
+
+            &--scroll {
+                overflow-y: scroll;
+            }
         }
     }
 

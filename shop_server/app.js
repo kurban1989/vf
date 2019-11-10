@@ -28,12 +28,12 @@ let cart = fs.readFileSync(config.pagesPath + '/cart.ejs', 'utf8');
 
 // Опции рендера главной страницы
 const optionsMain = {
-  title : 'Красивое нижнее бельё по индивидуальным меркам',
-  h1 : 'Красивое нижнее бельё по индивидуальным меркам',
-  nav : '',
-  picture : '',
-  footer : footer,
-  cart : cart,
+  title: 'Красивое нижнее бельё по индивидуальным меркам',
+  h1: 'Красивое нижнее бельё по индивидуальным меркам',
+  nav: '',
+  picture: '',
+  footer,
+  cart,
   mobileMenu : mobileMenu,
   bodyMain : '',
   main : '',
@@ -124,7 +124,7 @@ app.get('/', function (req, res, next) {
           items : result,
           list: await db.getQuery('SELECT * FROM `category`'),
         }, function(err, html){
-            if (err) { throw new Error("this E: " + err); }
+            if (err) { throw new Error("Render Error: " + err); }
             optionsMain.nav  = html;
         });
     })
@@ -142,7 +142,7 @@ app.get('/', function (req, res, next) {
               checkNewCat: checkNewCat,
               items : result,
             }, (err, html) => {
-                if (err) { throw new Error("this E: " + err); }
+                if (err) { throw new Error("Render Error: " + err); }
                 optionsMain.mobileMenu = html;
             });
         });
@@ -154,7 +154,7 @@ app.get('/', function (req, res, next) {
         res.render(config.pagesPath + '/main.ejs', {
         h1 : optionsMain.h1,
         }, function(err, html){
-            if (err) { throw new Error("this E: " + err); }
+            if (err) { throw new Error("Render Error: " + err); }
             optionsMain.bodyMain = html;
         });
     })
@@ -163,7 +163,7 @@ app.get('/', function (req, res, next) {
         res.render(config.viewMain + "/index",
         optionsMain,
         function(err, html){
-          if (err) {throw new Error(err);}
+          if (err) { throw new Error(err); }
             res.send(util.replacerSpace(html)); // Обфускация HTML - delete space
         });
     })
@@ -171,7 +171,7 @@ app.get('/', function (req, res, next) {
 });
 
 // Запрос карточки продукта /product/
-app.get('/product/:types/:ids', (req, res, next) => {
+app.get('/product/:type/:id', (req, res, next) => {
   const optionsCol = optionsMain;
   const userToken = req.cookies.add2cart_for_users || 'none';
   let inCart = null;
@@ -182,7 +182,7 @@ app.get('/product/:types/:ids', (req, res, next) => {
   optionsCol.picture = '';
 
     preRender(config.pagesPath, null, res)
-    .then(async function(result) {
+    .then(async (result) => {
         let checkNewCat = false;
         const checkNew = await db.getQuery('SELECT * FROM `products` WHERE `new`=1');
 
@@ -194,24 +194,25 @@ app.get('/product/:types/:ids', (req, res, next) => {
           checkNewCat: checkNewCat,
           items : result,
           list: await db.getQuery('SELECT * FROM `category`'),
-        }, function(err, html){
-            if (err) { console.log("this E: " + err); }
+        },
+        (err, html) => {
+            if (err) { console.log("Render Error: " + err); }
             optionsCol.nav  = html;
         });
 
         return Promise.all([f1]);
     })
-    .then(function(f1) {
+    .then((f1) => {
 
       // Рендер всей инфы на странице товара в майн боди
-      let renderByMainBody = db.getQuerySafe('products', 'id', req.params.ids, 'equality').then(async (rr) => {
+      let renderByMainBody = db.getQuerySafe('products', 'id', req.params.id, 'equality').then(async (rr) => {
 
         let resultInCart = null;
         optionsCol.title = rr[0].category + ' -> ' + rr[0].title;
 
         /* Проверка наличия товара в корзине */
         await (async () => {
-          resultInCart = await db.getQueryManySafe('cart', {id_prod: req.params.ids, user_token: userToken, success: 0});
+          resultInCart = await db.getQueryManySafe('cart', { id_prod: req.params.id, user_token: userToken, success: 0 });
         })();
 
         if (resultInCart.length > 0 || resultInCart.length != 0) {
@@ -230,7 +231,7 @@ app.get('/product/:types/:ids', (req, res, next) => {
             if (err) { throw new Error(err); }
             optionsCol.modalSizes = html;
           })
-        })(rr[0].sizes.split(','), rr[0].sizesBra ? rr[0].sizesBra.split(',') : [], req.params.ids);
+        })(rr[0].sizes.split(','), rr[0].sizesBra ? rr[0].sizesBra.split(',') : [], req.params.id);
 
         /* Рендер самой страницы товара */
         res.render(config.pagesPath + '/card.ejs', {
@@ -245,7 +246,7 @@ app.get('/product/:types/:ids', (req, res, next) => {
           textInBtnCart,
           classInCart
         }, function(err, html){
-            if (err) { throw new Error("this E: " + err); }
+            if (err) { throw new Error("Render Error: " + err); }
             optionsCol.bodyMain = html;
         });
       });
@@ -253,9 +254,9 @@ app.get('/product/:types/:ids', (req, res, next) => {
       return Promise.all([renderByMainBody]);
 
     })
-    .then(function(renderByMainBody) {
+    .then((renderByMainBody) => {
         // РЕНДЕР МОБИЛЬНОГО МЕНЮ
-        let mobMenu = db.getQuery('SELECT * FROM `category`').then(async function(result){
+        let mobMenu = db.getQuery('SELECT * FROM `category`').then(async (result) => {
             let checkNewCat = false;
             const checkNew = await db.getQuery('SELECT * FROM `products` WHERE `new`=1');
 
@@ -265,8 +266,8 @@ app.get('/product/:types/:ids', (req, res, next) => {
             res.render(mobileMenu, {
             checkNewCat: checkNewCat,
             items : result,
-            }, function(err, html){
-                if (err) { throw new Error("this E: " + err); }
+            }, (err, html) => {
+                if (err) { throw new Error("Render Error: " + err); }
                 optionsMain.mobileMenu = html;
             });
         });
@@ -277,11 +278,11 @@ app.get('/product/:types/:ids', (req, res, next) => {
         // Основной рендер
         res.render(config.viewMain + "/index",
         optionsCol,
-        function(err, html){
+        (err, html) => {
             res.status(200).send(util.replacerSpace(html)); // Обфускация HTML - delete space
         });
     })
-    .catch(function(err) { throw new Error(err); });
+    .catch(err => { throw new Error(err) } );
 });
 // Запрос КОЛЛЕКЦИИ
 app.get('/collection/:query', (req, res, next) => {
@@ -291,17 +292,23 @@ app.get('/collection/:query', (req, res, next) => {
     optionsCol.picture = '';
 
     if (req.params.query === 'new') {
-      optionsCol.h1 = 'Новая коллекция';
+      optionsMain.title = optionsCol.h1 = 'Новая коллекция';
+      optionsMain.discription = 'Новая коллекция в интенет магазине vflingerie.com';
+    } else {
+      db.getQuerySafe('category', 'name', req.params.query, 'equality').then((result) => {
+        optionsMain.title = optionsMain.discription = result[0].description;
+      })
     }
 
     preRender(config.pagesPath, null, res)
-    .then(async function(result) {
+    .then(async (result) => {
         let checkNewCat = false;
         const checkNew = await db.getQuery('SELECT * FROM `products` WHERE `new`=1');
 
         if (checkNew.length > 0) {
           checkNewCat = true;
         }
+
         // Рендер пунктов выпадашек
         res.render(config.viewMain + '/nav.ejs', {
         checkNewCat: checkNewCat,
@@ -309,7 +316,7 @@ app.get('/collection/:query', (req, res, next) => {
         list: await db.getQuery('SELECT * FROM `category`'),
         },
         (err, html) => {
-            if (err) { console.log("this E: " + err); }
+            if (err) { console.log("Render Error: " + err); }
             optionsCol.nav  = html;
         });
     })
@@ -327,8 +334,9 @@ app.get('/collection/:query', (req, res, next) => {
           res.render(mobileMenu, {
             checkNewCat: checkNewCat,
             items : result,
-          }, function(err, html){
-              if (err) { throw new Error("this E: " + err); }
+          },
+          (err, html) => {
+              if (err) { throw new Error("Render Error: " + err); }
               optionsMain.mobileMenu = html;
           });
         });
@@ -357,7 +365,7 @@ app.get('/collection/:query', (req, res, next) => {
             table: result
           },
           (err, html) => {
-            if (err) { console.log("this E: " + err); }
+            if (err) { console.log("Render Error: " + err); }
             optionsCol.bodyMain = html;
           });
 
@@ -367,7 +375,7 @@ app.get('/collection/:query', (req, res, next) => {
           res.render(config.viewMain + "/index",
           optionsCol,
           (err, html) => {
-              res.send(util.replacerSpace(html)); // Обфускация HTML - delete space
+              res.send(util.replacerSpace(html)); // Обфускация HTML
           });
       });
     // конец всех рендеров страницы коллекции
@@ -383,7 +391,7 @@ app.use((req, res, next) => {
 app.listen(4000);
 
 // Рендер Десктопного Меню ( Для 'выпадашек' )
-function preRender(path, args = [], res) {
+function preRender (path, args = [], res) {
 
   let template = [];
 
@@ -400,8 +408,9 @@ function preRender(path, args = [], res) {
            description: item.description,
            img: item.images
          },
-         function(err, html){
-             template.push(util.replacerSpace(html)); // Обфускация HTML - delete space
+         (err, html) => {
+            if (err) { throw new Error("Render Error: " + err); }
+            template.push(util.replacerSpace(html)); // Обфускация HTML
          });
       })();
 

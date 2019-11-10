@@ -16,10 +16,9 @@ class Resize {
     let filename = '';
     let filepath = '';
 
-    return new Promise(function(resolve, reject){
+    return new Promise((resolve, reject) => {
       image.metadata()
-        .then(function({height, width, format}) {
-              // let ratio_orig = width/height;
+        .then(({height, width, format}) => {
               let fitAction = sharp.fit.cover;
               height = 815;
               width = 610;
@@ -38,7 +37,7 @@ class Resize {
                 fitAction
               }
 
-        }).then(async function(args) {
+        }).then(async (args) => {
           filename = Resize.filename(args.format);
           filepath = self.filepath(filename);
 
@@ -63,8 +62,8 @@ class Resize {
 
           }
 
-        }).then(function(args) {
-          setTimeout(function() {
+        }).then((args) => {
+          setTimeout(() => {
             fs.unlink(buffer);
             return resolve(filename);
           }, 105);

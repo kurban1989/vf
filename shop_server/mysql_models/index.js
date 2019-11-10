@@ -131,10 +131,13 @@ exports.getQueryManySafe = async (table, obj, callback) => {
       client.getConnection((err, connector) => {
         // запрос
         connector.query(sql, (error, result) => {
-          connector.release();
+
           if (error) {
-             return reject(new Error(error));
+            connector.release(); // Закрываем соединение
+            return reject(new Error(error));
           }
+
+          connector.release(); // Закрываем соединение
 
           if (typeof callback === 'function') {
               callback();
@@ -211,7 +214,7 @@ exports.setData = async (table, obj, callback) => {
     let sql = '';
 
     clearBad(obj).then((ObjProm) => {
-      for (var prop in ObjProm) {
+      for (let prop in ObjProm) {
         if ({}.hasOwnProperty.call(ObjProm, prop)) {
           dataWrite += '"' + obj[prop];
           dataWrite += '", ';

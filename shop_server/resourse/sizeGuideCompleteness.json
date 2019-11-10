@@ -1,0 +1,26 @@
+{
+  "AA": {
+    "completeness": "10 - 12"
+  },
+  "A": {
+    "completeness": "12 - 14"
+  },
+  "B": {
+    "completeness": "14 - 16"
+  },
+  "C": {
+    "completeness": "16 - 18"
+  },
+  "D": {
+    "completeness": "18 - 20"
+  },
+  "E": {
+    "completeness": "20 - 22"
+  },
+  "F": {
+    "completeness": "22 - 24"
+  },
+  "G": {
+    "completeness": "24 - 26"
+  }
+}
