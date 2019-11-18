@@ -1,11 +1,181 @@
+<% var optionDate = {
+  month: 'numeric',
+  day: 'numeric',
+  year: 'numeric'
+};
+%>
 <div class="Container--center Container__top">
-  <h1 class="h2" style="text-transform: none;font-weight: 400;"><%- h1 %></h1>
+  <h1 class="h2" style="text-transform: none;font-weight: 400;"><%= h1 %></h1>
 </div>
 <div class="Main">
   <button class="Button Button__absolute Button__absolute--right js-logout">Выйти</button>
     <% if(admin) { %>
-    <a href="/power/admin/" style="color: #fff;text-decoration: underline;">Админка</a>
+      <a href="/power/admin/" style="color: #fff;text-decoration: underline;">Админка</a>
+      <br><br><br>
     <% } %>
-    <br><br><br>
-    <p>Кабинет пользователя на стадии разработки</p>
+    <div class="Container Customer">
+      <ul class="Customer__navigation">
+        <li>
+          <a href="#orders" class="js-userAccordion is-active" data-item="orders">Посмотреть заказы</a>
+        </li>
+        <li>
+          <a href="#user_data" class="js-userAccordion" data-item="user">Личные данные</a>
+        </li>
+      </ul>
+      <div class="Customer__main">
+        <div class="Customer__orders js-userAccordion-orders js-accordionHide">
+          <div class="Container--size-chart--scroll">
+            <% if (existsCheckout.length) { %>
+            <table class="Product-table Product-table-all">
+              <thead>
+                <tr class="size-guide-tr">
+                  <th class="page-size-guide medium-col">Номер заказа</th>
+                  <th class="page-size-guide medium-col">Заказанный товар</th>
+                  <th class="page-size-guide medium-col">Выбранный размер</th>
+                  <th class="page-size-guide medium-col">Адрес доставки</th>
+                  <th class="page-size-guide medium-col">Общая сумма заказа</th>
+                  <th class="page-size-guide medium-col">Статус оплаты</th>
+                  <th class="page-size-guide medium-col">Статус заказа</th>
+                  <th class="page-size-guide medium-col">Дата заказа</th>
+                </tr>
+              </thead>
+              <% for(i = 0; i < existsCheckout.length; i++) { %>
+                <tr class="Product-table__cart size-guide-tr">
+                  <td class="page-size-guide--center medium-col size-guide-td"><%= existsCheckout[i].id %></td>
+                  <td class="page-size-guide--center medium-col size-guide-td">
+                    <a class="list" href="/product/<%= productsFromCheckout[i].category %>/<%= productsFromCheckout[i].id %>">
+                      <%= productsFromCheckout[i].title %>
+                    </a>
+                  </td>
+                  <td class="page-size-guide--center medium-col size-guide-td"><%= checkout[i].size %></td>
+                  <td class="page-size-guide--center medium-col size-guide-td">
+                    <%= existsCheckout[i].checkoutRegion %>,
+                    <br>
+                    г. <%= existsCheckout[i].checkoutCity %>
+                  </td>
+                  <td class="page-size-guide--center medium-col size-guide-td">
+                    <%= parseInt(existsCheckout[i].sum_checkout, 10) + parseInt(existsCheckout[i].cost_delivery, 10) %>
+                  </td>
+                  <td class="page-size-guide--center medium-col size-guide-td">
+                    <%= existsCheckout[i].status_pay ? 'Оплачен' : 'Не оплачено' %>
+                  </td>
+                  <td class="page-size-guide--center medium-col size-guide-td">
+                    <%= existsCheckout[i].new ? 'Ждёт обработки' : 'Обработан администратором' %>
+                  </td>
+                  <td class="page-size-guide--center medium-col size-guide-td">
+                    <%= new Date(existsCheckout[i].date).toLocaleDateString('ru', optionDate) %>
+                  </td>
+                </tr>
+              <% } %>
+            </table>
+            <% } else { %> 
+              <p>У вас пока нет ни одного заказа</p>
+            <% } %>
+          </div>
+        </div>
+
+        <div class="Customer__address js-userAccordion-user js-accordionHide" style="display: none;">
+          <ul class="Product__ul">
+            <li class="Customer__preheader">
+              <p>Имя:</p>
+            </li>
+            <li>
+              <p class="list"><%= userInfo.first_name && userInfo.first_name.length ? userInfo.first_name : 'Не указано' %></p>
+            </li>
+
+            <li class="Customer__preheader">
+              <p>Фамилия:</p>
+            </li>
+            <li>
+              <p class="list"><%= userInfo.last_name && userInfo.last_name.length ? userInfo.last_name : 'Не указано' %></p>
+            </li>
+
+            <li class="Customer__preheader">
+              <p>email:</p>
+            </li>
+            <li>
+              <p class="list"><%= userInfo.email && userInfo.email.length ? userInfo.email : 'Не указано' %></p>
+            </li>
+            
+            <li class="Customer__preheader">
+              <p>Город:</p>
+            </li>
+            <li>
+              <p class="list"><%= userInfo.city && userInfo.city.length ? userInfo.city : 'Не указано' %></p>
+            </li>
+
+            <li class="Customer__preheader">
+              <p>Регион:</p>
+            </li>
+            <li>
+              <p class="list"><%= userInfo.region && userInfo.region.length ? userInfo.region : 'Не указано' %></p>
+            </li>
+
+            <li class="Customer__preheader">
+              <p>Номер телефона:</p>
+            </li>
+            <li>
+              <p class="list"><%= userInfo.phone && userInfo.phone.length ? userInfo.phone : 'Не указано' %></p>
+            </li>
+          </ul>
+
+          <div class="Order-step__sections">
+            <button class="js-userAccordion Button__card--primary Button--block Button__card--next-step" type="button" data-item="edit">
+              <span>Отредактировать</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="Customer__orders js-userAccordion-edit js-accordionHide" style="display: none;">
+          <div class="Order-main--step">
+              <form action="" id="edit_user_data">
+                <div class="Order-step__sections">
+                  <div class="Order-main__header--sections">
+                    <span>Контактная информация</span>
+                  </div>
+                </div>
+
+                <div class="Order-step__sections--half">
+                  <input placeholder="Email" autocapitalize="off" spellcheck="false" aria-required="true" class="Order-input" type="email" name="Email" id="email" value="<%= userInfo.email && userInfo.email.length ? userInfo.email : '' %>">
+                </div>
+
+                <div class="Order-step__sections--half">
+                  <input placeholder="Ваше имя" autocapitalize="off" spellcheck="false" aria-required="true" class="Order-input" type="text" name="first_name" id="first_name" value="<%= userInfo.first_name && userInfo.first_name.length ? userInfo.first_name : '' %>">
+                </div>
+
+                <div class="Order-step__sections--half">
+                  <input placeholder="Фамилия" autocapitalize="off" spellcheck="false" aria-required="true" class="Order-input" type="text" name="last_name" id="last_name" value="<%= userInfo.last_name && userInfo.last_name.length ? userInfo.last_name : '' %>">
+                </div>
+
+                <div class="Order-step__sections--half" style="position: relative;">
+                  <input placeholder="Регион" autocapitalize="off" spellcheck="true" aria-required="true" class="Order-input" type="text" name="region" id="region" value="<%= userInfo.region && userInfo.region.length ? userInfo.region : '' %>">
+                  <input type="text" class="is-hidden" name="checkoutRegionCode">
+                  <ul class="Content-table__dropdown-menu js-categoryPopup"></ul>
+                </div>
+
+                <div class="Order-step__sections--half" style="position: relative;">
+                  <input placeholder="Город" autocapitalize="off" spellcheck="true" aria-required="true" class="Order-input" type="text" name="city" id="city" value="<%= userInfo.city && userInfo.city.length ? userInfo.city : '' %>">
+                  <ul class="Content-table__dropdown-menu js-categoryPopup"></ul>
+                </div>
+
+                <div class="Order-step__sections--half">
+                  <input placeholder="Номер телефона" autocapitalize="off" spellcheck="false" aria-required="true" class="Order-input js-numberFormat" type="phone" name="phone" id="phone" value="<%= userInfo.phone && userInfo.phone.length ? userInfo.phone : '' %>">
+                </div>
+                
+                <div class="Order-step__sections--half Customer--half">
+                  <button class="Button__card--primary Button--block Button__card--next-step" type="button">
+                    <span>Сохранить</span>
+                  </button>
+                </div>
+                
+                <div class="Order-step__sections--half Customer--half">
+                  <button class="js-userAccordion Button__card--primary Button--block Button__card--next-step" type="button" data-item="user">
+                    <span>Отменить</span>
+                  </button>
+                </div>
+              </form>
+          </div>
+        </div>
+      </div>      
+    </div>
 </div>

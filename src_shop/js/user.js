@@ -191,4 +191,14 @@ $(document).on('click', '.js-faqQuery', function(e) {
         }, 7000)
 
     });
+});
+
+/* Аккордион/вкладки на странице юзера */
+$(document).on('click', '.js-userAccordion', function(e) {
+    e.preventDefault();
+    const item = $(this).data('item')
+    $('.js-userAccordion').removeClass('is-active');
+    $(this).addClass('is-active');
+    $('.js-accordionHide').hide();
+    $(`.js-userAccordion-${item}`).show()
 })

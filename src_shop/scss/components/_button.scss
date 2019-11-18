@@ -38,8 +38,8 @@ button {
         border-radius: 5px;
 
         &--right {
-            top: 5px;
-            right: 1px;
+            top: 7px;
+            right: 5px;
             padding: 0 10px;
         }
     }
@@ -146,11 +146,20 @@ button {
 }
 
 .inCart {
+    background-color: #C78F5A;
     background: linear-gradient(10deg,#916338 30%,#C78F5A);
 }
 
 @include mq("tablet-small", "max") {
-    .Button--block {
-        width: 100%;
+    .Button {
+        &--block {
+            width: 100%;
+        }
+        &__absolute {
+            &--right {
+                top: 45px;
+                right: 30px;
+            }
+        }
     }
 }

@@ -123,12 +123,13 @@ app.get('/', function (req, res, next) {
           checkNewCat: checkNewCat,
           items : result,
           list: await db.getQuery('SELECT * FROM `category`'),
-        }, function(err, html){
+        },
+        (err, html) => {
             if (err) { throw new Error("Render Error: " + err); }
             optionsMain.nav  = html;
         });
     })
-    .then(function() {
+    .then(() => {
         // РЕНДЕР МОБИЛЬНОГО МЕНЮ
         let mobMenu = db.getQuery('SELECT * FROM `category`').then(async (result) => {
             let checkNewCat = false;
@@ -149,20 +150,20 @@ app.get('/', function (req, res, next) {
 
         return Promise.all([mobMenu]);
     })
-    .then(function(mobMenu) {
+    .then((mobMenu) => {
         // Рендер заголовка в майн боди
         res.render(config.pagesPath + '/main.ejs', {
         h1 : optionsMain.h1,
-        }, function(err, html){
+        }, (err, html) => {
             if (err) { throw new Error("Render Error: " + err); }
             optionsMain.bodyMain = html;
         });
     })
-    .then(function() {
+    .then(() => {
         // Основной рендер
         res.render(config.viewMain + "/index",
         optionsMain,
-        function(err, html){
+        (err, html) => {
           if (err) { throw new Error(err); }
             res.send(util.replacerSpace(html)); // Обфускация HTML - delete space
         });
@@ -215,7 +216,7 @@ app.get('/product/:type/:id', (req, res, next) => {
           resultInCart = await db.getQueryManySafe('cart', { id_prod: req.params.id, user_token: userToken, success: 0 });
         })();
 
-        if (resultInCart.length > 0 || resultInCart.length != 0) {
+        if (resultInCart.length || resultInCart.length) {
             disabled = 'disabled="true"';
             textInBtnCart = 'В корзине';
             classInCart = ' inCart';
@@ -227,7 +228,8 @@ app.get('/product/:type/:id', (req, res, next) => {
             sizes: sizes,
             sizesBra: sizesBra,
             pid: id
-          },  (err, html) => {
+          },
+          (err, html) => {
             if (err) { throw new Error(err); }
             optionsCol.modalSizes = html;
           })
@@ -245,7 +247,7 @@ app.get('/product/:type/:id', (req, res, next) => {
           disabled,
           textInBtnCart,
           classInCart
-        }, function(err, html){
+        }, (err, html) => {
             if (err) { throw new Error("Render Error: " + err); }
             optionsCol.bodyMain = html;
         });
@@ -311,9 +313,9 @@ app.get('/collection/:query', (req, res, next) => {
 
         // Рендер пунктов выпадашек
         res.render(config.viewMain + '/nav.ejs', {
-        checkNewCat: checkNewCat,
-        items : result,
-        list: await db.getQuery('SELECT * FROM `category`'),
+          checkNewCat: checkNewCat,
+          items : result,
+          list: await db.getQuery('SELECT * FROM `category`'),
         },
         (err, html) => {
             if (err) { console.log("Render Error: " + err); }
@@ -380,7 +382,7 @@ app.get('/collection/:query', (req, res, next) => {
       });
     // конец всех рендеров страницы коллекции
     })
-    .catch((err) => { throw new Error(err) });
+    .catch((err) => { throw new Error("Render Error: " + err) });
 });
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
@@ -409,7 +411,7 @@ function preRender (path, args = [], res) {
            img: item.images
          },
          (err, html) => {
-            if (err) { throw new Error("Render Error: " + err); }
+            if (err) { throw new Error("Render Error: " + err) }
             template.push(util.replacerSpace(html)); // Обфускация HTML
          });
       })();

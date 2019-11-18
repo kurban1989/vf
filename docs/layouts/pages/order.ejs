@@ -100,7 +100,7 @@
                         </div>
 
                         <div class="Order-step__sections">
-                            <input placeholder="Email" autocapitalize="off" spellcheck="false" autocomplete="shipping email" aria-required="true" class="Order-input" size="30" type="email" name="checkoutEmail" id="checkout_email">
+                            <input placeholder="Email" autocapitalize="off" spellcheck="false" autocomplete="shipping email" aria-required="true" class="Order-input" type="email" name="checkoutEmail" id="checkout_email">
                         </div>
                         <div class="Order-step__sections">
                             <div class="Order-step__sections--half">
@@ -119,7 +119,7 @@
                             <input placeholder="Организация (опционально)" autocomplete="shipping organization" class="Order-input" size="30" type="text" name="checkoutCompany" id="checkout_shipping_address_company">
                         </div>
                         <div class="Order-step__sections" style="position: relative;">
-                            <input placeholder="Регион / Область доставки" aria-required="true" autocomplete="shipping region" class="Order-input js-keyPopup" size="30" type="text" name="checkoutRegion" id="checkout_shipping_region">
+                            <input placeholder="Регион / Область доставки" aria-required="true" autocomplete="shipping region" class="Order-input js-keyPopup" type="text" name="checkoutRegion" id="checkout_shipping_region">
                             <input type="text" class="is-hidden" name="checkoutRegionCode">
                             <ul class="Content-table__dropdown-menu js-categoryPopup"></ul>
                         </div>
@@ -136,7 +136,9 @@
                             </div>
                         </div>
                         <div class="Order-step__sections--half">
-                            <span class="Order-main--link"><a href="/cart/"><p>&larr; Вернуться в корзину</p></a></span>
+                            <span class="Order-main--link">
+                                <a href="/cart/"><p>&larr; Вернуться в корзину</p></a>
+                            </span>
                         </div>
                         <div class="Order-step__sections--half">
                             <button class="Button__card--primary Button--block Button__card--next-step js-nextCheckout" type="submit">
@@ -173,65 +175,65 @@
         </span>
     </div>
 
-        <div class="Order-sidebar">
-            <div class="Order-sidebar__sections js-sidebar">
-                <div class="Order-sidebar__section Order-sidebar__section--product-list">
-                    <div class="Order-sidebar__content">
-                        <table class="Product-table">
-                            <% arrOrder.forEach(function(item){ %>
-                            <tr class="Product" data-product-id="<%- item.id %>">
-                                <td class="Product__image">
-                                    <div class="Product__thumbnail">
-                                        <div class="Product__thumbnail--wrapper">
-                                            <img src="<%- item.img %>" alt="" class="Product__thumbnail--image">
-                                        </div>
-                                        <span class="Product__quantity" aria-hidden="true"><%- item.quantity %></span>
+    <div class="Order-sidebar">
+        <div class="Order-sidebar__sections js-sidebar">
+            <div class="Order-sidebar__section Order-sidebar__section--product-list">
+                <div class="Order-sidebar__content">
+                    <table class="Product-table">
+                        <% arrOrder.forEach(function(item){ %>
+                        <tr class="Product" data-product-id="<%- item.id %>">
+                            <td class="Product__image">
+                                <div class="Product__thumbnail">
+                                    <div class="Product__thumbnail--wrapper">
+                                        <img src="<%- item.img %>" alt="" class="Product__thumbnail--image">
                                     </div>
-                                </td>
-                                <td class="Product__description">
-                                    <div class="Product__description--title">
-                                        <%- item.title %>
-                                    </div>
-                                    <div class="Product__description--variant Product__small-text">
-                                        <%- item.size %>
-                                    </div>
-                                </td>
-                                <td class="Product__price">
-                                    <div class="Product__price--table"><span><%- item.sum %>&nbsp;</span></div>
+                                    <span class="Product__quantity" aria-hidden="true"><%- item.quantity %></span>
+                                </div>
+                            </td>
+                            <td class="Product__description">
+                                <div class="Product__description--title">
+                                    <%- item.title %>
+                                </div>
+                                <div class="Product__description--variant Product__small-text">
+                                    <%- item.size %>
+                                </div>
+                            </td>
+                            <td class="Product__price">
+                                <div class="Product__price--table"><span><%- item.sum %>&nbsp;</span></div>
+                            </td>
+                        </tr>
+                        <% }); %>
+                    </table>
+
+                    <div class="Order-sidebar__summary-section">
+                        <table class="Product-table__total-line">
+                            <tr>
+                                <th scope="row">Подитог</th>
+                                <td class="Product-table__total-line--price">
+                                    <span class="js-preSum"><%- totalSum %>&nbsp;</span>
                                 </td>
                             </tr>
-                            <% }); %>
+                            <tr>
+                                <th scope="row">Доставка</th>
+                                <td>
+                                    <span class="Product__small-text js-costDelivery">Стоимость доставки будет расчитана на следующем шаге</span>
+                                </td>
+                            </tr>
+                            <tfoot>
+                                <tr>
+                                    <th class="Product-table__total-line--footer">
+                                        <span class="payment-due-label__total">Всего</span>
+                                    </th>
+                                    <td class="Product-table__total-line--price Product-table__total-line--bold Product-table__total-line--footer">
+                                        <span class="js-totalSumAfter"><%- totalSum %>&nbsp;</span>
+                                    </td>
+                                </tr>
+                            </tfoot>
                         </table>
-
-                        <div class="Order-sidebar__summary-section">
-                            <table class="Product-table__total-line">
-                                <tr>
-                                    <th scope="row">Подитог</th>
-                                    <td class="Product-table__total-line--price">
-                                        <span class="js-preSum"><%- totalSum %>&nbsp;</span>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">Доставка</th>
-                                    <td>
-                                        <span class="Product__small-text js-costDelivery">Стоимость доставки будет расчитана на следующем шаге</span>
-                                    </td>
-                                </tr>
-                                <tfoot>
-                                    <tr>
-                                        <th class="Product-table__total-line--footer">
-                                            <span class="payment-due-label__total">Всего</span>
-                                        </th>
-                                        <td class="Product-table__total-line--price Product-table__total-line--bold Product-table__total-line--footer">
-                                            <span class="js-totalSumAfter"><%- totalSum %>&nbsp;</span>
-                                        </td>
-                                    </tr>
-                                </tfoot>
-                            </table>
-                        </div>
                     </div>
                 </div>
             </div>
         </div>
+    </div>
     </div>
 </div>

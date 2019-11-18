@@ -72,22 +72,54 @@ if (req.params.page === 'inside') {
   
   if (!req.cookies || !req.cookies.ust) {
     res.status(401).send("<p>Sorry, Unauthorized! <br><br> You need authorize!</p><br><p><b>Error 401 </b></p><br><br><a href='/account/login/'>LOGIN<a>");
-    return
+    return false
   } else {
     const token = await db.getQuery('SELECT * FROM `sessions` WHERE `token_session`="' + req.cookies.ust + '";');
-    const user = await db.getQuery('SELECT * FROM `vfuser` WHERE `id`=' + token[0].user_id + ';');
+    const user = await db.getQuery('SELECT * FROM `vfuser` WHERE `id`=' + parseInt(token[0].user_id, 10) + ';');
 
-    if (user.length > 0 && token.length > 0) {
+    if (user.length && token.length) {
       optionsMain.admin = user[0].prava === 'artem'
+      const infoUser = user.map((item) => {
+        return {
+          first_name: item.first_name,
+          last_name: item.last_name,
+          email: item.email,
+          city: item.city,
+          region: item.region,
+          phone: item.phone
+        }
+      })
+
+      optionsMain.userInfo = infoUser[0];
+
+      optionsMain.existsCheckout = await db.getQuerySafe('checkout', 'checkoutEmail', user[0].email, 'equality');
+
+      if (optionsMain.existsCheckout.length) {
+        optionsMain.checkout = await db.getQuerySafe('cart', 'email', user[0].email, 'equality');
+
+        optionsMain.productsFromCheckout = optionsMain.checkout.map(async (item) => {
+          const resolve = await db.getQuerySafe('products', 'id', item.id_prod, 'equality');
+
+          return {
+            id: resolve[0].id,
+            title: resolve[0].title,
+            category: resolve[0].category
+          }
+        })
+
+        Promise.all(optionsMain.productsFromCheckout).then(values => { 
+          optionsMain.productsFromCheckout = values
+        })
+      }
     }
   }
 }
 preRender(config.pagesPath, res)
-  .then(async function(result) {
+  .then(async (result) => {
       let checkNewCat = false;
       const checkNew = await db.getQuery('SELECT * FROM `products` WHERE `new`=1');
 
-      if (checkNew.length > 0) {
+      if (checkNew.length) {
         checkNewCat = true;
       }
       // Рендер пунктов выпадашек
@@ -95,12 +127,13 @@ preRender(config.pagesPath, res)
       checkNewCat: checkNewCat,
       items : result,
       list: await db.getQuery('SELECT * FROM `category`'),
-      }, function(err, html){
-          if (err) { throw new Error("this E: " + err); }
+      },
+      (err, html) => {
+          if (err) { throw new Error("Render Error: " + err) }
           optionsMain.nav  = html;
       });
   })
-  .then(function() {
+  .then(() => {
       // РЕНДЕР МОБИЛЬНОГО МЕНЮ
       let mobMenu = db.getQuery('SELECT * FROM `category`').then(async (result) => {
         let checkNewCat = false;
@@ -113,8 +146,11 @@ preRender(config.pagesPath, res)
         res.render(mobileMenu, {
         checkNewCat: checkNewCat,
         items : result,
-        }, (err, html) => {
-            if (err) { throw new Error("this E: " + err); }
+        },
+        (err, html) => {
+            if (err) {
+              throw new Error("Render Error: " + err)
+            }
             optionsMain.mobileMenu = html;
         });
       });
@@ -128,6 +164,7 @@ preRender(config.pagesPath, res)
       (err, html) => {
           if (err) {
             res.status(404).send("<p>Sorry can't find that you want!</p> <p><b>Error 404 </b></p><br><br><a href='/'>HOME<a>");
+            throw new Error("Render Error: \n\n----------\n\n\t" + err)
           }
           optionsMain.bodyMain = html;
       });
@@ -143,11 +180,11 @@ preRender(config.pagesPath, res)
           res.send(util.replacerSpace(html)); // Обфускация HTML - delete space
       });
   })
-  .catch((err) => { throw new Error(err); });
+  .catch((err) => { throw new Error(err) });
 });
 
 //// Аутентификация через вк ////
-router.get('/vk/auth', function (request, response, next) {
+router.get('/vk/auth', (request, response, next) => {
   const salt = bcrypt.genSaltSync(10);
   const token = uuidv1(salt + new Date().getTime() + String(Math.random() * 120));
   const options = {
@@ -166,8 +203,8 @@ router.get('/vk/auth', function (request, response, next) {
     res.on('data', async (responceData) => {
       const json = JSON.parse(responceData);
       const expires = new Date(Date.now() + 1000 * 60 * 60 * 2)
-      let id = String(json.user_id);
       const hash = crypto.createHash('md5').update(id).digest('hex'); // Хэш MD5
+      let id = String(json.user_id);
 
       db.getQuerySafe('vfuser', 'hash_id', hash, 'equality').then( async (resultQuery) => {
 
@@ -215,7 +252,7 @@ router.get('/vk/auth', function (request, response, next) {
 
 });
 // Вход в систему
-router.post('/login/', async function (req, res, next) {
+router.post('/login/', async (req, res, next) => {
   const dataUser = {
     email: req.body.email,
     password: crypto.createHash('md5').update(req.body.pass).digest('hex')
@@ -241,7 +278,7 @@ router.post('/login/', async function (req, res, next) {
   })
 });
 // Регистрация юзера в системе
-router.post('/reguser', function (req, res, next) {
+router.post('/reguser', (req, res, next) => {
   const salt = bcrypt.genSaltSync(10);
   const originPassword = req.body.regpass
   const dataUser = {
@@ -319,8 +356,8 @@ function getTemplateMail (objectUser) {
     text: `Поздравляем с успешной регистрацией на нашем сайт красивого нижнего белья по индивидуальным меркам!
     
         Данные вашего аккаунта: 
-        login: ${email}
-        password: ${originPassword}
+        Login: ${email}
+        Password: ${originPassword}
         
         Данное письмо создано автоматически и не требует ответа.`
   }
@@ -336,8 +373,8 @@ function getTemplateMailForgot (objectUser) {
     text: `Ваш старый пароль успешно сброшен!
     
         Новые данные вашего аккаунта: 
-        login: ${email}
-        new password: ${originPassword}
+        Login: ${email}
+        New password: ${originPassword}
         
         Данное письмо создано автоматически и не требует ответа.`
   }
@@ -353,15 +390,15 @@ return new Promise(async function(resolve, reject) {
 
   args.forEach(async function(item) {
 
-    await (function(){
+    await (() => {
        res.render(path + '/menu/desktop_menu.ejs',
        {
          link: item.name,
          description: item.description,
          img: item.images
        },
-       function(err, html){
-           template.push(util.replacerSpace(html)); // Обфускация HTML - delete space
+       (err, html) => {
+           template.push(util.replacerSpace(html)); // Обфускация HTML
        });
     })();
 

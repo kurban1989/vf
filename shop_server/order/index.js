@@ -28,21 +28,21 @@ const optionsMain = {
   discription : 'Оформление заказа',
 };
 
-router.get('/', function(req, res, next) {
+router.get('/', (req, res, next) => {
 
   const userToken = req.cookies.add2cart_for_users || '';
   const arrOrder = [];
   let quantity = 0;
   let size = '';
 
-  if(userToken == '') {
+  if(userToken === '') {
     res.send('<script type="text/javascript">window.location.href = history.go(-1);</script>');
   }
 
   db.getQueryManySafe('cart', {user_token: userToken, success: 0})
-  .then(async function(r){
+  .then(async (resultFromCart) => {
     let arrOrderPromise = [];
-    arrOrderPromise = await r.map(async function(rr, index) {
+    arrOrderPromise = await resultFromCart.map(async (rr, index) => {
           let resolve = await db.getQuerySafe('products', 'id', rr.id_prod, 'equality');
           // СБор данных для таблички рендера добавленных товаров.
           arrOrder.push({
@@ -58,10 +58,10 @@ router.get('/', function(req, res, next) {
 
       return Promise.all(arrOrderPromise);
   })
-  .then(function(r2){
+  .then((r2) => {
     let totalSum = 0;
 
-    arrOrder.forEach(function(currentValue) {
+    arrOrder.forEach((currentValue) => {
       totalSum += toNumber(currentValue.sum);
     });
 
@@ -76,7 +76,7 @@ router.get('/', function(req, res, next) {
         optionsMain.bodyMain = html; // Обфускация HTML - delete space
     });
   })
-  .then(function(r){
+  .then((r) => {
     // Основной рендер
     res.render(config.viewMain + '/index',
     optionsMain,
@@ -84,28 +84,28 @@ router.get('/', function(req, res, next) {
       if (err) {throw new Error(err);}
         res.send(util.replacerSpace(html)); // Обфускация HTML - delete space
     });
-  }).catch(function(err) { throw new Error(err); });
+  }).catch((err) => { throw new Error(err); });
 });
 
 /* Парсим поисковый запрос */
-router.post('/', function(req, res, next) {
+router.post('/', (req, res, next) => {
     if(req.body.param1 === 'searchCat') { // Поиск по имени regiona
       db.getQuerySafe('regions', 'region', req.body.param2, 'likeAllFields')
-        .then(function(responce){
+        .then((responce) => {
           res.send(JSON.stringify({result: responce}));
         });
     } else if(req.body.param1 === 'searchCity') { // Поиск по имени regiona и города
       db.getQueryManySafe(['cities','latestLike'], {region: req.body.param3, city: req.body.param2})
-        .then(function(responce){
+        .then((responce) => {
           res.send(JSON.stringify({result: responce}));
         });
     }
 });
 
 /*
- * Получение данных для доставки СДЭК
+ * Получение данных для доставки from СДЭК
  */
-router.post('/delivery/', function(request, response, next) {
+router.post('/delivery/', (request, response, next) => {
   const userToken = request.cookies.add2cart_for_users || '';
 
   if(userToken == '') {
@@ -135,28 +135,37 @@ router.post('/delivery/', function(request, response, next) {
       {
         response.send(JSON.stringify({status: 'error', msg: 'В населёныый пункт "' + request.body.checkoutCity + '" не осуществляется доставка.<br><br>&nbsp;Выберите другой, удобный и ближайший для вас город.'}));// Отправка юзеру данных
       } else {
-        getCostSdek(JSON.parse(d), userToken).then(function(cost) {
-          const jsonObj = JSON.parse(cost);
+        getCostSdek(JSON.parse(d), userToken).then((cost) => {
+          const jsonObjCost = JSON.parse(cost);
           const final = {
             user_token: userToken,
-            cost_delivery: jsonObj.result[0].result.priceByCurrency,
-            delivery_period_max: jsonObj.result[0].result.deliveryPeriodMax,
-            delivery_period_min: jsonObj.result[0].result.deliveryPeriodMin
+            cost_delivery: jsonObjCost.result[0].result.priceByCurrency,
+            delivery_period_max: jsonObjCost.result[0].result.deliveryPeriodMax,
+            delivery_period_min: jsonObjCost.result[0].result.deliveryPeriodMin
           };
 
           response.send(cost);// Отправка юзеру данных о доставке
 
+          const checkoutRegionCodeVar = parseInt(request.body.checkoutRegionCode, 10); // Для проверки на NaN
+
           /* после того как спросили стоимость доставки, запишем первые данные о заказе, сделав некоторые поле Integer */
           request.body.checkoutFirst_name = request.body.checkoutFirst_name.trim();
           request.body.checkoutLast_name = request.body.checkoutLast_name.trim();
-          request.body.checkoutRegionCode = parseInt(request.body.checkoutRegionCode, 10);
-          request.body.checkoutPhone = parseInt(request.body.checkoutPhone.replace(/[^0-9]/g, ''), 10); // Обязательно Посмотреть как приходит в БД!!!!!!
+          request.body.checkoutRegionCode = isNaN(checkoutRegionCodeVar) ? 0 : checkoutRegionCodeVar;
+          request.body.checkoutPhone = parseInt(request.body.checkoutPhone.replace(/[^0-9]/g, ''), 10);
 
-          setTimeout(async function() {
-            let localId = await db.getQueryManySafe('cart', {user_token: userToken, success: 0});
+          setTimeout(async () => {
+            const localId = await db.getQueryManySafe('cart', { user_token: userToken, success: 0 });
+            const checkCheckoutExist = await db.getQueryManySafe('checkout', { user_token: userToken, checkoutEmail: request.body.checkoutEmail });
 
-            db.setData('checkout', Object.assign(final, request.body));
-            db.updateData('cart', {status_checkout: 1}, localId[0].id); // Запишем инфу, то что юзер уже первый этап оформления заказа прошёл
+            if (!checkCheckoutExist.length) {
+              await db.setData('checkout', Object.assign(final, request.body));
+            } else {
+              await db.updateData('checkout', Object.assign(final, request.body), checkCheckoutExist[0].id);
+            }
+
+            // Запишем инфу, то что юзер уже первый этап оформления заказа прошёл
+            await db.updateData('cart', { status_checkout: 1, email: request.body.checkoutEmail }, localId[0].id);
 
           }, 100);
         })
@@ -184,9 +193,9 @@ const goods = {
 
   return new Promise((resolve, reject) => {
     db.getQueryManySafe('cart', {user_token: userToken, success: 0})
-        .then(async function(r){
+        .then(async (results) => {
 
-          arrOrderPromise = await r.map(async function(rr, index) {
+          arrOrderPromise = await results.map(async (rr, index) => {
                 let resolve = await db.getQuerySafe('products', 'id', rr.id_prod, 'equality');
 
                 goods.weight = String(parseFloat(toNumber(goods.weight) + toNumber(resolve[0].weight)).toFixed(3));
@@ -252,7 +261,7 @@ const goods = {
 
         req.end();
 
-      }).catch(function(err) { throw new Error(err); });
+      }).catch((err) => { throw new Error(err) });
   });
 };/* End function for Sdek */
 

@@ -31,10 +31,10 @@ router.all('*', async (req, res, next) => {
     const user = await db.getQuery('SELECT * FROM `vfuser` WHERE `id`=' + token[0].user_id + ';');
 
     if (user.length > 0 && token.length > 0) {
-        if (user[0].prava !== 'artem') {
-          res.status(403).send("<p>Sorry, Forbidden! </p><br><p><b>Error 403 </b></p><br><br><a href='/account/login/'>LOGIN<a>");
-          return
-        }
+      if (user[0].prava !== 'artem') {
+        res.status(403).send("<p>Sorry, Forbidden! </p><br><p><b>Error 403 </b></p><br><br><a href='/account/login/'>LOGIN<a>");
+        return
+      }
     } else {
       res.status(403).send("<p>Sorry, Forbidden! </p><br><p><b>Error 403 </b></p><br><br><a href='/account/login/'>LOGIN<a>");
       return
@@ -77,7 +77,7 @@ router.post('/orders/', (req, res) => {
   /* Запрос для перевода заказа в из "Нового" в статус "Обработанный" */
   if (req.body.param1 === 'orderReady') {
 
-    db.updateData('checkout', {new: 0}, req.body.idProd)
+    db.updateData('checkout', { new: 0 }, req.body.idProd)
       .then((result) => {
         res.send(JSON.stringify({status: 'ok'}));
       })
@@ -91,7 +91,7 @@ router.post('/orders/', (req, res) => {
 
     db.getQuerySafe('cart', 'user_token', req.body.idProd, 'equality').then(async (result) => {
 
-        let templateArrLocal = await result.map(async (item) => {
+        const templateArrLocal = await result.map(async (item) => {
               let resolve = await db.getQuerySafe('products', 'id', item.id_prod, 'equality');
 
               resolve[0].changedSize = item.size;
@@ -102,8 +102,9 @@ router.post('/orders/', (req, res) => {
 
         return Promise.all(templateArrLocal);
     })
-    .then(async function(templateArrLocal) {
-      await db.getQuerySafe('checkout', 'user_token', req.body.idProd, 'equality').then(async function(result) {
+    .then(async (templateArrLocal) => {
+      await db.getQuerySafe('checkout', 'user_token', req.body.idProd, 'equality')
+      .then(async (result) => {
         dataOrderAll.numberOrder = result[0].id;
         dataOrderAll.date = result[0].date;
         dataOrderAll.dataCustomer = result;
@@ -132,8 +133,7 @@ router.post('/orders/', (req, res) => {
           res.send(JSON.stringify({result: '<script type="text/javascript"> window.location.href = "'+ config.fullDomain +'/power/admin/orders/";</script>'}));
       });
   }
-
-});
+})
 
 // КАТЕГОРИИ / ГРУППЫ - ТОВАРОВ
 router.get('/cat/', (req, res, next) => {
@@ -147,14 +147,14 @@ router.get('/cat/', (req, res, next) => {
   if ('parent_cat' in req.query) {
     if ('update' in req.query && req.query.update == 1) {
 
-      delete req.query.update;// удаление лишнего поля
+      delete req.query.update; // удаление лишнего поля
 
       db.updateData('category', req.query, req.cookies.updateCat)
       .then((result) => {
         res.cookie('updatedCat', req.query.name + '__' + result.insertId, { domain: '.'+config.domain, path: '/', expires: new Date(Date.now() + 1100)});
         res.redirect(config.fullDomain + '/power/admin/');
       })
-      .catch(function(err) { throw new Error(err); });
+      .catch((err) => { throw new Error(err); });
       return;
     }
 
@@ -163,7 +163,7 @@ router.get('/cat/', (req, res, next) => {
         res.cookie('successAddCat', req.query.name + '__' + result.insertId, { domain: '.'+config.domain, path: '/', expires: new Date(Date.now() + 1000)});
         res.redirect(config.fullDomain + '/power/admin/cat/');
       })
-      .catch(function(err) { throw new Error(err); });
+      .catch((err) => { throw new Error(err); });
       return;
   }
 
@@ -192,7 +192,7 @@ router.get('/', (req, res, next) => {
 
     if ('update' in req.query && req.query.update == 1) {
 
-      delete req.query.update;// удаление лишнего поля
+      delete req.query.update; // удаление лишнего поля
 
       /* Чекаем есть ли размер для БРА в запросе */
      if (!req.query.sizesBra) {
@@ -201,10 +201,10 @@ router.get('/', (req, res, next) => {
 
       db.updateData('products', req.query, req.cookies.updateProduct)
       .then((result) => {
-        res.cookie('updatedProduct', req.query.title + '__' + result.insertId, { domain: '.'+config.domain, path: '/', expires: new Date(Date.now() + 1100)});
+        res.cookie('updatedProduct', req.query.title + '__' + result.insertId, { domain: '.' + config.domain, path: '/', expires: new Date(Date.now() + 1100)});
         res.redirect(config.fullDomain + '/power/admin/');
       })
-      .catch(function(err) { throw new Error(err); });
+      .catch((err) => { throw new Error(err); });
       return;
     }
 
@@ -213,18 +213,18 @@ router.get('/', (req, res, next) => {
         res.cookie('successAddProduct', req.query.title + '__' + result.insertId, { domain: '.'+config.domain, path: '/', expires: new Date(Date.now() + 1100)});
         res.redirect(config.fullDomain + '/power/admin/');
       })
-      .catch(function(err) { throw new Error(err); });
+      .catch((err) => { throw new Error(err); });
       return;
   }
 
   preRanderTableProd(req, res, config.pagesPath + '/adm_show_product.ejs')
-    .then(function(responce){
+    .then((responce) => {
 
       optionsPage.showAllProd = responce;
 
       res.render(config.viewMain + '/admin_index',
       optionsPage,
-      function(err, html){
+      (err, html) => {
         if (err) throw new Error(err);
         res.send(util.replacerSpace(html)); // Обфускация HTML - del space
       });
@@ -247,29 +247,31 @@ router.get('/filter/', (req, res) => {
         {
           'table': resultFilter
         },
-        function(err, html){
+        (err, html) => {
           if (err) throw new Error(err);
           r = util.replacerSpace(html);
         });
         return r;
     })
-    .then(function(resultFilter) {
+    .then((resultFilter) => {
         res.json(resultFilter);
     });
 });
 // POST запорсы AJAX страничек редактирования товара!
 router.post('/update/', (req, res) => {
   if (req.body.qeuryUpdate === 'set') {
-    getOneValue(parseInt(req.body.id, 10), 'products').then(function(rr) {
-      res.send(JSON.stringify({result: rr}));
+    getOneValue(parseInt(req.body.id, 10), 'products')
+    .then((rr) => {
+      res.send(JSON.stringify({ result: rr }));
     })
   }
 });
 // POST запорсы AJAX страничек редактирования категории!
 router.post('/cat/update/', (req, res) => {
   if (req.body.qeuryUpdate === 'set') {
-    getOneValue(parseInt(req.body.id, 10), 'category').then(function(rr) {
-      res.send(JSON.stringify({result: rr}));
+    getOneValue(parseInt(req.body.id, 10), 'category')
+    .then((rr) => {
+      res.send(JSON.stringify({ result: rr }));
     })
   }
 })
@@ -289,34 +291,38 @@ router.post('/', (req, res, next) => {
     } else if (req.body.param1 === 'deleteProd') { // Запрос на удаление товара
       /* Удаление фотографий */
       db.getQuerySafe('products', 'id', req.body.idProd, 'equality')
-        .then(function(resFile){
+        .then((resFile) => {
             if (resFile[0].images.length > 2) {
               const arrFile = resFile[0].images.split(',');
 
-                arrFile.forEach(function(file) {
-                  fs.unlink(config.dirnameNew + file, function(err) {
-                    if (err && err.code == 'ENOENT') {
-                        console.info("File doesn't exist, won't remove it.");
-                    } else if (err) {
-                        // other errors, e.g. maybe we don't have enough permission
-                        console.error("Error occurred while trying to remove file");
-                    } else {
-                        console.info('removed');
-                    }
-                  });
+              arrFile.forEach((file) => {
+                fs.unlink(config.dirnameNew + file, function(err) {
+                  if (err && err.code == 'ENOENT') {
+                      console.info("File doesn't exist, won't remove it.");
+                  } else if (err) {
+                      // other errors, e.g. maybe we don't have enough permission
+                      console.error("Error occurred while trying to remove file");
+                  } else {
+                      console.info('Removed photo from goods');
+                  }
+                });
               });
           }
         })
-        .then(function(){
+        .then(() => {
           db.getQuerySafe('products', 'id', req.body.idProd, 'deleteProd')
-            .then(function(responce){
-              res.send(JSON.stringify({result: '<script type="text/javascript"> window.location.href = "'+ config.fullDomain +'/power/admin/";</script>'}));
+            .then((responce) => {
+              res.send(JSON.stringify(
+                {
+                  result: '<script type="text/javascript"> window.location.href = "'+ config.fullDomain +'/power/admin/";</script>'
+                }
+              ))
             });
         });
 
     } else if (req.body.param1 === 'searchCat') { // Поиск по категории из списка категорий
       db.getQuerySafe('category', 'name', req.body.param2)
-        .then(function(responce){
+        .then((responce) => {
           res.send(JSON.stringify({result: responce}));
         });
 
@@ -332,11 +338,17 @@ router.post('/', (req, res, next) => {
 
     } else if (req.body.param1 === "backAllProd"){
       preRanderTableProd(req, res, config.pagesPath + '/adm_show_product.ejs')
-        .then(function(responce){
+        .then((responce) => {
           page = responce;
       })
-      .then(function(responce){
-          res.send(JSON.stringify({result: page, state: state, title: title}));
+      .then((responce) => {
+          res.send(JSON.stringify(
+            {
+              result: page,
+              state: state,
+              title: title
+            }
+          ));
       });
       return;
     } else {
@@ -346,7 +358,7 @@ router.post('/', (req, res, next) => {
 });
 
 // POST запорсы AJAX страничек добавления/редактирования/удаление категорий
-router.post('/cat/',(req,res) => {
+router.post('/cat/', (req,res) => {
 
   let page = '';
   let state = {};
@@ -373,7 +385,13 @@ router.post('/cat/',(req,res) => {
           page = responce;
       })
       .then((responce) => {
-          res.send(JSON.stringify({result: page, state: state, title: title}));
+          res.send(JSON.stringify(
+            {
+              result: page,
+              state: state,
+              title: title
+            }
+          ))
       });
       return;
 }
@@ -381,80 +399,80 @@ router.post('/cat/',(req,res) => {
 // запрос таблицы категорий
 async function preRanderTableCat(req, res, file) {
   let htmlTable = await db.getQuery('SELECT * FROM `category`')
-    .then(function(result){
-          let r = '';
+    .then((result) => {
+      let r = '';
 
-          res.render(file,
-          {
-            'table': result
-          },
-          function(err, html){
-            if (err) throw new Error(err);
-            r = util.replacerSpace(html);
-          });
+      res.render(file,
+      {
+        'table': result
+      },
+      (err, html) => {
+        if (err) throw new Error(err);
+        r = util.replacerSpace(html);
+      });
 
-          return r;
+      return r;
   })
-  .catch(function(err) { throw new Error(err); });
+  .catch((err) => { throw new Error(err); });
 
   return htmlTable;
 };
 // Запрос одной позиции товара или категории для редактирования
 async function getOneValue(id, table) {
-  let r = await db.getQuery('SELECT * FROM `'+table+'` WHERE id = '+ id +';')
-    .then(function(result){
-         return result
-  })
-  .catch(function(err) { throw new Error(err); });
+  let r = await db.getQuery('SELECT * FROM `'+ table +'` WHERE id = '+ id +';')
+    .then( result => result )
+    .catch((err) => { throw new Error(err) });
 
   return r;
 }
 
 /* Запорс заявок / заказов */
 async function preRanderTableOrders(req, res, file) {
-  let htmlTable = await db.getQuery('SELECT * FROM `checkout` ORDER BY id DESC').then(function(result){
-          let r = '';
+  let htmlTable = await db.getQuery('SELECT * FROM `checkout` ORDER BY id DESC')
+    .then((result) => {
+      let r = '';
 
-          res.render(file,
-          {
-            'table': result
-          },
-          function(err, html){
-            if (err) throw new Error(err);
-            r = util.replacerSpace(html);
-          });
+      res.render(file,
+      {
+        'table': result
+      },
+      (err, html) => {
+        if (err) throw new Error(err);
+        r = util.replacerSpace(html);
+      });
 
-          return r;
+      return r;
   })
-  .catch(function(err) { throw new Error(err); });
+  .catch((err) => { throw new Error(err); });
 
   return htmlTable;
 };
 
 // Запрос таблиц товара
 async function preRanderTableProd(req, res, file) {
-  let htmlTable = await db.getQuery(queryShowAllProd()).then(function(result){
-          let r = '';
+  let htmlTable = await db.getQuery(queryShowAllProd())
+  .then((result) => {
+      let r = '';
 
-          res.render(file,
-          {
-            'table': result
-          },
-          function(err, html){
-            if (err) throw new Error(err);
-            r = util.replacerSpace(html);
-          });
+      res.render(file,
+      {
+        'table': result
+      },
+      (err, html) => {
+        if (err) throw new Error(err);
+        r = util.replacerSpace(html);
+      });
 
-          return r;
+      return r;
   })
-  .catch(function(err) { throw new Error(err); });
+  .catch((err) => { throw new Error(err); });
 
   return htmlTable;
 };
 
 // Запрос на порверку, есть ли новые заказы
 async function queryNewOrder(db) {
-  let rows = await db.getQuery('SELECT id, new FROM `checkout` WHERE new="1"')
+  const rows = await db.getQuery('SELECT id, new FROM `checkout` WHERE new="1"')
   return rows;
 }
 // Текстовой запрос в БД с учётом сортировки
