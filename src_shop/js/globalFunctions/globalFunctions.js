@@ -109,11 +109,11 @@ window.sumAnimate = function(selector, number) {
 };
 
 /* Преобразуем данные формы из массива в объект */
-window.getFormData = function($form){
+window.getFormData = function($form) {
     var unindexed_array = $form.serializeArray();
     var indexed_array = {};
 
-    $.map(unindexed_array, function(n, i){
+    $.map(unindexed_array, function(n, i) {
         indexed_array[n['name']] = n['value'];
     });
 

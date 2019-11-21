@@ -345,6 +345,37 @@ router.post('/forgot/', async (req, res, next) => {
     res.send(JSON.stringify({ responce: 'Bad request' }))
   }
 })
+
+
+// Редактирование личных данных Юзера
+router.post('/edit_data_user/', async (req, res) => {
+  const errorMessage = "<p>Sorry, Unauthorized! <br><br> You need authorize!</p><br><p><b>Error 401 </b></p><br><br><a href='/account/login/'>LOGIN<a>";
+
+  if (!req.cookies || !req.cookies.ust) {
+    res.status(401).send(errorMessage)
+    return false
+  } else {
+    const token = await db.getQuerySafe('sessions', 'token_session', req.cookies.ust, 'equality')
+    const user = await db.getQuery('SELECT * FROM `vfuser` WHERE `id`=' + parseInt(token[0].user_id, 10) + ';');
+
+    if (user.length && token.length) {
+
+      delete req.body.checkoutRegionCode
+      db.updateData('vfuser', req.body, token[0].user_id).then((resolve) => {
+        if (resolve.affectedRows && resolve.affectedRows > 0) {
+          res.status(200).send(JSON.stringify({ responce: 'ok' }))
+        } else {
+          res.status(400).send(JSON.stringify({ responce: 'Bad request' }))
+        }
+      })
+
+    } else {
+      res.status(401).send(errorMessage)
+      return false
+    }
+  }
+})
+
 // Функция возвращающая объект письма для отправки
 function getTemplateMail (objectUser) {
   let {email, originPassword} = objectUser
@@ -384,11 +415,11 @@ function preRender(path, res) {
   let args = null;
   let template = [];
 
-return new Promise(async function(resolve, reject) {
+return new Promise(async (resolve, reject) => {
 
   args = await db.getQuery('SELECT * FROM `category`');
 
-  args.forEach(async function(item) {
+  args.forEach(async (item) => {
 
     await (() => {
        res.render(path + '/menu/desktop_menu.ejs',

@@ -192,7 +192,40 @@ $(document).on('click', '.js-faqQuery', function(e) {
 
     });
 });
+/* запрос обновление данных юзера */
+$(document).on('click', '#send_update_user', function(e) {
+    e.preventDefault();
+    const $form = $('#edit_user_data');
+    let dataObj = {};
 
+    $(this).prop('disabled', true);
+
+    if (!testEmail($('#email').val())) {
+        $(this).prop('disabled', false);
+        $('#email').addClass('Error-input');
+        return false;
+    }
+
+    dataObj = Object.assign({}, getFormData($form));
+    $('.js-preloaderFaq').show();
+
+    $.post('/account/edit_data_user/', dataObj, (data, textStatus, xhr) => {
+        $(this).prop('disabled', false);
+        data = JSON.parse(data);
+        $('.js-preloaderFaq').hide();
+
+        if (textStatus == '400') {
+            openModal();
+            $('.js-differentMsg').html('<b style="color:#FFB54C;">Ошибка: ' + data.responce + '</b>');
+            setTimeout(() => {
+                closeModal()
+            }, 7000)
+        } else {
+            window.location.href = location.href;
+        }
+
+    })
+});
 /* Аккордион/вкладки на странице юзера */
 $(document).on('click', '.js-userAccordion', function(e) {
     e.preventDefault();
