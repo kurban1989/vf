@@ -363,6 +363,17 @@ p.contacts {
     line-height: 35px;
 }
 
+.relative {
+    position: relative;
+}
+
+.bias:before {
+    display: block;
+	content: "";
+	height: 70px;
+	margin: -70px 0 0;
+}
+
 .cart-is-expanded {
   @include translate(0%, 0);
 }

@@ -1,4 +1,5 @@
 import $ from "jquery";
+import stickybits from 'stickybits'
 import "slick-carousel";
 import "./scroll_bar.js";
 import "./dropZone.js";
@@ -32,6 +33,7 @@ $(window).on('resize', function() {
         document.removeEventListener('touchmove', checkScrollWindow);*/
         $('.js-footerAccordion').slideDown(300);
         $('.js-sidebar').slideDown(300);
+        $('.js-imagesSlider').slick('unslick');
         initSwitch = true;
     } else if (window.innerWidth <= 980 && initSwitch) {
         /*document.addEventListener('touchend', checkScrollEnd);
@@ -42,6 +44,37 @@ $(window).on('resize', function() {
         $('.js-footerAccordion').slideUp(100);
         $('.js-sidebar').slideUp(100);
         initSwitch = false;
+
+        $('.js-imagesSlider').slick({
+            slidesToShow: 1,
+            slidesToScroll: 1,
+            useTransform: true,
+            adaptiveHeight: true,
+            centerMode: false,
+            dots: true,
+            arrow: false,
+            TouchMove: false,
+            infinite: false,
+            centerPadding: '0',
+            swipeToSlide: false,
+            // asNavFor: '.js-imagesSliderNav',
+            // vertical: true,
+            variableWidth: false,
+            // focusOnSelect: true,
+            responsive: [
+                {
+                  breakpoint: 1025,
+                  settings: {
+                    dots: true,
+                    centerMode: true,
+                    slidesToShow: 1,
+                    vertical: false,
+                    TouchMove: true,
+                    swipeToSlide: true
+                  }
+                }
+              ]
+        });
     }
 }).resize();
 
@@ -258,61 +291,35 @@ function showModal() {
                     infinite: true,
                     centerPadding: '0',
                     swipeToSlide: true,
-                    variableWidth: false,
+                    variableWidth: false
                 });
             }
         });
     }
     else {
-        $('.js-imagesSliderNav').slick({
-            useTransform: true,
-            adaptiveHeight: true,
-            centerMode: true,
-            dots: false,
-            arrow: false,
-            slidesToShow: 3,
-            slidesToScroll: 1,
-            infinite: false,
-            centerPadding: '0',
-            swipeToSlide: true,
-            asNavFor: '.js-imagesSlider',
-            vertical: true,
-            focusOnSelect: true
-        });
+        var stickybit = stickybits('.sidebar', {
+            stickyBitStickyOffset: 110,
+            useStickyClasses: true,
+            useFixed: true
+        })
+        // $('.js-imagesSliderNav').slick({
+        //     useTransform: true,
+        //     adaptiveHeight: true,
+        //     centerMode: true,
+        //     dots: false,
+        //     arrow: false,
+        //     slidesToShow: 3,
+        //     slidesToScroll: 1,
+        //     infinite: false,
+        //     centerPadding: '0',
+        //     swipeToSlide: true,
+        //     asNavFor: '.js-imagesSlider',
+        //     vertical: true,
+        //     focusOnSelect: true
+        // });
         
         /* prevArrow: $('.Block__arrows--left'),
            nextArrow: $('.Block__arrows--right'), */
-
-        $('.js-imagesSlider').slick({
-            slidesToShow: 1,
-            slidesToScroll: 1,
-            useTransform: true,
-            adaptiveHeight: true,
-            centerMode: false,
-            dots: true,
-            arrow: false,
-            TouchMove: false,
-            infinite: false,
-            centerPadding: '0',
-            swipeToSlide: false,
-            asNavFor: '.js-imagesSliderNav',
-            vertical: true,
-            variableWidth: false,
-            focusOnSelect: true,
-            responsive: [
-                {
-                  breakpoint: 1025,
-                  settings: {
-                    dots: true,
-                    centerMode: true,
-                    slidesToShow: 1,
-                    vertical: false,
-                    TouchMove: true,
-                    swipeToSlide: true
-                  }
-                }
-              ]
-        });
     }
 
     /* Восстановление введённых значений из инпута при случайной перезагрузке или прочего фейла */

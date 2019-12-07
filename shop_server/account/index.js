@@ -71,11 +71,11 @@ switch(req.params.page) {
 if (req.params.page === 'inside') {
   
   if (!req.cookies || !req.cookies.ust) {
-    res.status(401).send("<p>Sorry, Unauthorized! <br><br> You need authorize!</p><br><p><b>Error 401 </b></p><br><br><a href='/account/login/'>LOGIN<a>");
+    res.status(401).send("<p>Sorry, Unauthorized! <br><br> You need authorize!</p><br><p><b>Error 401 </b></p><br><br><a href='/account/login/'>LOGIN<a>")
     return false
   } else {
-    const token = await db.getQuery('SELECT * FROM `sessions` WHERE `token_session`="' + req.cookies.ust + '";');
-    const user = await db.getQuery('SELECT * FROM `vfuser` WHERE `id`=' + parseInt(token[0].user_id, 10) + ';');
+    const token = await db.getQuery('SELECT * FROM `sessions` WHERE `token_session`="' + req.cookies.ust + '";')
+    const user = await db.getQuery('SELECT * FROM `vfuser` WHERE `id`=' + parseInt(token[0].user_id, 10) + ';')
 
     if (user.length && token.length) {
       optionsMain.admin = user[0].prava === 'artem'
@@ -203,8 +203,8 @@ router.get('/vk/auth', (request, response, next) => {
     res.on('data', async (responceData) => {
       const json = JSON.parse(responceData);
       const expires = new Date(Date.now() + 1000 * 60 * 60 * 2)
-      const hash = crypto.createHash('md5').update(id).digest('hex'); // Хэш MD5
       let id = String(json.user_id);
+      const hash = crypto.createHash('md5').update(id).digest('hex'); // Хэш MD5
 
       db.getQuerySafe('vfuser', 'hash_id', hash, 'equality').then( async (resultQuery) => {
 
@@ -342,14 +342,13 @@ router.post('/forgot/', async (req, res, next) => {
       res.send(JSON.stringify({ responce: `С Email адресом '${req.body.email}' пользователь не существует` }))
     }
   } else {
-    res.send(JSON.stringify({ responce: 'Bad request' }))
+    res.status(400).send(JSON.stringify({ responce: 'Bad request' }))
   }
 })
 
-
-// Редактирование личных данных Юзера
+/* Редактирование личных данных Юзера */
 router.post('/edit_data_user/', async (req, res) => {
-  const errorMessage = "<p>Sorry, Unauthorized! <br><br> You need authorize!</p><br><p><b>Error 401 </b></p><br><br><a href='/account/login/'>LOGIN<a>";
+  const errorMessage = "<p>Sorry, Unauthorized! <br> You need authorize!</p><br><p><b>Error 401 </b></p><br><a href='/account/login/'>LOGIN<a>";
 
   if (!req.cookies || !req.cookies.ust) {
     res.status(401).send(errorMessage)

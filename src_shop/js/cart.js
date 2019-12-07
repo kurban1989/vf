@@ -313,6 +313,7 @@ $(document).on('click', '.js-nextCheckout', function(e) {
 
     $.post('/order/delivery/', dataArr, function(data, textStatus, xhr) {
         data = JSON.parse(data);
+        let totalSum = 0;
 
         if (data.status && data.status == 'error' || data.error) {
             openModal();
@@ -328,7 +329,11 @@ $(document).on('click', '.js-nextCheckout', function(e) {
             $('.js-costDelivery').text(data.result[0].result.priceByCurrency + ' ₽');
             $('.js-dayDelivery').text('( ' + data.result[0].result.deliveryPeriodMin +' - '+ data.result[0].result.deliveryPeriodMax + ' ' + num2str(data.result[0].result.deliveryPeriodMax, ['дня', 'дней']) + ' ) ');
             $('.js-contentDelivery').text('Россия, ' + dataArr.checkoutRegion + ', ' + dataArr.checkoutCity);
-            $('.js-totalSumAfter').html((Number(data.result[0].result.priceByCurrency) + Number($('.js-preSum').text())) + '&nbsp;');
+            $('.js-totalSumAfter').html(data.totalSum + '&nbsp;');
+            $('#totalSum').val(data.totalSum);
+            $('#em').val(data.email);
+            $('#sign').val(data.sign);
+            $('#id_order').val(data.idOrder);
         }
 
         $('.js-nextCheckout').prop('disabled', false);

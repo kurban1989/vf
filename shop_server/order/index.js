@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const config = require('../conf');
 const utils = require('../utils');
+const crypto = require('crypto');
 const util = new utils();
 module.paths.push(config.pathToServer); // Добавим в глобал пафф, корневой каталог
 const cookieParser = require('cookie-parser');
@@ -15,28 +16,39 @@ const modalErr = fs.readFileSync(config.modalPath + '/modalErr.ejs', 'utf8');
 
 // Опции рендера
 const optionsMain = {
-  title : 'Оформление заказа',
-  h1 : 'Оформление заказа',
-  nav : '',
-  picture : '',
-  footer : footer,
-  cart : '',
-  mobileMenu : '',
-  bodyMain : 'order',
-  main : '',
-  modalSizes : modalErr,
-  discription : 'Оформление заказа',
-};
+  title: 'Оформление заказа',
+  h1: 'Оформление заказа',
+  nav: '',
+  picture: '',
+  footer: footer,
+  cart: '',
+  mobileMenu: '',
+  bodyMain: 'order',
+  main: '',
+  modalSizes: modalErr,
+  discription: 'Оформление заказа'
+}
 
-router.get('/', (req, res, next) => {
+router.get('/', async (req, res, next) => {
 
   const userToken = req.cookies.add2cart_for_users || '';
   const arrOrder = [];
+  let isAuthUser = false;
   let quantity = 0;
   let size = '';
 
   if(userToken === '') {
     res.send('<script type="text/javascript">window.location.href = history.go(-1);</script>');
+  }
+
+  // Проверка авторизации пользователя
+  if (req.cookies && req.cookies.ust) {
+    const token = await db.getQuery('SELECT * FROM `sessions` WHERE `token_session`="' + req.cookies.ust + '";')
+    const user = await db.getQuery('SELECT * FROM `vfuser` WHERE `id`=' + parseInt(token[0].user_id, 10) + ';')
+
+    if (user.length && token.length) {
+      isAuthUser = true
+    }
   }
 
   db.getQueryManySafe('cart', {user_token: userToken, success: 0})
@@ -52,15 +64,16 @@ router.get('/', (req, res, next) => {
             sum: preSum(rr.quantity, resolve[0].price),
             title: resolve[0].title,
             price: resolve[0].price,
-            id: resolve[0].id,
+            id: resolve[0].id
           });
     });
 
       return Promise.all(arrOrderPromise);
   })
   .then((r2) => {
+    const { merchantID } = config.freeKassa;
     let totalSum = 0;
-
+    // checkout
     arrOrder.forEach((currentValue) => {
       totalSum += toNumber(currentValue.sum);
     });
@@ -68,11 +81,14 @@ router.get('/', (req, res, next) => {
     // рендер добавленных товаров
     res.render(config.pagesPath + '/order.ejs',
     {
-      arrOrder: arrOrder,
-      totalSum: totalSum
+      arrOrder,
+      totalSum,
+      userToken,
+      isAuthUser,
+      merchantID
     },
-    function(err, html){
-      if (err) {throw new Error(err);}
+    (err, html) => {
+      if (err) { throw new Error(err) }
         optionsMain.bodyMain = html; // Обфускация HTML - delete space
     });
   })
@@ -80,9 +96,12 @@ router.get('/', (req, res, next) => {
     // Основной рендер
     res.render(config.viewMain + '/index',
     optionsMain,
-    function(err, html){
-      if (err) {throw new Error(err);}
-        res.send(util.replacerSpace(html)); // Обфускация HTML - delete space
+    (err, html) => {
+      if (err) {
+        throw new Error(err);
+      }
+
+      res.send(util.replacerSpace(html)); // Обфускация HTML - delete space
     });
   }).catch((err) => { throw new Error(err); });
 });
@@ -108,7 +127,7 @@ router.post('/', (req, res, next) => {
 router.post('/delivery/', (request, response, next) => {
   const userToken = request.cookies.add2cart_for_users || '';
 
-  if(userToken == '') {
+  if(userToken === '') {
     response.status(402).send('Не удалось пройти идентификацию пользователя!');
     return false;
   }
@@ -136,15 +155,18 @@ router.post('/delivery/', (request, response, next) => {
         response.send(JSON.stringify({status: 'error', msg: 'В населёныый пункт "' + request.body.checkoutCity + '" не осуществляется доставка.<br><br>&nbsp;Выберите другой, удобный и ближайший для вас город.'}));// Отправка юзеру данных
       } else {
         getCostSdek(JSON.parse(d), userToken).then((cost) => {
+          let sign = ''; // Цифровая подпись для оплаты
+          const { merchantID } = config.freeKassa;
+          const { secret1 } = config.freeKassa;
           const jsonObjCost = JSON.parse(cost);
+          // console.log(cost)
+          // console.log(jsonObjCost, JSON.parse(jsonObjCost.result[0].result))
           const final = {
             user_token: userToken,
             cost_delivery: jsonObjCost.result[0].result.priceByCurrency,
             delivery_period_max: jsonObjCost.result[0].result.deliveryPeriodMax,
             delivery_period_min: jsonObjCost.result[0].result.deliveryPeriodMin
           };
-
-          response.send(cost);// Отправка юзеру данных о доставке
 
           const checkoutRegionCodeVar = parseInt(request.body.checkoutRegionCode, 10); // Для проверки на NaN
 
@@ -155,16 +177,23 @@ router.post('/delivery/', (request, response, next) => {
           request.body.checkoutPhone = parseInt(request.body.checkoutPhone.replace(/[^0-9]/g, ''), 10);
 
           setTimeout(async () => {
+            const totalSum = (Number(final.cost_delivery) + Number(request.body.sum_checkout));
             const localId = await db.getQueryManySafe('cart', { user_token: userToken, success: 0 });
             const checkCheckoutExist = await db.getQueryManySafe('checkout', { user_token: userToken, checkoutEmail: request.body.checkoutEmail });
 
             if (!checkCheckoutExist.length) {
-              await db.setData('checkout', Object.assign(final, request.body));
+              await db.setData('checkout', Object.assign({}, final, request.body));
             } else {
-              await db.updateData('checkout', Object.assign(final, request.body), checkCheckoutExist[0].id);
+              await db.updateData('checkout', Object.assign({}, final, request.body), checkCheckoutExist[0].id);
             }
 
-            // Запишем инфу, то что юзер уже первый этап оформления заказа прошёл
+            sign = crypto.createHash('md5').update(`${merchantID}:${totalSum}:${secret1}:${checkCheckoutExist[0].id}`).digest('hex');
+
+            response.send(JSON.stringify(
+              Object.assign({}, jsonObjCost, { sign: sign, totalSum: totalSum, email: request.body.checkoutEmail, idOrder: checkCheckoutExist[0].id })
+            ));// Отправка юзеру данных о доставке и подпись для оплаты
+
+            // Затем запишем инфу, то что юзер уже первый этап оформления заказа прошёл
             await db.updateData('cart', { status_checkout: 1, email: request.body.checkoutEmail }, localId[0].id);
 
           }, 100);
@@ -216,7 +245,8 @@ const goods = {
                             "senderCityId": "431", /* Код Тольятти*/
                             "receiverCityId": String(objCity[0].cityCode),
                             "currency":"RUB",
-                            "tariffList":[{"id":1}],
+                            "tariffId": 5,
+                            "tariffList":[{"id":5}],
                             "goods":
                                 [
                                   goods

@@ -1,6 +1,11 @@
 import $ from "jquery";
 import { testEmail } from "./inputMaskRus.js";
 
+
+$(document).on('click', '.bias', function(e) {
+    $('.js-imagesSlider').css('padding-top', '30px')
+});
+
 /* запрос на создание юзера */
 $(document).on('click', '.js-createUser', function(e) {
     e.preventDefault();
@@ -214,12 +219,12 @@ $(document).on('click', '#send_update_user', function(e) {
         data = JSON.parse(data);
         $('.js-preloaderFaq').hide();
 
-        if (textStatus == '400') {
+        if (textStatus == '400' || textStatus == '401') {
             openModal();
             $('.js-differentMsg').html('<b style="color:#FFB54C;">Ошибка: ' + data.responce + '</b>');
             setTimeout(() => {
                 closeModal()
-            }, 7000)
+            }, 6000)
         } else {
             window.location.href = location.href;
         }

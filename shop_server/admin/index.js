@@ -71,15 +71,15 @@ router.post('/orders/', (req, res) => {
     numberOrder: 0,
     newOrder: 0,
     date: '',
-    statusPay: '',
-  };
+    statusPay: ''
+  }
 
   /* Запрос для перевода заказа в из "Нового" в статус "Обработанный" */
   if (req.body.param1 === 'orderReady') {
 
     db.updateData('checkout', { new: 0 }, req.body.idProd)
       .then((result) => {
-        res.send(JSON.stringify({status: 'ok'}));
+        res.send(JSON.stringify({ status: 'ok' }));
       })
       .catch(err => { throw new Error(err) });
       return;

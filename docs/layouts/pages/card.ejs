@@ -1,23 +1,28 @@
 <div class="Container Container__top--large">
     <div class="Container__row">
+        <div class="Product__thumbnails relative">
+            <div class="sidebar">
+                <% if(images && images != '' && images.length > 5) { imgPreview = images.split(','); %>
+                    <% imgPreview.forEach(function(img){ %>
+                        <% if(img.length > 2) { %>
+                            <a href="#<%- img %>">
+                                <img data-src="<%= img %>" alt="">
+                            </a>
+                        <% } %>
+                    <% }); %>
+                <% } %>
+            </div>
+        </div>
         <div class="Container__col-1of2">
             <div class="Product__images">
-
-                <div class="Product__thumbnails js-imagesSliderNav">
-                    <% if(images && images != '' && images.length > 5) { imgPreview = images.split(','); %>
-                        <% imgPreview.forEach(function(img){ %>
-                            <% if(img.length > 2) { %>
-                            <img data-src="<%= img %>" alt="">
-                            <% } %>
-                        <% }); %>
-                    <% } %>
-                </div>
-
                 <div class="Product__images--slider js-imagesSlider">
                     <% if(images && images != '' && images.length > 5) { %>
                         <% imgPreview.forEach(function(img){ %>
                             <% if(img.length > 2) { %>
-                            <span><img src="<%= img %>" alt=""></span>
+                                <div class="Product__images--slide">
+                                    <a name="<%- img %>" class="bias relative"></a>
+                                    <img src="<%= img %>" alt="">
+                            </div>
                             <% } %>
                         <% }); %>
                     <%} else {%>
@@ -36,8 +41,8 @@
 
             </div>
         </div>
-        <div class="Container__col-1of2 Container__col-lg">
-            <div class="Product__info-wrapper">
+        <div class="Container__col-1of2 Container__col-lg relative">
+            <div class="Product__info-wrapper sidebar">
                 <div class="Container--left"><h1 class="h2"><%= h1 %></h1></div>
                 <div class="Product__price--set">
                     <h4><%= price %></h4>

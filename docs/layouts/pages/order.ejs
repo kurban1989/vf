@@ -83,10 +83,26 @@
                 </div>
 
                 <div class="Order-step__sections--half">
-                    <span class="Order-main--link"><a href="javascript:void(0);" class="js-returnInfo"><p>&larr; Вернуться к полям информации</p></a></span>
+                    <span class="Order-main--link">
+                        <a href="javascript:void(0);" class="js-returnInfo">
+                            <p>&larr; Вернуться к полям информации</p>
+                        </a>
+                    </span>
                 </div>
                 <div class="Order-step__sections--half">
-                    <button class="Button__card--primary Button--block Button__card--next-step js-goToPay" type="button"><span>Перейти к оплате</span></button>
+                    <form method='get' action='http://www.free-kassa.ru/merchant/cash.php'>
+                        <input type='hidden' name='m' value='<%= merchantID %>'>
+                        <input type='hidden' name='oa' id="totalSum">
+                        <input type='hidden' name='o' id="id_order">
+                        <input type='hidden' name='s' id="sign">
+                        <input type='hidden' name='i' value='1'>
+                        <input type='hidden' name='lang' value='ru'>
+                        <input type='hidden' name='em' id="em">
+                        <input type='hidden' name='us_login' value='<%= userToken %>'>
+                        <button class="Button__card--primary Button--block Button__card--next-step js-goToPay" type="submit">
+                            <span>Перейти к оплате</span>
+                        </button>
+                    </form>
                 </div>
             </div>
 
@@ -95,7 +111,10 @@
                     <form action="" id="checkoutStep1" style="margin: 0;">
                         <div class="Order-step__sections">
                             <div class="Order-main__header--sections">
-                                <span>Контактная информация</span> <span>&nbsp;Уже есть аккаунт? <a href="/account/login" class="Order-main__header--sigin">Войти</a></span>
+                                <span>Контактная информация</span>
+                                <% if (!isAuthUser) { %>
+                                    <span>&nbsp;Уже есть аккаунт? <a href="/account/login" class="Order-main__header--sigin">Войти</a></span>
+                                <% } %>
                             </div>
                         </div>
 

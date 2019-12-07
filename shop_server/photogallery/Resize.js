@@ -64,9 +64,9 @@ class Resize {
 
         }).then((args) => {
           setTimeout(() => {
-            fs.unlink(buffer);
+            fs.unlink(buffer, () => {});
             return resolve(filename);
-          }, 105);
+          }, 100);
         });
     });
   }
