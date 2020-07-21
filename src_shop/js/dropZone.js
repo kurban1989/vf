@@ -39,7 +39,7 @@ $(document).on('click', '.js-removeImage', function(e) {
  */
 window.upload = function(file) {
 
-    if($('input[type="hidden"]:not(.readyLoad)').length == 0) {
+    if ($('input[type="hidden"]:not(.readyLoad)').length == 0) {
         $('.Fixed-overlay').show();
         $('.Modal').addClass('active');
         $('body').addClass('no-scroll');
@@ -101,7 +101,7 @@ window.upload = function(file) {
  */
 window.uploadFile = function() {
 
-    if(event.target.classList.contains('js-removeImage') || event.target.classList.contains('js-removeImageSpan')) {
+    if (event.target.classList.contains('js-removeImage') || event.target.classList.contains('js-removeImageSpan')) {
         return false;
     }
 
@@ -146,15 +146,15 @@ $(document).on('keyup', '.js-keyPopup', function(e) {
     const ids = $(this).attr('id');
     let search = 'searchCat';
 
-    if(ids == 'input-title') {
+    if (ids == 'input-title') {
         search = 'searchTitleProd';
     }
 
-    if(ids == 'checkout_shipping_city') {
+    if (ids == 'checkout_shipping_city') {
         search = 'searchCity';
     }
 
-    if(val.length < 2) {
+    if (val.length < 2) {
         if (location.href.search(/order/) > -1 && ids == 'checkout_shipping_region') {
             $('#checkout_shipping_city').val('');
         }
@@ -162,7 +162,7 @@ $(document).on('keyup', '.js-keyPopup', function(e) {
         return false;
     }
 
-    if(ids == 'checkout_shipping_city' && e.type == 'focusout' ) {
+    if (ids == 'checkout_shipping_city' && e.type == 'focusout' ) {
         return false;
     }
     /* Тормозим лишний Аякс запрос */
@@ -183,7 +183,7 @@ $(document).on('keyup', '.js-keyPopup', function(e) {
     })
     .done(function(data) {
         $insert.show();
-        if(data.result.length == 0) {
+        if (data.result.length == 0) {
             $insert.hide();
         }
 
@@ -194,7 +194,7 @@ $(document).on('keyup', '.js-keyPopup', function(e) {
 
             item.name = item.name || item.title || item.city || item.region;
 
-            if(ids === 'checkout_shipping_region') {
+            if (ids === 'checkout_shipping_region') {
                 checkRegionClass = ' js-codeRegionExtension';
                 $('input[name="checkoutRegionCode"]').val(codeRegion)
 
@@ -229,13 +229,13 @@ $(document).on('click', '.js-insertSearchRes', function(e) {
     let $input = $(this).closest('.Content-table__filter--form-group').find('.js-keyPopup');
     let codeRegion = $(this).siblings('span.js-codeRegionExtension').text();
 
-    if($input.length == 0) {
+    if ($input.length == 0) {
         $input = $(this).closest('.Order-step__sections').find('.js-keyPopup');
     }
 
     $input.val($(this).text());
 
-    if(codeRegion) {
+    if (codeRegion) {
         $('input[name="checkoutRegionCode"]').val(codeRegion);
     }
 
@@ -260,7 +260,7 @@ $(document).on('click', '.js-insertSearchRes', function(e) {
     let err = false;
 
     [].forEach.call(requiredData, function(item) {
-        if(item.value == '') {
+        if (item.value == '') {
             item.classList.add('Error-input');
             err = true;
         } else {
@@ -268,7 +268,7 @@ $(document).on('click', '.js-insertSearchRes', function(e) {
         }
     });
 
-    if(err) {
+    if (err) {
         $('.Fixed-overlay').show();
         $('.Modal').addClass('active');
         $('body').addClass('no-scroll');
@@ -276,14 +276,14 @@ $(document).on('click', '.js-insertSearchRes', function(e) {
         return false;
     }
 
-    if(typeBtn == 'submit') {
+    if (typeBtn == 'submit') {
         $('#addNewProd').trigger('submit'); return;
     }
 
     let arrData = $('#addNewProd').serialize();
 
     $('#addNewProd input[type="checkbox"').each(function(index, el) {
-        if(!$(el).is(':checked')) {
+        if (!$(el).is(':checked')) {
            arrData += '&' + $(el).attr('name') + '=0';
         }
     });
@@ -299,7 +299,7 @@ $(document).on('click', '.js-insertSearchRes', function(e) {
     event.preventDefault();
     let typeBtn = $(this).attr('type');
 
-    if(typeBtn == 'submit') {
+    if (typeBtn == 'submit') {
         $('#addNewProd').trigger('submit'); return;
     }
 
@@ -318,7 +318,7 @@ $(document).on('click', '.js-insertSearchRes', function(e) {
       let test = '';
       $('#filter_group').serializeArray().forEach(function(item){ test += item.value; });
 
-      if(test.length < 2) {
+      if (test.length < 2) {
         $('.Fixed-overlay').show();
         $('.Modal').addClass('active');
         $('body').addClass('no-scroll');

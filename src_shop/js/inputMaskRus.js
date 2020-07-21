@@ -89,7 +89,7 @@ export const testEmail = (email) => {
 
   let reg = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,6})$/;
 
-   if(reg.test(email) === false) {
+   if (reg.test(email) === false) {
       alert('Введите корректный e-mail');
       return false;
    }

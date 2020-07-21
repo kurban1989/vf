@@ -124,9 +124,9 @@ preRender(config.pagesPath, res)
       }
       // Рендер пунктов выпадашек
       res.render(config.viewMain + '/nav.ejs', {
-      checkNewCat: checkNewCat,
-      items : result,
-      list: await db.getQuery('SELECT * FROM `category`'),
+        checkNewCat: checkNewCat,
+        items : result,
+        list: await db.getQuery('SELECT * FROM `category`'),
       },
       (err, html) => {
           if (err) { throw new Error("Render Error: " + err) }
@@ -144,8 +144,8 @@ preRender(config.pagesPath, res)
         }
 
         res.render(mobileMenu, {
-        checkNewCat: checkNewCat,
-        items : result,
+          checkNewCat: checkNewCat,
+          items : result,
         },
         (err, html) => {
             if (err) {
@@ -162,11 +162,11 @@ preRender(config.pagesPath, res)
       res.render(config.pagesPath + '/' + req.params.page + '.ejs',
       optionsMain,
       (err, html) => {
-          if (err) {
-            res.status(404).send("<p>Sorry can't find that you want!</p> <p><b>Error 404 </b></p><br><br><a href='/'>HOME<a>");
-            throw new Error("Render Error: \n\n----------\n\n\t" + err)
-          }
-          optionsMain.bodyMain = html;
+        if (err) {
+          res.status(404).send("<p>Sorry can't find that you want!</p> <p><b>Error 404 </b></p><br><br><a href='/'>HOME<a>");
+          throw new Error("Render Error: \n\n----------\n\n\t" + err)
+        }
+        optionsMain.bodyMain = html;
       });
   })
   .then(() => {
@@ -230,9 +230,9 @@ router.get('/vk/auth', (request, response, next) => {
         }
 
         await db.setData('sessions', {
-            user_id: id,
-            token_session: token,
-            expire_at: expires
+          user_id: id,
+          token_session: token,
+          expire_at: expires
         });
 
         response.cookie('ust', token, { domain: '.' + config.domain, path: '/', expires: expires});
@@ -262,10 +262,11 @@ router.post('/login/', async (req, res, next) => {
     if (result.length > 0) {
       const token = uuidv1(req.body.email + new Date().getTime() + String(Math.random() * 120));
       const expires = new Date(Date.now() +  1000 * 60 * 60 * 2);
+
       const r = await db.setData('sessions', {
-          user_id: result[0].id,
-          token_session: token,
-          expire_at: expires
+        user_id: result[0].id,
+        token_session: token,
+        expire_at: expires
       });
 
       res.cookie('ust', token, { domain: '.' + config.domain, path: '/', expires: expires});

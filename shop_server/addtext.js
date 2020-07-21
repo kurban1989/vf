@@ -19,7 +19,7 @@ arrRegion.forEach(async function(item) {
 // }
 // const req = https.request(options, (res) => {
 
-//   if(res.statusCode != 200) {
+//   if (res.statusCode != 200) {
 //     //response.status(res.statusCode).send('<b>Удалённый сервер не ответил правильно. Статус ответа: <i>' + res.statusCode + '</i></b>');
 //     console.error('Статус ответа: <i>' + res.statusCode);
 //   }

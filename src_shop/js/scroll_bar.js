@@ -82,12 +82,12 @@
 
     SimpleBar.prototype.init = function () {
         // Measure scrollbar width
-        if(typeof SCROLLBAR_WIDTH === 'undefined') {
+        if (typeof SCROLLBAR_WIDTH === 'undefined') {
             SCROLLBAR_WIDTH = scrollbarWidth();
         }
 
         // If scrollbar is a floating scrollbar, disable the plugin
-        if(SCROLLBAR_WIDTH === 0) {
+        if (SCROLLBAR_WIDTH === 0) {
           this.$el.css('overflow', 'auto');
 
           return;
@@ -189,7 +189,7 @@
      * Resize scrollbar
      */
     SimpleBar.prototype.resizeScrollbar = function () {
-        if(SCROLLBAR_WIDTH === 0) {
+        if (SCROLLBAR_WIDTH === 0) {
             return;
         }
 
@@ -245,7 +245,7 @@
         if (!this.options.autoHide) {
             return;
         }
-        if(typeof this.flashTimeout === 'number') {
+        if (typeof this.flashTimeout === 'number') {
             window.clearTimeout(this.flashTimeout);
         }
 
@@ -258,7 +258,7 @@
      */
     SimpleBar.prototype.hideScrollbar = function () {
         this.$scrollbar.removeClass('visible');
-        if(typeof this.flashTimeout === 'number') {
+        if (typeof this.flashTimeout === 'number') {
             window.clearTimeout(this.flashTimeout);
         }
     };

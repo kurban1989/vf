@@ -37,11 +37,11 @@
   $suffix,
   $values
 ) {
-  $top:    $property + "-top"    + if($suffix, "-#{$suffix}", "");
-  $bottom: $property + "-bottom" + if($suffix, "-#{$suffix}", "");
-  $left:   $property + "-left"   + if($suffix, "-#{$suffix}", "");
-  $right:  $property + "-right"  + if($suffix, "-#{$suffix}", "");
-  $all:    $property +             if($suffix, "-#{$suffix}", "");
+  $top:    $property + "-top"    + if ($suffix, "-#{$suffix}", "");
+  $bottom: $property + "-bottom" + if ($suffix, "-#{$suffix}", "");
+  $left:   $property + "-left"   + if ($suffix, "-#{$suffix}", "");
+  $right:  $property + "-right"  + if ($suffix, "-#{$suffix}", "");
+  $all:    $property +             if ($suffix, "-#{$suffix}", "");
 
   $values: _compact-shorthand($values);
 

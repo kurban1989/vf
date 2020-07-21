@@ -4,7 +4,7 @@ let changedSize = 0
 
 $(document).ready(function() {
     /* ОБщая сумма товара в корзине у юзера */
-    if(!getCookie('total_sum_in_cart')) {
+    if (!getCookie('total_sum_in_cart')) {
         setCookie('total_sum_in_cart', '0', 5);
     }
 });
@@ -51,17 +51,17 @@ $(document).on('click', '.js-getSize', function(e) {
 });
 /* Добавление товара в корзину */
 $(document).on('click', '.js-add2cart', function(e) {
-    if(!getCookie('add2cart_for_users')) {
+    if (!getCookie('add2cart_for_users')) {
         setCookie('add2cart_for_users', new String(new Date().getTime()).hashCode(), 5);
     }
     /* ОБщее количество товара в корзине у юзера */
-    if(!getCookie('total_in_cart')) {
+    if (!getCookie('total_in_cart')) {
         setCookie('total_in_cart', 1, 5);
     } else {
         setCookie('total_in_cart', parseInt(getCookie('total_in_cart'), 10) + 1, 5);
     }
 
-    if(getCookie('total_sum_in_cart').length == 0) {
+    if (getCookie('total_sum_in_cart').length == 0) {
         setCookie('total_sum_in_cart', '0', 5);
     }
 
@@ -105,7 +105,7 @@ $(document).on('click', '.js-add2cart', function(e) {
 
             $('.js-moneyTotal').text(getCookie('total_sum_in_cart')); /* Вывод подитога в карточку корзины */
 
-            if($('.cart-is-expanded').length == 0) {
+            if ($('.cart-is-expanded').length == 0) {
                 $('.js-cartToggle').trigger('click');
             }
         });
@@ -158,10 +158,10 @@ $(document).on('keyup', '.js-quantity', function(e) {
     let idProd = $(this).closest('.cart-item').find('.js-removeFromCart').data('product_id');
     idProd = $('.cart-item[data-cart="' + idProd + '"]').data('insert_id') || $(this).data('product_id');
 
-    if(val == '' || val == 0) {
+    if (val == '' || val == 0) {
         $(this).attr('data-old_val', '0');
         return;
-    } else if(val <= -1) {
+    } else if (val <= -1) {
         $(this).closest('.cart-item').find('.js-removeFromCart').trigger('click');
         return false;
     }
@@ -184,19 +184,19 @@ function minusPlus(el) {
     let plus = true;
     idProd = $('.cart-item[data-cart="' + idProd + '"]').data('insert_id');
 
-    if(action == 'plus') {
+    if (action == 'plus') {
         val++;
     } else {
         val--;
         plus = false;
     }
 
-    if(val == 0) {
+    if (val == 0) {
         $(el).attr('data-old_val', '0');
         return;
     }
 
-    if(val <= -1) {
+    if (val <= -1) {
         $(el).closest('.cart-item').find('.js-removeFromCart').trigger('click');
         return false;
     }
@@ -212,7 +212,7 @@ function setNewQuantity(idProd, userId, quantity, cost, plus, diffSum = 1) {
     const nowSum = parseInt(getCookie('total_sum_in_cart'), 10);
 
     $.post('/add2cart/quantity/', {product: idProd, user: userId, quantity: quantity}, function(data, textStatus, xhr) {
-        if(!plus)
+        if (!plus)
         {
             setCookie('total_sum_in_cart', String(nowSum - parseInt(cost * diffSum, 10)), 5);
             setCookie('total_in_cart', parseInt(getCookie('total_in_cart'), 10) - parseInt(diffSum, 10), 5);
@@ -272,7 +272,7 @@ return `<div class="cart-item" data-cart="${args.id}" data-insert_id="${args.ins
 
 /* Сохраняем в локалСторадж введённые данные юзера для доставки */
 $('#checkoutStep1 input').on('blur', function(e) {
-   if(e.target.value == '') return false;
+   if (e.target.value == '') return false;
 
     prodStorageSet(e.target.name, e.target.value);
     setCookie('localStorageInputUser', encodeURIComponent(e.target), 3);
@@ -287,7 +287,7 @@ $(document).on('click', '.js-nextCheckout', function(e) {
     $(this).prop('disabled', true);
 
     [].forEach.call(requiredData, function(item) {
-        if(item.value == '' || item.value.length == 1) {
+        if (item.value == '' || item.value.length == 1) {
             item.classList.add('Error-input');
             err = true;
         } else {
@@ -295,7 +295,7 @@ $(document).on('click', '.js-nextCheckout', function(e) {
         }
     });
 
-    if(err) {
+    if (err) {
         $(this).prop('disabled', false);
         return false;
     } else {
@@ -303,7 +303,7 @@ $(document).on('click', '.js-nextCheckout', function(e) {
         dataArr.checkoutRegionCode = $('input[name="checkoutRegionCode"]').val();
     }
 
-    if(!testEmail($('#checkout_email').val())) {
+    if (!testEmail($('#checkout_email').val())) {
         $(this).prop('disabled', false);
         $('#checkout_email').addClass('Error-input');
         return false;

@@ -50,7 +50,7 @@
 <script type="text/javascript">
 var inputThisPage = document.querySelectorAll('#addNewProd input, #addNewProd textarea');
     // Если пришёл запрос на редактирование продукта
-if(location.href.search(/admin/) != -1 && getCookie('updateCat')) {
+if (location.href.search(/admin/) != -1 && getCookie('updateCat')) {
     localStorage.clear();// Очистка старого значения локального хранилища во избежании конфликтов
     var btn = document.querySelector('#submitFormCat');
     btn.setAttribute('type', 'button');
@@ -65,12 +65,12 @@ if(location.href.search(/admin/) != -1 && getCookie('updateCat')) {
         for (var i = inputThisPage.length - 1; i >= 0; i--) {
             var field = inputThisPage[i].name
         /* вставляем фото */
-            if(/image/.test(inputThisPage[i].name) && String(data.result[0][field]).length > 3) {
+            if (/image/.test(inputThisPage[i].name) && String(data.result[0][field]).length > 3) {
                 var forImg = document.querySelectorAll('input[name="' + inputThisPage[i].name + '"]');
                 field = field.replace(/\[\]/g, '');
                 var arrImg = String(data.result[0][field]).split(',');
 
-                if(arrImg[ii]!='' && arrImg[ii]!= null && arrImg[ii]!= undefined ) {
+                if (arrImg[ii]!='' && arrImg[ii]!= null && arrImg[ii]!= undefined ) {
                     document.querySelector('.js-dropPhotogallery').insertAdjacentHTML("beforeEnd", templateCustom({
                         src: arrImg[ii],
                     }));
@@ -81,7 +81,7 @@ if(location.href.search(/admin/) != -1 && getCookie('updateCat')) {
 
                 ii++;
         /* вставляем фото */
-            } else if(inputThisPage[i].type == 'checkbox') {
+            } else if (inputThisPage[i].type == 'checkbox') {
                 inputThisPage[i].checked = data.result[0][field] == 1 ? true : false;
             } else {
                 inputThisPage[i].value = data.result[0][field];

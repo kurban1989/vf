@@ -44,7 +44,7 @@ router.get('/', (req, res, next) => {
         let checkNewCat = false;
         const checkNew = await db.getQuery('SELECT * FROM `products` WHERE `new`=1');
 
-        if(checkNew.length > 0) {
+        if (checkNew.length > 0) {
           checkNewCat = true;
         }
         // Рендер пунктов выпадашек
@@ -53,7 +53,7 @@ router.get('/', (req, res, next) => {
         items : result,
         list: await db.getQuery('SELECT * FROM `category`'),
         }, function(err, html){
-            if(err) { throw new Error("this E: " + err); }
+            if (err) { throw new Error("this E: " + err); }
             optionsMain.nav  = html;
         });
     })
@@ -63,7 +63,7 @@ router.get('/', (req, res, next) => {
             let checkNewCat = false;
             const checkNew = await db.getQuery('SELECT * FROM `products` WHERE `new`=1');
 
-            if(checkNew.length > 0) {
+            if (checkNew.length > 0) {
               checkNewCat = true;
             }
 
@@ -72,7 +72,7 @@ router.get('/', (req, res, next) => {
             items : result,
             },
             (err, html) => {
-                if(err) { throw new Error("this E: " + err); }
+                if (err) { throw new Error("this E: " + err); }
                 optionsMain.mobileMenu = html;
             });
         });
@@ -114,7 +114,7 @@ router.get('/', (req, res, next) => {
             tableVisible: tableVisible
         },
         (err, html) => {
-            if(err) { throw new Error("this E: " + err); }
+            if (err) { throw new Error("this E: " + err); }
             optionsMain.bodyMain = html;
         });
     })

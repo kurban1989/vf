@@ -99,9 +99,9 @@ $(document).on('click', '.js-toggleSlide', function(e) {
         return false;
     }
 
-    if($parent === 'faq') {
+    if ($parent === 'faq') {
 
-        if(!$(this).hasClass('color-active')) {
+        if (!$(this).hasClass('color-active')) {
             /* Закроем сначала предыдущие вкладки */
             $('.Faq .color-active').each(function() {
                 $(this).toggleClass('color-active');
@@ -134,7 +134,7 @@ $(document).on('mouseout', '.Menu__sub--active', function(e) {
       return false;
     }
 
-    if(list.contains('Menu__sub--active') || list.contains('nav-link--image-block')) {
+    if (list.contains('Menu__sub--active') || list.contains('nav-link--image-block')) {
         return false;
     }
 
@@ -147,7 +147,7 @@ $(document).on('click', '.js-mobMenu', function(e) {
     $('.js-mobileNav').toggleClass('menu-is-expanded');
     $('body').toggleClass('no-scroll');
 
-    if($('.Nav__mob-menu').hasClass('menu-is-expanded')) {
+    if ($('.Nav__mob-menu').hasClass('menu-is-expanded')) {
         document.removeEventListener('touchend', checkScrollEnd);
         document.removeEventListener('touchmove', checkScrollWindow);
     }
@@ -168,7 +168,7 @@ $(document).on('click', '.js-btnAddProd', function(e) {
     const tt = $(this).data('src');
     const idProd = $(this).data('product_id') || $('input[name*=\'selected\']:checked').data('product_id') || null;
 
-    if(tt == 'deleteProd' && idProd != '' && idProd != null) {
+    if (tt == 'deleteProd' && idProd != '' && idProd != null) {
         bool = confirmDelete('');
         if (!bool) {
             return false;
@@ -222,7 +222,7 @@ function showModal() {
     // Скролл бар как на apple
     $('.js-scrollContent').simplebar();
 // Проверка добавки нового товара в админке
-    if(location.href.search(/admin/) != -1 && getCookie('successAddProduct')) {
+    if (location.href.search(/admin/) != -1 && getCookie('successAddProduct')) {
         let readyProduct = getCookie('successAddProduct');
         readyProduct = readyProduct.split('__');
         showModal();
@@ -233,7 +233,7 @@ function showModal() {
         readyProduct = null;
     }
 // Проверка добавки новой категории в админке
-    if(location.href.search(/admin\/cat/) != -1 && getCookie('successAddCat')) {
+    if (location.href.search(/admin\/cat/) != -1 && getCookie('successAddCat')) {
         let readyProduct = getCookie('successAddCat');
         readyProduct = readyProduct.split('__');
         showModal();
@@ -242,7 +242,7 @@ function showModal() {
         readyProduct = null;
     }
 // Проверка на обновление продукта в админке
-    if(location.href.search(/admin/) != -1 && getCookie('updatedProduct')) {
+    if (location.href.search(/admin/) != -1 && getCookie('updatedProduct')) {
         let readyProduct = getCookie('updatedProduct');
         readyProduct = readyProduct.split('__');
         showModal();
@@ -252,7 +252,7 @@ function showModal() {
         readyProduct = null;
     }
 // Проверка на обновление категории в админке
-    if(location.href.search(/admin/) != -1 && getCookie('updatedCat')) {
+    if (location.href.search(/admin/) != -1 && getCookie('updatedCat')) {
         let readyProduct = getCookie('updatedCat');
         readyProduct = readyProduct.split('__');
         showModal();
@@ -272,11 +272,11 @@ function showModal() {
         }
     });
 
-    if(location.href.search(/product/) == -1) {
+    if (location.href.search(/product/) == -1) {
 
         $('.js-slickCard').each(function(index, el) {
 
-            if($(this).find('img').length > 1) {
+            if ($(this).find('img').length > 1) {
 
                 $(this).slick({
                     useTransform: true,
@@ -323,30 +323,30 @@ function showModal() {
     }
 
     /* Восстановление введённых значений из инпута при случайной перезагрузке или прочего фейла */
-    if(location.href.search(/order/) > -1 && getCookie('localStorageInputUser') && location.href.search(/admin/) == -1) {
+    if (location.href.search(/order/) > -1 && getCookie('localStorageInputUser') && location.href.search(/admin/) == -1) {
         var forImg = 0;
         for (var i = inputThisPage.length - 1; i >= 0; i--) {
             var strSearch = inputThisPage[i].name
 
             var getVal = prodStorageGet(strSearch);
 
-            if(getVal != null && getVal != undefined) {
+            if (getVal != null && getVal != undefined) {
                 inputThisPage[i].value = getVal;
             }
         }
 
-        if($('#checkout_shipping_region').val().length > 2) {
+        if ($('#checkout_shipping_region').val().length > 2) {
             $('#checkout_shipping_city').closest('.Order-step__sections').removeClass('is-hidden');
         }
     };
 
     if (location.href.search(/order/) == -1 && location.href.search(/admin/) == -1) {
         /* Вывод подитога в карточку корзины */
-        if(getCookie('total_sum_in_cart')) {
+        if (getCookie('total_sum_in_cart')) {
             $('.js-moneyTotal').text(getCookie('total_sum_in_cart'));
         }
         /* Вывод корзины, если там есть что */
-        if(getCookie('total_in_cart') && getCookie('total_in_cart').length > 0) {
+        if (getCookie('total_in_cart') && getCookie('total_in_cart').length > 0) {
             const resultInsert = document.querySelector('.js-insertInCartProd');
             const $iconBag = $('.js-cartIcon');
             $.post('/requirecart', {param1: 'getCart'}, function(data, textStatus, xhr) {

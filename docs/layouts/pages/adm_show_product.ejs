@@ -35,7 +35,7 @@
                         <div class="Content-table__cell">
                             <input type="checkbox" class="Content-table__filter--form-control checkbox" name="selected[]" data-product_id="<%=item.id%>">
                         </div>
-                        <% if(item.images && item.images != '' && item.images.length > 5) {imgPreview = item.images.split(','); %>
+                        <% if (item.images && item.images != '' && item.images.length > 5) {imgPreview = item.images.split(','); %>
                         <div class="Content-table__cell"><img class="preview" data-src="<%- imgPreview[0] %>" alt=""></div>
                         <%} else {%>
                         <div class="Content-table__cell"><img class="preview" data-src="/img/svg/no-photo.svg" alt=""></div>
@@ -44,7 +44,7 @@
                         <div class="Content-table__cell"><p class="text"><%- item.vendor %></p></div>
                         <div class="Content-table__cell"><p class="text"><%- item.category %></p></div>
                         <div class="Content-table__cell"><p class="text"><span class="price"><%= item.price %> </span><br> <span class="old-price"><%= item.old_price %> </span></p></div>
-                        <div class="Content-table__cell"><p class="text"><% if(item.visible == 1) {%> Да <%} else {%> Нет <% } %></p></div>
+                        <div class="Content-table__cell"><p class="text"><% if (item.visible == 1) {%> Да <%} else {%> Нет <% } %></p></div>
                         <div class="Content-table__cell"><p class="text"><%- item.discription %></p></div>
                         <div class="Content-table__cell"><p class="text"><%= item.stock_count %></p></div>
                         <div class="Content-table__cell">

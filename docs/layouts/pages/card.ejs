@@ -2,9 +2,9 @@
     <div class="Container__row">
         <div class="Product__thumbnails relative">
             <div class="sidebar">
-                <% if(images && images != '' && images.length > 5) { imgPreview = images.split(','); %>
+                <% if (images && images != '' && images.length > 5) { imgPreview = images.split(','); %>
                     <% imgPreview.forEach(function(img){ %>
-                        <% if(img.length > 2) { %>
+                        <% if (img.length > 2) { %>
                             <a href="#<%- img %>">
                                 <img data-src="<%= img %>" alt="">
                             </a>
@@ -16,9 +16,9 @@
         <div class="Container__col-1of2">
             <div class="Product__images">
                 <div class="Product__images--slider js-imagesSlider">
-                    <% if(images && images != '' && images.length > 5) { %>
+                    <% if (images && images != '' && images.length > 5) { %>
                         <% imgPreview.forEach(function(img){ %>
-                            <% if(img.length > 2) { %>
+                            <% if (img.length > 2) { %>
                                 <div class="Product__images--slide">
                                     <a name="<%- img %>" class="bias relative"></a>
                                     <img src="<%= img %>" alt="">
@@ -30,7 +30,7 @@
                     <% } %>
                 </div>
 
-                <% if(!!0) { %>
+                <% if (!!0) { %>
                     <div class="Block__arrows Block__arrows--left Block__arrows--show">
                         <svg svg-inline="" role="presentation" focusable="false" xmlns="http://www.w3.org/2000/svg" width="20" height="30"><defs><linearGradient id="a" x1="50%" x2="24.241%" y1="24.167%" y2="77.79%"><stop offset="0%" stop-color="#E7C19D"></stop><stop offset="100%" stop-color="#D59B67"></stop></linearGradient></defs><path fill="url(#a)" fill-rule="evenodd" transform="matrix(-1 0 0 1 14 0)" d="M14 12.935v.13L.258 26H0l10.516-13L0 0h.258z"></path></svg>
                     </div>
@@ -51,7 +51,7 @@
                 <ul class="Product__ul">
                     <% list = list_primary.split(','); %>
                     <% list.forEach(function(primary){ %>
-                        <% if(primary.length > 1) { %>
+                        <% if (primary.length > 1) { %>
                         <li><%= primary %></li>
                         <% } %>
                     <% }); %>

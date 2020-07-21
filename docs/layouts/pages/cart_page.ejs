@@ -16,7 +16,7 @@
       <td>
         <div class="Product-table__cart--info-cell">
           <div>
-            <% if(item.img && item.img != '' && item.img.length > 5) {var imgPreview = item.img.split(','); %>
+            <% if (item.img && item.img != '' && item.img.length > 5) {var imgPreview = item.img.split(','); %>
               <img data-src="<%- imgPreview[0] %>" alt="<%- item.title %>">
             <%} else {%>
               <img data-src="/img/svg/no-photo.svg" alt="">

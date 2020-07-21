@@ -87,7 +87,7 @@
                 <div class="Content-table__cell"><p class="text area">(<%= item.delivery_period_min %> - <%= item.delivery_period_max %>)</p></div>
                 <div class="Content-table__cell"><p class="text area"><%= sumOrder %> руб.</p></div>
                 <div class="Content-table__cell"><p class="text area"><%= (Number(sumOrder) + Number(item.cost_delivery)) %> руб.</p></div>
-                <div class="Content-table__cell"><p class="text area js-statusOrder"><% if(item.new == 1) { %> Новый <% } else { %> Обработанный <% } %></p></div>
+                <div class="Content-table__cell"><p class="text area js-statusOrder"><% if (item.new == 1) { %> Новый <% } else { %> Обработанный <% } %></p></div>
             </div>
             <% }) %>
 
@@ -111,14 +111,14 @@
                     <ul class="Content-table__label-order--list">
                         <li>
                             <div class="Content-table__cell"><p class="text area">
-                            <% if(statusPay == 1) { %> <b class="pay-yes">Оплачено</b> <% } else { %> <b class="pay-no">Оплаты не было</b> <% } %>
+                            <% if (statusPay == 1) { %> <b class="pay-yes">Оплачено</b> <% } else { %> <b class="pay-no">Оплаты не было</b> <% } %>
                             </p></div>
                         </li>
                     </ul>
                 </div>
             </div>
 
-            <% if(newOrder == 1) { %>
+            <% if (newOrder == 1) { %>
             <div class="Content-table__filter--form-group" style="text-align: center;">
                 <button class="Content-table__add-btn  js-btnAddProd" id="orderSuccess" data-src="orderReady" data-product_id="<%= numberOrder %>" type="button" title="Перевести заказ в статус 'Обработан'">Заказ обработан <span> &#10004;</span></button>
             </div>

@@ -172,11 +172,11 @@ router.get('/cat/', (req, res, next) => {
 
       optionsPage.showAllProd = responce;
       res.render(config.viewMain + '/admin_index',
-          optionsPage,
-          function(err, html){
-            if (err) throw new Error(err);
-            res.send(util.replacerSpace(html)); // Обфускация HTML - del space
-          });
+        optionsPage,
+        function(err, html){
+          if (err) throw new Error(err);
+          res.send(util.replacerSpace(html)); // Обфускация HTML - del space
+        });
     });
 });
 // Корень админки
@@ -257,26 +257,34 @@ router.get('/filter/', (req, res) => {
         res.json(resultFilter);
     });
 });
+
 // POST запорсы AJAX страничек редактирования товара!
-router.post('/update/', (req, res) => {
+router.post('/update/', async (req, res) => {
   if (req.body.qeuryUpdate === 'set') {
-    getOneValue(parseInt(req.body.id, 10), 'products')
-    .then((rr) => {
-      res.send(JSON.stringify({ result: rr }));
-    })
+    try {
+      const result = await getOneValue(parseInt(req.body.id, 10), 'products')
+      res.status(200).send(JSON.stringify({ result }));
+    }
+    catch (e) {
+      res.status(500).send(JSON.stringify({ result: e }))
+    }
   }
 });
+
 // POST запорсы AJAX страничек редактирования категории!
 router.post('/cat/update/', (req, res) => {
   if (req.body.qeuryUpdate === 'set') {
-    getOneValue(parseInt(req.body.id, 10), 'category')
-    .then((rr) => {
-      res.send(JSON.stringify({ result: rr }));
-    })
+    try {
+      const result = await getOneValue(parseInt(req.body.id, 10), 'category')
+      res.status(200).send(JSON.stringify({ result }));
+    }
+    catch (e) {
+      res.status(500).send(JSON.stringify({ result: e }))
+    }
   }
 })
 // POST запорсы AJAX страничек добавления/удаления.
-router.post('/', (req, res, next) => {
+router.post('/', (req, res) => {
 
   let page = '';
   let state = {};
@@ -338,8 +346,8 @@ router.post('/', (req, res, next) => {
 
     } else if (req.body.param1 === "backAllProd"){
       preRanderTableProd(req, res, config.pagesPath + '/adm_show_product.ejs')
-        .then((responce) => {
-          page = responce;
+      .then((responce) => {
+        page = responce;
       })
       .then((responce) => {
           res.send(JSON.stringify(
@@ -365,13 +373,13 @@ router.post('/cat/', (req,res) => {
   let title = '';
 
   if (req.body.param1 === 'setNewWindowAdd') {
-      // Запрос на редактирование, просто ставим куку для следующего запроса
-      if (req.body.idProd != null && req.body.idProd!= undefined) {
-        res.cookie('updateCat', req.body.idProd, { domain: '.'+config.domain, path: '/', expires: new Date(Date.now() + 60*60*50)});
-      }
+    // Запрос на редактирование, просто ставим куку для следующего запроса
+    if (req.body.idProd != null && req.body.idProd!= undefined) {
+      res.cookie('updateCat', req.body.idProd, { domain: '.'+config.domain, path: '/', expires: new Date(Date.now() + 60*60*50)});
+    }
 
-      page = fs.readFileSync(config.pagesPath + '/add_cat.ejs', 'utf8');
-      res.send(JSON.stringify({result: page, state: {}, title: 'Добавление новой категории'}));
+    page = fs.readFileSync(config.pagesPath + '/add_cat.ejs', 'utf8');
+    res.send(JSON.stringify({result: page, state: {}, title: 'Добавление новой категории'}));
 
   } else if (req.body.param1 === 'deleteProd') { // Запрос на удаление категории
       db.getQuerySafe('category', 'id', req.body.idProd, 'deleteProd')
@@ -385,13 +393,13 @@ router.post('/cat/', (req,res) => {
           page = responce;
       })
       .then((responce) => {
-          res.send(JSON.stringify(
-            {
-              result: page,
-              state: state,
-              title: title
-            }
-          ))
+        res.send(JSON.stringify(
+          {
+            result: page,
+            state: state,
+            title: title
+          }
+        ))
       });
       return;
 }
@@ -419,15 +427,15 @@ async function preRanderTableCat(req, res, file) {
 };
 // Запрос одной позиции товара или категории для редактирования
 async function getOneValue(id, table) {
-  let r = await db.getQuery('SELECT * FROM `'+ table +'` WHERE id = '+ id +';')
-    .then( result => result )
-    .catch((err) => { throw new Error(err) });
-
-  return r;
+  try {
+    const result = await db.getQuery('SELECT * FROM `'+ table +'` WHERE id = '+ id +';')
+    return result;
+  }
+  catch (err) { throw new Error(err) }
 }
 
 /* Запорс заявок / заказов */
-async function preRanderTableOrders(req, res, file) {
+async function preRanderTableOrders(_, res, file) {
   let htmlTable = await db.getQuery('SELECT * FROM `checkout` ORDER BY id DESC')
     .then((result) => {
       let r = '';

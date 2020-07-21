@@ -195,14 +195,14 @@ dropZone[0].ondrop = function(event) {
 /* Сохраняем в локалСторадж введённые данные для товара */
 for (var i = inputThisPage.length - 1; i >= 0; i--) {
     inputThisPage[i].addEventListener('blur', function(e) {
-        if(e.target.value == '') return false;
+        if (e.target.value == '') return false;
 
         prodStorageSet(e.target.name, e.target.value);
         setCookie('localStorageInput', encodeURIComponent(e.target), 3);
     }, false)
 }
 /* Если пришёл запрос на редактирование продукта */
-if(location.href.search(/admin/) != -1 && getCookie('updateProduct')) {
+if (location.href.search(/admin/) != -1 && getCookie('updateProduct')) {
     addSecondSize.click(); /* Вернём поле БРА перед всеми манипуляциями И скроем кнопку */
 
     var btn = document.querySelector('#submitFormProd');
@@ -221,12 +221,12 @@ if(location.href.search(/admin/) != -1 && getCookie('updateProduct')) {
         for (var i = inputThisPage.length - 1; i >= 0; i--) {
             var field = inputThisPage[i].name
             /* вставляем фото */
-            if(/image/.test(inputThisPage[i].name) && String(data.result[0][field]).length > 3) {
+            if (/image/.test(inputThisPage[i].name) && String(data.result[0][field]).length > 3) {
                 var forImg = document.querySelectorAll('input[name="' + inputThisPage[i].name + '"]');
                 field = field.replace(/\[\]/g, '');
                 var arrImg = String(data.result[0][field]).split(',');
 
-                if(arrImg[ii]!='' && arrImg[ii]!= null && arrImg[ii]!= undefined ) {
+                if (arrImg[ii]!='' && arrImg[ii]!= null && arrImg[ii]!= undefined ) {
                     document.querySelector('.js-dropPhotogallery').insertAdjacentHTML("beforeEnd", templateCustom({
                         src: arrImg[ii],
                     }));
@@ -237,7 +237,7 @@ if(location.href.search(/admin/) != -1 && getCookie('updateProduct')) {
 
                 ii++;
         /* вставляем фото */
-            } else if(inputThisPage[i].type == 'checkbox') {
+            } else if (inputThisPage[i].type == 'checkbox') {
                 inputThisPage[i].checked = data.result[0][field] == 1 ? true : false;
             } else {
                 inputThisPage[i].value = data.result[0][field];
@@ -247,22 +247,22 @@ if(location.href.search(/admin/) != -1 && getCookie('updateProduct')) {
     });
 }
 /* Восстановление введённых значений из инпута при случайной перезагрузке или прочего фейла */
-if(location.href.search(/admin/) != -1 && getCookie('localStorageInput')) {
+if (location.href.search(/admin/) != -1 && getCookie('localStorageInput')) {
     var forImg = 0;
     for (var i = inputThisPage.length - 1; i >= 0; i--) {
         var strSearch = inputThisPage[i].name
 
-        if(/image/.test(inputThisPage[i].name)) {
+        if (/image/.test(inputThisPage[i].name)) {
             forImg++;
             strSearch = inputThisPage[i].name + '' + forImg;
         }
 
         var getVal = prodStorageGet(strSearch);
 
-        if(getVal != null && getVal != undefined) {
+        if (getVal != null && getVal != undefined) {
             inputThisPage[i].value = getVal;
 
-            if(/image/.test(inputThisPage[i].name) && getVal.length > 3) {
+            if (/image/.test(inputThisPage[i].name) && getVal.length > 3) {
               /* вставляем фото */
                 document.querySelector('.js-dropPhotogallery').insertAdjacentHTML("beforeEnd", templateCustom({
                     src: getVal,

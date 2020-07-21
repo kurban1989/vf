@@ -28,7 +28,7 @@ function sanitizeFile(file, cb) {
     let isAllowedExt = fileExts.includes(file.originalname.split('.')[1].toLowerCase());
     // Mime type must be an image
     let isAllowedMimeType = file.mimetype.startsWith("image/")
-    if(isAllowedExt && isAllowedMimeType){
+    if (isAllowedExt && isAllowedMimeType){
         return cb(null ,true) // no errors
     }
     else{

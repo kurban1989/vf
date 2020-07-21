@@ -70,7 +70,7 @@ export const checkScroll = () => {
     const $navPanel = $('.Nav-bg');
     let nowScroll  = getViewportOffset();
 
-    if(latestScroll < nowScroll.top + 5) {
+    if (latestScroll < nowScroll.top + 5) {
         $navPanel.addClass('Nav-bg--min-h');
         $('.Menu__sub--active').removeClass('Menu__sub--active');
         latestScroll = nowScroll.top;
@@ -79,14 +79,14 @@ export const checkScroll = () => {
         latestScroll = nowScroll.top;
     }
 
-    if(getViewportOffset().top == 0 ){
+    if (getViewportOffset().top == 0 ){
         $navPanel.removeClass('Nav-bg--min-h');
         latestScroll = nowScroll.top;
     }
 }
 
 const checkScrollEnd = () => {
-    if(getViewportOffset().top == 0 ){
+    if (getViewportOffset().top == 0 ){
         $navPanel.removeClass('Nav-bg--min-h');
         latestScroll = 0
     } else {

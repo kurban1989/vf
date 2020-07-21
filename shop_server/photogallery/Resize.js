@@ -41,7 +41,7 @@ class Resize {
           filename = Resize.filename(args.format);
           filepath = self.filepath(filename);
 
-          if(args.format !== 'gif') {
+          if (args.format !== 'gif') {
 
             await sharp(buffer)
               .resize(args.width, args.height, {

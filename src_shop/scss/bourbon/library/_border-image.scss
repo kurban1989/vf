@@ -8,7 +8,7 @@
     $border-type: type-of($border);
 
     @if $border-type == string or list {
-      $border-str: if($border-type == list, nth($border, 1), $border);
+      $border-str: if ($border-type == list, nth($border, 1), $border);
 
       $url-str:       str-slice($border-str, 0, 3);
       $gradient-type: str-slice($border-str, 0, 6);

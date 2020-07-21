@@ -37,7 +37,7 @@ router.get('/', async (req, res, next) => {
   let quantity = 0;
   let size = '';
 
-  if(userToken === '') {
+  if (userToken === '') {
     res.send('<script type="text/javascript">window.location.href = history.go(-1);</script>');
   }
 
@@ -108,12 +108,12 @@ router.get('/', async (req, res, next) => {
 
 /* Парсим поисковый запрос */
 router.post('/', (req, res, next) => {
-    if(req.body.param1 === 'searchCat') { // Поиск по имени regiona
+    if (req.body.param1 === 'searchCat') { // Поиск по имени regiona
       db.getQuerySafe('regions', 'region', req.body.param2, 'likeAllFields')
         .then((responce) => {
           res.send(JSON.stringify({result: responce}));
         });
-    } else if(req.body.param1 === 'searchCity') { // Поиск по имени regiona и города
+    } else if (req.body.param1 === 'searchCity') { // Поиск по имени regiona и города
       db.getQueryManySafe(['cities','latestLike'], {region: req.body.param3, city: req.body.param2})
         .then((responce) => {
           res.send(JSON.stringify({result: responce}));
@@ -127,7 +127,7 @@ router.post('/', (req, res, next) => {
 router.post('/delivery/', (request, response, next) => {
   const userToken = request.cookies.add2cart_for_users || '';
 
-  if(userToken === '') {
+  if (userToken === '') {
     response.status(402).send('Не удалось пройти идентификацию пользователя!');
     return false;
   }
@@ -143,14 +143,14 @@ router.post('/delivery/', (request, response, next) => {
 
   const req = https.request(options, (res) => {
 
-    if(res.statusCode != 200) {
+    if (res.statusCode != 200) {
       response.send('<b>Удалённый сервер не ответил правильно. Статус ответа: <i>' + res.statusCode + '</i></b>');
       console.error('Статус ответа: <i>' + res.statusCode);
     }
 
     res.on('data', (d) => {
       /*process.stdout.write(d);*/
-      if(d.length < 5) /* Если массив/строка со сдэка пришёл пустым, то значит туда нету доставки */
+      if (d.length < 5) /* Если массив/строка со сдэка пришёл пустым, то значит туда нету доставки */
       {
         response.send(JSON.stringify({status: 'error', msg: 'В населёныый пункт "' + request.body.checkoutCity + '" не осуществляется доставка.<br><br>&nbsp;Выберите другой, удобный и ближайший для вас город.'}));// Отправка юзеру данных
       } else {
@@ -265,7 +265,7 @@ const goods = {
 
         const req = https.request(options, (res) => {
 
-          if(res.statusCode != 200) {
+          if (res.statusCode != 200) {
             console.error('Статус ответа: ' + res.statusCode);
           }
 
@@ -273,7 +273,7 @@ const goods = {
            /* process.stdout.write(d);*/
             const check = JSON.parse(d);
 
-            if(check.error) {
+            if (check.error) {
               return reject(check)
             } else {
               check.result[0].result.deliveryPeriodMax++;
@@ -297,7 +297,7 @@ const goods = {
 
 /* Взять только первое изображение */
 function getOneImg(images) {
-    if(images && images != '' && images.length > 5) {
+    if (images && images != '' && images.length > 5) {
       imgPreview = images.split(',');
       return toString(imgPreview[0]);
     } else {

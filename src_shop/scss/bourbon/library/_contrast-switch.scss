@@ -76,6 +76,6 @@
     $-contrast-to-light: _contrast-ratio($base-color, $light-color);
     $-prefer-dark: $-contrast-to-dark >= $-contrast-to-light;
 
-    @return if($-prefer-dark, $dark-color, $light-color);
+    @return if ($-prefer-dark, $dark-color, $light-color);
   }
 }

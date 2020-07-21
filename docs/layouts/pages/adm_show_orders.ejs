@@ -41,10 +41,10 @@
                         <div class="Content-table__cell"><p class="text"><%- item.sum_checkout %> руб.</p></div>
                         <div class="Content-table__cell"><p class="text"><%- item.cost_delivery %> руб.</p></div>
                         <div class="Content-table__cell"><p class="text">
-                            <% if(item.new == 1) { %> <b class="pay-yes">Новый</b> <% } else { %> <b class="pay-orange">Обработанный</b> <% } %>
+                            <% if (item.new == 1) { %> <b class="pay-yes">Новый</b> <% } else { %> <b class="pay-orange">Обработанный</b> <% } %>
                         </p></div>
                         <div class="Content-table__cell"><p class="text">
-                            <% if(item.status_pay == 1) { %> <b class="pay-yes">Оплачено</b> <% } else { %> <b class="pay-no">Оплаты не было</b> <% } %>
+                            <% if (item.status_pay == 1) { %> <b class="pay-yes">Оплачено</b> <% } else { %> <b class="pay-no">Оплаты не было</b> <% } %>
                         </p></div>
                         <div class="Content-table__cell">
                             <button class="Content-table__add-btn js-btnAddProd" title="Подробный просмотр Заказа" style="font-size:14px;" data-src="setNewWindowAdd" data-product_id="<%= item.user_token %>">

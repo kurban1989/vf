@@ -31,7 +31,7 @@
                         <div class="Content-table__cell">
                             <input type="checkbox" class="Content-table__filter--form-control checkbox" name="selected[]" data-product_id="<%=item.id%>">
                         </div>
-                        <% if(item.images && item.images != '' && item.images.length > 5) {imgPreview = item.images.split(','); %>
+                        <% if (item.images && item.images != '' && item.images.length > 5) {imgPreview = item.images.split(','); %>
                         <div class="Content-table__cell"><img class="preview" data-src="<%- imgPreview[0] %>" alt=""></div>
                         <%} else {%>
                         <div class="Content-table__cell"><img class="preview" data-src="/img/svg/no-photo.svg" alt=""></div>

@@ -1,9 +1,31 @@
-/* eslint-disable no-useless-escape */
 /* eslint-disable new-cap */
 /* eslint-disable no-new-require */
-const mysql = new require('mysql')
 const config = require('../conf')
+const mysql = new require('mysql')
 const client = mysql.createPool(config.mysql)
+// TO DO only for develop computer
+// const client = mysql.createPool({
+//   host: 'localhost',
+//   port: '3306',
+//   user: 'root',
+//   password: 'root',
+//   database: 'cargo'
+// })
+const htmlspecialchars = {
+  encode: (string) => {
+    const mapChars = {
+      '&': '&amp;',
+      '<': '&lt;',
+      '>': '&gt;',
+      '"': '&quot;',
+      '–': '&ndash;',
+      '—': '&mdash;',
+      "'": '&#39;'
+    }
+    const repl = (c) => { return mapChars[c] }
+    return string ? string.toString().replace(/[&<>"–'—]/gim, repl) : string
+  }
+}
 
 function setCHARACTER () {
   client.getConnection(async (_err, connector) => {
@@ -18,7 +40,7 @@ function setCHARACTER () {
   })
 }
 
-setCHARACTER() // Первый запрос на изменение кодировки
+// setCHARACTER() // Первый запрос на изменение кодировки
 
 // Функция для любого запроса к БД
 exports.getQuery = (sql, callback) => {
@@ -44,8 +66,8 @@ exports.getQuery = (sql, callback) => {
   })
 }
 
-// Функция для любого СОДЕРЖАЩИЙ ЗАПРОС ПО ОДНОМУ ПОЛЮ запроса к БД, которые идут от юзера безопасные соединения
-exports.getQuerySafe = (table, field, query, pattern = 'like', callback) => {
+// Функция для любого СОДЕРЖАЩИЙ ЗАПРОС ПО ОДНОМУ ПОЛЮ запроса к БД, которые идут от юзера (безопасный запрос, не требует доп защит)
+exports.getQuerySafe = (table, field, query, pattern = 'like', sorted = ' ORDER BY id DESC') => {
   setCHARACTER()
 
   let sql = 'SELECT id, ?? FROM ?? WHERE ?? like ?'
@@ -61,6 +83,8 @@ exports.getQuerySafe = (table, field, query, pattern = 'like', callback) => {
     sql = 'DELETE FROM ?? WHERE ?? = ?'
     inserts = [table, field, query]
   }
+
+  sql = sql + sorted
   // Промис запроса
   return new Promise((resolve, reject) => {
     client.getConnection((_err, connector) => {
@@ -72,24 +96,19 @@ exports.getQuerySafe = (table, field, query, pattern = 'like', callback) => {
         if (error) {
           return reject(new Error(error))
         }
-        if (typeof callback === 'function') {
-          const resFunc = callback()
-          return resolve(result, resFunc)
-        } else {
-          return resolve(result)
-        }
+
+        return resolve(result)
       })
     })
   })
 }
-// Функция для любого многополевого запроса к БД, которые идут от юзера безопасные соединения
+// Функция для любого многополевого запроса к БД, которые идут от юзера (безопасный запрос, не требует доп защит)
 exports.getQueryManySafe = (table, obj, callback) => {
   setCHARACTER()
 
   return new Promise((resolve, reject) => {
-    const fields = Object.keys(obj)
+    const excludeId = Object.prototype.hasOwnProperty.call(obj, 'excludeId') && obj.excludeId === false
     let dataWrite = ''
-    let sql = ''
     let like = ''
 
     /* Если мы хотим чтобы последнее условие было как 'like %search%', то первый аргумент должен быть обязательно массивом */
@@ -99,18 +118,19 @@ exports.getQueryManySafe = (table, obj, callback) => {
       table = table[0]
     }
 
-    clearBad(obj).then((ObjProm) => {
+    clearBad(obj, table, excludeId).then((saveObject) => {
+      const fields = Object.keys(obj)
       let i = 0
-      for (const prop in ObjProm) {
-        if ({}.hasOwnProperty.call(ObjProm, prop)) {
+      for (const prop in saveObject) {
+        if ({}.hasOwnProperty.call(saveObject, prop)) {
           // если пусто то не продолжаем дальше итерацию
-          if (ObjProm[prop] === undefined || ObjProm[prop] === 'NULL') {
+          if (saveObject[prop] === undefined || saveObject[prop] === 'NULL') {
             i++
           } else {
             if (like === 'latestLike' && i === fields.length - 1) {
-              dataWrite += '`' + fields[i] + '` like "%' + obj[prop] + '%"'
+              dataWrite += '`' + fields[i] + '` like "%' + saveObject[prop] + '%"'
             } else {
-              dataWrite += '`' + fields[i] + '` = "' + obj[prop]
+              dataWrite += '`' + fields[i] + '` = "' + saveObject[prop]
               dataWrite += '" AND '
             }
             i++
@@ -119,8 +139,8 @@ exports.getQueryManySafe = (table, obj, callback) => {
       }
     })
       .then(() => {
-        dataWrite = dataWrite.replace(/(\')/gm, '')
-        dataWrite = dataWrite.replace(/\"on\"/gm, '1')
+        dataWrite = dataWrite.replace(/(')/gm, '')
+        dataWrite = dataWrite.replace(/"on"/gm, '1')
 
         if (like !== 'latestLike') {
         /* Обрезка хвостика ('" AND ') */
@@ -128,7 +148,7 @@ exports.getQueryManySafe = (table, obj, callback) => {
         }
       })
       .then(() => {
-        sql = 'SELECT * FROM ' + table + ' WHERE ' + dataWrite
+        const sql = 'SELECT * FROM ' + table + ' WHERE ' + dataWrite
 
         client.getConnection((_err, connector) => {
         // запрос
@@ -156,28 +176,29 @@ exports.updateData = (table, obj, id, callback) => {
   setCHARACTER()
 
   return new Promise((resolve, reject) => {
-    const fields = Object.keys(obj)
+    let fields = []
     let dataWrite = ''
     let sql = ''
 
-    clearBad(obj).then((ObjProm) => {
+    clearBad(obj, table).then((saveObject) => {
+      fields = Object.keys(saveObject)
       let i = 0
-      for (const prop in ObjProm) {
-        if ({}.hasOwnProperty.call(ObjProm, prop)) {
-          dataWrite += '`' + fields[i] + '` = "' + obj[prop]
+      for (const prop in saveObject) {
+        if ({}.hasOwnProperty.call(saveObject, prop)) {
+          dataWrite += '`' + fields[i] + '` = "' + saveObject[prop]
           dataWrite += '", '
           i++
         }
       }
     })
       .then(() => {
-        dataWrite = dataWrite.replace(/(\')/gm, '')
-        dataWrite = dataWrite.replace(/\"on\"/gm, '1')
+        dataWrite = dataWrite.replace(/"on"/gm, '1')
+        dataWrite = dataWrite.replace(/(')/gm, '')
         dataWrite = clearDigitsFields(dataWrite)
       })
       .then(() => {
-        sql = 'UPDATE `' + table + '` SET ' + dataWrite + ', date = NOW() WHERE id=' + parseInt(id, 10) + ';'
-        sql = sql.replace(/(\"NULL\")/, 'NULL') // Если мы специально хотим записать NULL в ячейку.
+        sql = 'UPDATE `' + table + '` SET ' + dataWrite + ' WHERE id=' + parseInt(id, 10) + ';'
+        sql = sql.replace(/("NULL")/, 'NULL') // Если мы специально хотим записать NULL в ячейку.
 
         client.getConnection((_err, connector) => {
         // запрос
@@ -206,25 +227,25 @@ exports.setData = (table, obj, callback) => {
   setCHARACTER()
 
   return new Promise((resolve, reject) => {
-    const fields = Object.keys(obj)
+    let fields = []
     let dataWrite = ''
-    let sql = ''
 
-    clearBad(obj).then((ObjProm) => {
-      for (const prop in ObjProm) {
-        if ({}.hasOwnProperty.call(ObjProm, prop)) {
-          dataWrite += '"' + obj[prop]
+    clearBad(obj, table).then((saveObject) => {
+      fields = Object.keys(saveObject)
+      for (const prop in saveObject) {
+        if ({}.hasOwnProperty.call(saveObject, prop)) {
+          dataWrite += '"' + saveObject[prop]
           dataWrite += '", '
         }
       }
     })
       .then(() => {
         dataWrite = dataWrite.replace(/(on)/gm, '1')
-        dataWrite = dataWrite.replace(/(\')/gm, '')
+        dataWrite = dataWrite.replace(/(')/gm, '')
         dataWrite = clearDigitsFields(dataWrite)
       })
       .then(() => {
-        sql = 'INSERT INTO `' + table + '` (' + fields + ', date) VALUES (' + dataWrite + ', NOW());'
+        const sql = 'INSERT INTO `' + table + '` (' + fields + ', date) VALUES (' + dataWrite + ', NOW());'
 
         client.getConnection((err, connector) => {
           if (err) {
@@ -252,17 +273,46 @@ exports.setData = (table, obj, callback) => {
   })
 }
 
-async function clearBad (obj) {
+async function clearBadFields (obj, table, excludeId = false) {
+  const resObj = {}
+  const sql = `SHOW COLUMNS FROM ${table}`
+
+  if ({}.hasOwnProperty.call(obj, 'excludeId')) {
+    delete obj.excludeId
+  }
+  // eslint-disable-next-line no-undef
+  const columns = await new Promise((resolve, reject) => {
+    client.getConnection((_err, connector) => {
+      connector.query(sql, (error, result) => {
+        connector.release()
+        if (error) {
+          return reject(new Error(error))
+        }
+        return resolve(result)
+      })
+    })
+  })
+
+  columns.forEach((column) => {
+    if ((column.Extra !== 'auto_increment' || excludeId) && Object.prototype.hasOwnProperty.call(obj, column.Field)) {
+      resObj[column.Field] = obj[column.Field]
+    }
+  })
+  return resObj
+}
+
+async function clearBad (obj, table, excludeId) {
+  obj = await clearBadFields(obj, table, excludeId)
   for (const prop in obj) {
     if ({}.hasOwnProperty.call(obj, prop)) {
-      obj[prop] = await client.escape(obj[prop])
+      obj[prop] = await client.escape(htmlspecialchars.encode(obj[prop]))
     }
   }
   return obj
 }
 // Очистка от кавычек в цифровых полях
 function clearDigitsFields (str) {
-  if (str.search(/(\,\s{1})/) > -1) {
+  if (str.search(/(,\s{1})/) > -1) {
     str = str.split(', ')
   } else if (str.search(/(\.\s{1})/) > -1) {
     str = str.split('. ')
@@ -271,8 +321,9 @@ function clearDigitsFields (str) {
   }
 
   str = str.filter((item) => {
-    return item.search(/\"{1}\d+\"{1}/) > -1 ? toNumber(item) : item
+    return item.search(/"{1}\d+"{1}/) > -1 ? toNumber(item) : item
   })
+
   return str.join(',')
 }
 
