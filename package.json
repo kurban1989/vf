@@ -18,7 +18,7 @@
     "babel-install": "2.1.0",
     "babel-loader": "^8.0.4",
     "babel-preset-env": "^1.7.0",
-    "bcrypt": "^3.0.6",
+    "bcrypt": "^5.0.0",
     "body-parser": "^1.18.3",
     "browser-sync": "^2.26.3",
     "compression-webpack-plugin": "^2.0.0",
