@@ -63,7 +63,7 @@
     "multer": "^1.4.1",
     "node-static": "^0.7.11",
     "path": "^0.12.7",
-    "sharp": "^0.22.1",
+    "sharp": "^0.30.5",
     "slick-carousel": "^1.8.1",
     "sticky-sidebar": "^3.3.1",
     "stripe": "^6.34.0",
