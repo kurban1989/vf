@@ -36,7 +36,7 @@
     "http": "0.0.0",
     "httpp-proxy": "^0.10.3",
     "jest": "^24.7.1",
-    "jsonwebtoken": "^8.5.1",
+    "jsonwebtoken": "^9.0.0",
     "latest": "^0.2.0",
     "log4js": "^4.0.2",
     "merge-webpack-plugin": "^0.2.1",
